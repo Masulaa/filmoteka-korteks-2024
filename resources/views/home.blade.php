@@ -1,9 +1,5 @@
 @extends('layouts.app')
 
 @section('content')
-
-
-
-
-@include('movieslist')
+    @include('movieslist')
 @endsection
