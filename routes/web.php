@@ -1,7 +1,11 @@
 <?php
 
+use App\Http\Controllers\MovieController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+
 });
+Route::get('/home', [MovieController::class, 'index'])->name('home');
+Route::get('/movie', [MovieController::class, 'show'])->name('movie');
+Route::get('/moviesrate', [MovieController::class, 'rate'])->name('moviesrate');
