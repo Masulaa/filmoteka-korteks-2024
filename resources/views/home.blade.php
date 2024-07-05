@@ -1,5 +1,1 @@
-@extends('layouts.app')
-
-@section('content')
-    @include('movieslist')
-@endsection
+@include('movieslist', ['movies' => $movies])
