@@ -8,4 +8,3 @@ Route::get('/', function () {
 });
 Route::get('/home', [MovieController::class, 'index'])->name('home');
 Route::get('/movie', [MovieController::class, 'show'])->name('movie');
-Route::get('/moviesrate', [MovieController::class, 'rate'])->name('moviesrate');

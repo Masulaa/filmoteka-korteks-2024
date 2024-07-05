@@ -1,3 +1,9 @@
-@if ($movies->total() > 0)
-    @include('movieslist')
-@endif
+@extends('layouts.app')
+
+@section('content')
+
+
+
+
+@include('movieslist')
+@endsection

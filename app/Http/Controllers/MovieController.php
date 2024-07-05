@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Movie;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class MovieController extends Controller
 {
-
     public function index()
     {
         $movies = Movie::paginate(10);
@@ -26,10 +26,20 @@ class MovieController extends Controller
             'director' => 'required',
             'release_date' => 'required|date',
             'genre' => 'required',
-            'rating' => 'nullable|integer|min:1|max:10'
+            'rating' => 'required|integer|min:1|max:10',
+            'image' => 'nullable|image|max:2048', // Validacija za sliku
         ]);
 
-        Movie::create($request->all());
+        $path = $request->file('image') ? $request->file('image')->store('images') : null;
+
+        Movie::create([
+            'title' => $request->title,
+            'director' => $request->director,
+            'release_date' => $request->release_date,
+            'genre' => $request->genre,
+            'rating' => $request->rating,
+            'image' => $path,
+        ]);
 
         return redirect()->route('movies.index')->with('success', 'Movie created successfully.');
     }
@@ -50,16 +60,38 @@ class MovieController extends Controller
             'title' => 'required',
             'director' => 'required',
             'release_date' => 'required|date',
-            'genre' => 'required'
+            'genre' => 'required',
+            'rating' => 'required|integer|min:1|max:10',
+            'image' => 'nullable|image|max:2048', // Validacija za sliku
         ]);
 
-        $movie->update($request->all());
+        if ($request->file('image')) {
+            if ($movie->image) {
+                Storage::delete($movie->image); // Brišemo staru sliku
+            }
+            $path = $request->file('image')->store('images');
+        } else {
+            $path = $movie->image;
+        }
+
+        $movie->update([
+            'title' => $request->title,
+            'director' => $request->director,
+            'release_date' => $request->release_date,
+            'genre' => $request->genre,
+            'rating' => $request->rating,
+            'image' => $path,
+        ]);
 
         return redirect()->route('movies.index')->with('success', 'Movie updated successfully.');
     }
 
     public function destroy(Movie $movie)
     {
+        if ($movie->image) {
+            Storage::delete($movie->image); // Brišemo sliku
+        }
+
         $movie->delete();
 
         return redirect()->route('movies.index')->with('success', 'Movie deleted successfully.');

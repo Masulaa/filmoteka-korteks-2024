@@ -13,6 +13,7 @@ return new class extends Migration {
             $table->string('director');
             $table->date('release_date');
             $table->string('genre');
+            $table->string('image')->nullable();
             $table->timestamps();
         });
     }
