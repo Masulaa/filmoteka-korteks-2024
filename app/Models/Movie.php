@@ -34,4 +34,9 @@ class Movie extends Model
 
         return 0;
     }
+    public function countRatings()
+    {
+        $countRatings = $this->ratings()->count();
+        return $countRatings | 0;
+    }
 }
