@@ -16,7 +16,7 @@
                 <div class="mt-4 flex justify-between">
                     <div>
                         <h3 class="text-sm text-gray-700">
-                            <a href="{{ route('movie', $movie->id) }}">
+                            <a href="/movie/{movie}">
                                 <span aria-hidden="true" class="absolute inset-0"></span>
                                 {{$movie->title}}
                             </a>
@@ -27,6 +27,10 @@
                 </div>
             </div>
         @endforeach
+    </div>
+
+    <div class="mt-8">
+        {{ $movies->links() }}
     </div>
 </div>
 @endsection
