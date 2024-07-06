@@ -20,25 +20,25 @@ class MovieController extends Controller
         if ($request->ajax()) {
             $output = '';
             $query = $request->get('query');
-    
+
             $movies = Movie::where('title', 'like', '%' . $query . '%')
-                         ->orWhere('director', 'like', '%' . $query . '%')
-                         ->orWhere('genre', 'like', '%' . $query . '%')
-                         ->orderBy('id', 'desc')
-                         ->take(5)
-                         ->get();
-    
+                ->orWhere('director', 'like', '%' . $query . '%')
+                ->orWhere('genre', 'like', '%' . $query . '%')
+                ->orderBy('id', 'desc')
+                ->take(5)
+                ->get();
+
             $total_row = $movies->count();
-    
+
             if ($total_row > 0) {
                 foreach ($movies as $movie) {
                     $output .= '
                     <li class="flex gap-2">
-                    <img width="56px " src="'.$movie->image.'" >
+                    <img width="56px " src="' . $movie->image . '" >
                         <div class="flex flex-col">
                         <h1 class="text-lg font-bold">' . $movie->title . '</h1>
-                        <span>' . $movie->director . ' | ' .$movie->release_date .'</span>
-                        <span>' .  '</span>
+                        <span>' . $movie->director . ' | ' . $movie->release_date . '</span>
+                        <span>' . '</span>
                         </div>
                     </li>';
                 }
@@ -48,20 +48,37 @@ class MovieController extends Controller
                     <td colspan="3">No movies found</td>
                 </tr>';
             }
-    
+
             $data = array(
                 'html' => $output,
                 'total' => $total_row
             );
-    
+
             return response()->json($data);
         }
     }
-    
+
     public function create()
     {
         return view('movies.create');
     }
+
+    public function filter(Request $request)
+    {
+        $query = Movie::query();
+
+        if ($request->has('genre') && $request->genre != '') {
+            $query->where('genre', $request->genre);
+        }
+
+
+        $movies = $query->get();
+
+        return response()->json([
+            'html' => view('movies.partials.movies', compact('movies'))->render()
+        ]);
+    }
+
 
     public function store(Request $request)
     {
