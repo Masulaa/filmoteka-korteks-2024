@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 
 // Public
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('home');
 });
 
 // Private
