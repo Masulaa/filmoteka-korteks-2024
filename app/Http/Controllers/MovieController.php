@@ -10,7 +10,7 @@ class MovieController extends Controller
 {
     public function index()
     {
-        $movies = Movie::paginate(10);
+        $movies = Movie::paginate(20);
         return view('home', compact('movies'));
     }
 
@@ -27,7 +27,7 @@ class MovieController extends Controller
             'release_date' => 'required|date',
             'genre' => 'required',
             'rating' => 'required|integer|min:1|max:10',
-            'image' => 'nullable|image|max:2048', // Validacija za sliku
+            'image' => 'nullable|image|max:2048', 
         ]);
 
         $path = $request->file('image') ? $request->file('image')->store('images') : null;
@@ -62,12 +62,12 @@ class MovieController extends Controller
             'release_date' => 'required|date',
             'genre' => 'required',
             'rating' => 'required|integer|min:1|max:10',
-            'image' => 'nullable|image|max:2048', // Validacija za sliku
+            'image' => 'nullable|image|max:2048', 
         ]);
 
         if ($request->file('image')) {
             if ($movie->image) {
-                Storage::delete($movie->image); // Brišemo staru sliku
+                Storage::delete($movie->image); 
             }
             $path = $request->file('image')->store('images');
         } else {
@@ -89,7 +89,7 @@ class MovieController extends Controller
     public function destroy(Movie $movie)
     {
         if ($movie->image) {
-            Storage::delete($movie->image); // Brišemo sliku
+            Storage::delete($movie->image); 
         }
 
         $movie->delete();
