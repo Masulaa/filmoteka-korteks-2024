@@ -16,7 +16,7 @@
                 <div class="mt-4 flex justify-between">
                     <div>
                         <h3 class="text-sm text-gray-700">
-                            <a href="/movie/{movie}">
+                            <a href="{{ route('movie', $movie->id) }}">
                                 <span aria-hidden="true" class="absolute inset-0"></span>
                                 {{$movie->title}}
                             </a>

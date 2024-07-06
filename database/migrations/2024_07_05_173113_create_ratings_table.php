@@ -16,7 +16,6 @@ return new class extends Migration {
             $table->foreignId('movie_id')->constrained()->onDelete('cascade');
             $table->unsignedTinyInteger('rating');
             $table->timestamps();
-            $table->string('image')->nullable();
             $table->unique(['user_id', 'movie_id']);
         });
     }
