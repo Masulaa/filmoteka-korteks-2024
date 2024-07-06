@@ -2,8 +2,12 @@
 
 @php
     use Illuminate\Support\Facades\Request;
+    use App\Models\Movie;
+    use App\Models\User;
 
     $id = Request::route('id');
+    $movie = Movie::find($id);
+    $averageRating = $movie->averageRating();
 @endphp
 
 @section('content')
@@ -19,8 +23,7 @@
                 </svg>
             @endfor
 
-            <!--Only show the average rating when the user submits a rating -->
-            <span class="px-4"> Avg: <span id="average-rating">{{ number_format($movie->averageRating()) }}</span></span>
+            <span class="px-4"> Avg: <span id="average-rating">{{ $averageRating }}</span></span>
         </div>
 
         <p>Your rating: <span id="selected-rating">Not rated</span></p>
