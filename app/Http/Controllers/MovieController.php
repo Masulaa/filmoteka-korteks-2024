@@ -28,7 +28,7 @@ class MovieController extends Controller
             'release_date' => 'required|date',
             'genre' => 'required',
             'rating' => 'required|integer|min:1|max:10',
-            'image' => 'nullable|image|max:2048', 
+            'image' => 'nullable|image|max:2048',
         ]);
 
         $path = $request->file('image') ? $request->file('image')->store('images') : null;
@@ -66,7 +66,7 @@ class MovieController extends Controller
 
     public function show(Movie $movie)
     {
-        return view('movies.show', compact('movie'));
+        return view('movie', compact('movie'));
     }
 
     public function edit(Movie $movie)
@@ -82,12 +82,12 @@ class MovieController extends Controller
             'release_date' => 'required|date',
             'genre' => 'required',
             'rating' => 'required|integer|min:1|max:10',
-            'image' => 'nullable|image|max:2048', 
+            'image' => 'nullable|image|max:2048',
         ]);
 
         if ($request->file('image')) {
             if ($movie->image) {
-                Storage::delete($movie->image); 
+                Storage::delete($movie->image);
             }
             $path = $request->file('image')->store('images');
         } else {
@@ -109,7 +109,7 @@ class MovieController extends Controller
     public function destroy(Movie $movie)
     {
         if ($movie->image) {
-            Storage::delete($movie->image); 
+            Storage::delete($movie->image);
         }
 
         $movie->delete();
