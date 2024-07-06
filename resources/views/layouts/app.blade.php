@@ -17,8 +17,9 @@
 </head>
 
 <body class="font-sans antialiased ">
-    <div class="min-h-screen flex flex-col bg-gray-100 dark:bg-gray-900">
+    <div class="flex flex-col min-h-screen bg-gray-100 dark:bg-gray-900">
         @include('layouts.header')
+        @include('layouts.search')
 
         <!-- Page Content -->
         <main class="flex-grow">

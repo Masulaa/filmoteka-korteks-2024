@@ -6,6 +6,7 @@ use App\Models\Movie;
 use App\Models\Rating;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use DB;
 
 class MovieController extends Controller
 {
@@ -14,7 +15,49 @@ class MovieController extends Controller
         $movies = Movie::paginate(20);
         return view('home', compact('movies'));
     }
-
+    public function action(Request $request)
+    {
+        if ($request->ajax()) {
+            $output = '';
+            $query = $request->get('query');
+    
+            $movies = Movie::where('title', 'like', '%' . $query . '%')
+                         ->orWhere('director', 'like', '%' . $query . '%')
+                         ->orWhere('genre', 'like', '%' . $query . '%')
+                         ->orderBy('id', 'desc')
+                         ->take(5)
+                         ->get();
+    
+            $total_row = $movies->count();
+    
+            if ($total_row > 0) {
+                foreach ($movies as $movie) {
+                    $output .= '
+                    <li class="flex gap-2">
+                    <img width="56px " src="'.$movie->image.'" >
+                        <div class="flex flex-col">
+                        <h1 class="text-lg font-bold">' . $movie->title . '</h1>
+                        <span>' . $movie->director . ' | ' .$movie->release_date .'</span>
+                        <span>' .  '</span>
+                        </div>
+                    </li>';
+                }
+            } else {
+                $output = '
+                <tr>
+                    <td colspan="3">No movies found</td>
+                </tr>';
+            }
+    
+            $data = array(
+                'html' => $output,
+                'total' => $total_row
+            );
+    
+            return response()->json($data);
+        }
+    }
+    
     public function create()
     {
         return view('movies.create');

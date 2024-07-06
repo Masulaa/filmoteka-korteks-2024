@@ -18,7 +18,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/home', [MovieController::class, 'index'])->name('home');
     Route::get('/movies/{id}', [MovieController::class, 'show'])->name('movie');
-
+    Route::get('/action', [MovieController::class, 'action'])->name('action');
 
     Route::post('/movies/{movie}/rate', [RatingController::class, 'store'])->name('movies.rate')->middleware('auth');
 
