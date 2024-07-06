@@ -44,6 +44,25 @@ class MovieController extends Controller
         return redirect()->route('movies.index')->with('success', 'Movie created successfully.');
     }
 
+    public function rate(Request $request, $id)
+    {
+        $request->validate([
+            'rating' => 'required|integer|min:1|max:5',
+        ]);
+
+        $movie = Movie::findOrFail($id);
+
+        $rating = new Rating([
+            'rating' => $request->input('rating'),
+            'user_id' => auth()->id(),
+        ]);
+
+        $movie->ratings()->save($rating);
+
+        return redirect()->back()->with('success', 'Rating submitted successfully!');
+    }
+
+
     public function show(Movie $movie)
     {
         return view('movie', ["movie" => $movie]);
