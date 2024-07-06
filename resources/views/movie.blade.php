@@ -65,7 +65,16 @@
             <h2 class="sr-only">Movie informations</h2>
             <p class="text-3xl tracking-tight text-white">{{ $movie->genre }}</p>
 
-            <!-- Reviews -->
+            <!-- Description and details -->
+            <div>
+                <h3 class="sr-only">Description</h3>
+
+                <div class="space-y-6">
+                    <p class="text-base text-white">{{ $movie->director }}</p>
+                </div>
+            </div>
+
+            <!-- Ratings -->
             <div class="mt-6">
                 <h3 class="sr-only">Ratings</h3>
                 <div class="flex items-center">
@@ -104,14 +113,7 @@
         </div>
 
         <div class="py-5 lg:col-span-2 lg:col-start-1 lg:border-r lg:border-gray-700 lg:pt-6 lg:pb-14 lg:pr-8">
-            <!-- Description and details -->
-            <div>
-                <h3 class="sr-only">Description</h3>
 
-                <div class="space-y-6">
-                    <p class="text-base text-white">{{ $movie->director }}</p>
-                </div>
-            </div>
 
             <div class="mt-10">
                 <h3 class="text-sm font-medium text-white">{{ $movie->release_date }}</h3>
@@ -137,7 +139,6 @@
             </form>
         </div>
 
-        <!-- Prikazivanje komentara -->
         <div>
             <h3>Reviews</h3>
             @forelse ($movie->reviews as $review)
