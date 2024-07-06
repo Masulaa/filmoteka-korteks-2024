@@ -42,6 +42,8 @@
             </ol>
         </nav>
 
+
+
         <!-- Image gallery -->
         <div class="max-w-2xl mx-auto mt-6 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:gap-x-8 lg:px-8">
             <div class="hidden overflow-hidden rounded-lg aspect-h-4 aspect-w-3 lg:block">
@@ -101,7 +103,7 @@
             </div>
         </div>
 
-        <div class="py-10 lg:col-span-2 lg:col-start-1 lg:border-r lg:border-gray-700 lg:pt-6 lg:pb-16 lg:pr-8">
+        <div class="py-5 lg:col-span-2 lg:col-start-1 lg:border-r lg:border-gray-700 lg:pt-6 lg:pb-14 lg:pr-8">
             <!-- Description and details -->
             <div>
                 <h3 class="sr-only">Description</h3>
@@ -114,9 +116,12 @@
             <div class="mt-10">
                 <h3 class="text-sm font-medium text-white">{{ $movie->release_date }}</h3>
 
+
+
             </div>
+            <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
             <div class="mt-4">
-                <h3>Add a Review</h3>
+                <h2 class="text-2xl font-bold tracking-tight text-white ">Add a Review</h2>
                 <form action="{{ route('reviews.store', $movie->id) }}" method="POST">
                     @csrf
                     <div class="form-group">
@@ -125,12 +130,15 @@
                             class="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     </div>
             </div>
-            <button type="submit" class="btn btn-primary mt-2">Submit Review</button>
+            <button type="submit"
+                style="background-color: #1D4ED8; color: white; border-radius: 0.375rem; padding: 0.625rem 1.25rem;"
+                class="hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium text-sm me-2 mb-2 focus:outline-none focus:ring-blue-800">Submit
+                Review</button>
             </form>
         </div>
 
         <!-- Prikazivanje komentara -->
-        <div class="mt-4">
+        <div>
             <h3>Reviews</h3>
             @forelse ($movie->reviews as $review)
                 <div class="border p-3 mb-3">
