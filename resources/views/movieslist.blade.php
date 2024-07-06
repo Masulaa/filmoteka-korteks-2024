@@ -26,46 +26,11 @@
                     <p class="text-sm font-medium text-gray-900">{{ $movie->director }}</p>
                 </div>
             </div>
-        @endforeach  <div class="mt-4">
-            <h3>Add a Review</h3>
-            <form action="{{ route('reviews.store', $movie->id) }}" method="POST">
-                @csrf
-                <div class="form-group">
-                    <label for="content">Comment:</label>
-                    <textarea name="content" id="content" class="form-control" rows="3" required></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="rating">Rating:</label>
-                    <select name="rating" id="rating" class="form-control" required>
-                        <option value="">Select Rating</option>
-                        @for ($i = 1; $i <= 5; $i++)
-                            <option value="{{ $i }}">{{ $i }}</option>
-                        @endfor
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-primary mt-2">Submit Review</button>
-            </form>
-        </div>
-
-        <!-- Prikazivanje komentara -->
-        <div class="mt-4">
-            <h3>Reviews</h3>
-            @forelse ($movie->reviews as $review)
-                <div class="border p-3 mb-3">
-                    <p>{{ $review->content }}</p>
-                    <p>Rating: {{ $review->rating }}</p>
-                    <p>By: {{ $review->user->name }} on {{ $review->created_at->format('d M Y') }}</p>
-                </div>
-            @empty
-                <p>No reviews yet.</p>
-            @endforelse
-        </div>
+        @endforeach
     </div>
 
-</div>
-
-<div class="mt-8">
-    {{ $movies->links() }}
-</div>
+    <div class="mt-8">
+        {{ $movies->links() }}
+    </div>
 </div>
 @endsection
