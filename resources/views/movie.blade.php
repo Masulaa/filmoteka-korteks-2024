@@ -115,7 +115,35 @@
                 <h3 class="text-sm font-medium text-white">{{ $movie->release_date }}</h3>
 
             </div>
-            @endsection
+            <div class="mt-4">
+                <h3>Add a Review</h3>
+                <form action="{{ route('reviews.store', $movie->id) }}" method="POST">
+                    @csrf
+                    <div class="form-group">
+                        <label for="content">Comment:</label>
+                        <input type="text" name="content" id="content" required
+                            class="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    </div>
+            </div>
+            <button type="submit" class="btn btn-primary mt-2">Submit Review</button>
+            </form>
+        </div>
+
+        <!-- Prikazivanje komentara -->
+        <div class="mt-4">
+            <h3>Reviews</h3>
+            @forelse ($movie->reviews as $review)
+                <div class="border p-3 mb-3">
+                    <p>{{ $review->content }}</p>
+                    <p>By: {{ $review->user->name }} on {{ $review->created_at->format('d M Y') }}</p>
+                </div>
+            @empty
+                <p>No reviews yet.</p>
+            @endforelse
+        </div>
+    </div>
+
+    @endsection
 
 
 
@@ -126,77 +154,77 @@
 
 
 
-            <script>
-                document.addEventListener('DOMContentLoaded', function () {
-                    const ratingSection = document.getElementById('rating-section');
-                    const movieId = ratingSection.dataset.movieId;
-                    const stars = document.querySelectorAll('.star');
-                    const selectedRatingSpan = document.getElementById('selected-rating');
-                    const submitButton = document.getElementById('submit-rating');
-                    let selectedRating = 0;
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const ratingSection = document.getElementById('rating-section');
+            const movieId = ratingSection.dataset.movieId;
+            const stars = document.querySelectorAll('.star');
+            const selectedRatingSpan = document.getElementById('selected-rating');
+            const submitButton = document.getElementById('submit-rating');
+            let selectedRating = 0;
 
-                    console.log('Movie ID:', movieId);
-                    console.log('Stars:', stars);
+            console.log('Movie ID:', movieId);
+            console.log('Stars:', stars);
 
-                    stars.forEach(star => {
-                        star.addEventListener('click', function () {
-                            selectedRating = this.dataset.rating;
-                            updateStars(selectedRating);
-                            selectedRatingSpan.textContent = selectedRating;
-                            submitButton.disabled = false;
-                            console.log('Selected rating:', selectedRating);
-                        });
-                    });
-
-                    function updateStars(rating) {
-                        stars.forEach(star => {
-                            if (parseInt(star.dataset.rating) <= parseInt(rating)) {
-                                star.style.color = 'gold';
-                            } else {
-                                star.style.color = 'gray';
-                            }
-                        });
-                    }
-
-                    submitButton.addEventListener('click', function () {
-                        if (selectedRating === 0) {
-                            alert('Please select a rating before submitting.');
-                            return;
-                        }
-
-                        fetch(`/movies/${movieId}/rate`, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                'Accept': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                rating: selectedRating
-                            })
-                        })
-                            .then(response => {
-                                if (!response.ok) {
-                                    throw new Error('Network response was not ok');
-                                }
-                                return response.json();
-                            })
-                            .then(data => {
-                                if (data.success) {
-                                    document.getElementById('average-rating').textContent = data.average_rating
-                                        .toFixed(1);
-                                    document.getElementById('rating-message').textContent = data.message;
-                                    console.log('Rating updated successfully');
-                                } else {
-                                    document.getElementById('rating-message').textContent =
-                                        'Failed to save rating';
-                                    console.error('Rating update failed:', data.message);
-                                }
-                            })
-                            .catch(error => {
-                                document.getElementById('rating-message').textContent = 'An error occurred';
-                                console.error('Fetch error:', error);
-                            });
-                    });
+            stars.forEach(star => {
+                star.addEventListener('click', function () {
+                    selectedRating = this.dataset.rating;
+                    updateStars(selectedRating);
+                    selectedRatingSpan.textContent = selectedRating;
+                    submitButton.disabled = false;
+                    console.log('Selected rating:', selectedRating);
                 });
-            </script>
+            });
+
+            function updateStars(rating) {
+                stars.forEach(star => {
+                    if (parseInt(star.dataset.rating) <= parseInt(rating)) {
+                        star.style.color = 'gold';
+                    } else {
+                        star.style.color = 'gray';
+                    }
+                });
+            }
+
+            submitButton.addEventListener('click', function () {
+                if (selectedRating === 0) {
+                    alert('Please select a rating before submitting.');
+                    return;
+                }
+
+                fetch(`/movies/${movieId}/rate`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        rating: selectedRating
+                    })
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            document.getElementById('average-rating').textContent = data.average_rating
+                                .toFixed(1);
+                            document.getElementById('rating-message').textContent = data.message;
+                            console.log('Rating updated successfully');
+                        } else {
+                            document.getElementById('rating-message').textContent =
+                                'Failed to save rating';
+                            console.error('Rating update failed:', data.message);
+                        }
+                    })
+                    .catch(error => {
+                        document.getElementById('rating-message').textContent = 'An error occurred';
+                        console.error('Fetch error:', error);
+                    });
+            });
+        });
+    </script>
