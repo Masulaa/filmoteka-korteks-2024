@@ -6,36 +6,47 @@ use App\Models\Movie;
 use App\Models\Rating;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class RatingController extends Controller
 {
-    public function rateMovie(Request $request, Movie $movie)
+    public function store(Request $request, Movie $movie)
     {
-        $request->validate([
-            'rating' => 'required|integer|min:1|max:10',
-        ]);
+        Log::info('Rating store method called', ['user_id' => Auth::id(), 'movie_id' => $movie->id]);
 
-        $user = Auth::user();
-
-
-        $existingRating = Rating::where('user_id', $user->id)
-            ->where('movie_id', $movie->id)
-            ->first();
-
-        if ($existingRating) {
-
-
-            $existingRating->rating = $request->rating;
-            $existingRating->save();
-        } else {
-            // Inače, napravi novu ocenu
-            Rating::create([
-                'user_id' => $user->id,
-                'movie_id' => $movie->id,
-                'rating' => $request->rating,
+        try {
+            $validated = $request->validate([
+                'rating' => 'required|integer|min:1|max:10',
             ]);
-        }
 
-        return redirect()->route('movies.show', $movie->id)->with('success', 'Rating submitted successfully.');
+            Log::info('Validation passed', $validated);
+
+            $rating = Rating::updateOrCreate(
+                [
+                    'user_id' => Auth::id(),
+                    'movie_id' => $movie->id,
+                ],
+                ['rating' => $validated['rating']]
+            );
+
+            Log::info('Rating saved', ['rating_id' => $rating->id]);
+
+            return response()->json([
+                'success' => true,
+                'average_rating' => $movie->averageRating(),
+                'message' => 'Rating saved successfully',
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error in rating store method', [
+                'error' => $e->getMessage(),
+                'user_id' => Auth::id(),
+                'movie_id' => $movie->id
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while saving the rating',
+            ], 500);
+        }
     }
 }

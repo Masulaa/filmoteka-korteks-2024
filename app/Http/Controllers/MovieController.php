@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Movie;
+use App\Models\Rating;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -65,7 +66,7 @@ class MovieController extends Controller
 
     public function show(Movie $movie)
     {
-        return view('movie', ["movie" => $movie]);
+        return view('movies.show', compact('movie'));
     }
 
     public function edit(Movie $movie)

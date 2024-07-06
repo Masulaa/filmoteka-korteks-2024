@@ -1,3 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.stars {
+    font-size: 24px;
+    color: #ddd;
+}
+
+.stars .star {
+    cursor: pointer;
+}
+
+.stars .star:hover,
+.stars .star:hover ~ .star {
+    color: #ffd700;
+}
