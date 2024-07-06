@@ -16,10 +16,10 @@ class MovieFactory extends Factory
     public function definition()
     {
         return [
-            'title' => $this->faker->sentence,
+            'title' => $this->faker->realText($this->faker->numberBetween(10,25)), //it looks like a movie title
             'director' => $this->faker->name,
             'release_date' => $this->faker->date,
-            'genre' => $this->faker->word,
+            'genre' => "movie",
             'image' => $this->faker->imageUrl(),
         ];
     }
