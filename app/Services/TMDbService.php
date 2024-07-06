@@ -61,6 +61,8 @@ class TMDbService
                     'release_date' => isset($movieData['release_date']) ? date('Y-m-d', strtotime($movieData['release_date'])) : null,
                     'genre' => $genreString,
                     'image' => $movieData['poster_path'] ? 'https://image.tmdb.org/t/p/w500'.$movieData['poster_path'] : null,
+                    'overview' => $movieData['overview'] ?? null,
+                    'backdrop_path' => $movieData['backdrop_path'] ? 'https://image.tmdb.org/t/p/original'.$movieData['backdrop_path'] : null,
                 ]);
     
                 $syncCount++;
