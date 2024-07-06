@@ -1,4 +1,4 @@
-<div class="flex flex-col items-center my-4">
+<div class="flex flex-col items-center justify-center my-4">
     <div class="relative w-96">
         <div class="absolute inset-y-0 flex items-center pointer-events-none start-0 ps-3">
             <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
@@ -10,7 +10,7 @@
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Search..." required />
     </div>
-    <div class="text-slate-800 dark:text-white">
+    <div class=" text-slate-800 dark:text-white">
         <ul id="movie_data" class="flex flex-col gap-3 p-4 max-w-96">
 
         </ul>
