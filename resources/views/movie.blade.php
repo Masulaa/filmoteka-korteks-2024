@@ -88,8 +88,10 @@
 
                             <p class="py-2 ">Your rating: <span id="selected-rating">Not rated</span> </p>
                             <button type="button" id="submit-rating" disabled
-                                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-white-600 dark:hover:bg-white-700 focus:outline-none dark:focus:ring-blue-800">Submit
-                                Rating</button>
+                                style="background-color: #1D4ED8; color: white; border-radius: 0.375rem; padding: 0.625rem 1.25rem;"
+                                class="hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium text-sm me-2 mb-2 focus:outline-none focus:ring-blue-800">Submit
+                                Rating
+                            </button>
                             <p id="rating-message"></p>
                         </div>
 
