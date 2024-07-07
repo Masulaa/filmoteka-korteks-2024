@@ -25,6 +25,15 @@ class TMDbService
         $totalMovies = json_decode($response->getBody(), true)['total_results'];
         return $totalMovies;
     }
+    public function fetchVideoUrlsFromGitHub()
+    {
+        $url = 'https://raw.githubusercontent.com/keseljevicjovan/filmoteka-database/master/movies.json';
+        $json = file_get_contents($url);
+        $data = json_decode($json, true);
+
+        return $data;
+    }
+
     public function fetchPopularMovies($videoUrls, $numberOfMoviesToDownload)
     {
         $syncCount = 0;
@@ -132,8 +141,6 @@ class TMDbService
     
         return $syncCount;
     }
-    
-    
     
     protected function getCast($movieId)
     {
