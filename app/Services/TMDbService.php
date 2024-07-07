@@ -25,6 +25,15 @@ class TMDbService
         $totalMovies = json_decode($response->getBody(), true)['total_results'];
         return $totalMovies;
     }
+    public function fetchVideoUrlsFromGitHub()
+    {
+        $url = 'https://raw.githubusercontent.com/keseljevicjovan/filmoteka-database/master/movies.json';
+        $json = file_get_contents($url);
+        $data = json_decode($json, true);
+
+        return $data;
+    }
+
     public function fetchPopularMovies($videoUrls, $numberOfMoviesToDownload)
     {
         $syncCount = 0;
@@ -88,18 +97,17 @@ class TMDbService
     
                     $movieTitle = $movieData['title'];
                     $videoLink = isset($videoUrls[$movieTitle]) ? $videoUrls[$movieTitle] : null;
-                    echo "Processing movie: {$movieTitle}, Video URL: {$videoLink}\n";
     
                     $existingMovie = Movie::where('title', $movieData['title'])->first();
-    
+                    echo "($syncCount/$numberOfMoviesToDownload) ";
                     if ($existingMovie) {
                         if ($existingMovie->video_link !== $videoLink) {
                             $existingMovie->update([
                                 'video_link' => $videoLink,
                             ]);
-                            echo "Movie '{$movieTitle}' updated with new video link.\n";
+                            echo "\033[31mMovie '{$movieTitle}' updated with new video link.\033[0m\n";
                         } else {
-                            echo "Movie '{$movieTitle}' already exists with the same video link. Skip.\n";
+                            echo "\033[35mMovie '{$movieTitle}' already exists with the same video link. Skip.\033[0m\n";
                         }
                     } else {
                         Movie::create([
@@ -132,8 +140,6 @@ class TMDbService
     
         return $syncCount;
     }
-    
-    
     
     protected function getCast($movieId)
     {
