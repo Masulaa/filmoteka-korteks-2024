@@ -15,7 +15,10 @@ class Movie extends Model
         'release_date',
         'genre',
         'rating',
-        'image'
+        'image',
+        'overview',
+        'backdrop_path',
+        'cast'
     ];
 
     public function ratings()

@@ -14,6 +14,9 @@ return new class extends Migration {
             $table->date('release_date');
             $table->string('genre');
             $table->string('image')->nullable();
+            $table->text('overview')->nullable();
+            $table->string('backdrop_path')->nullable();
+            $table->text('cast')->nullable();
             $table->timestamps();
         });
     }
@@ -23,4 +26,3 @@ return new class extends Migration {
         Schema::dropIfExists('movies');
     }
 };
-
