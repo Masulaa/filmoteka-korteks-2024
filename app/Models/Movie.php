@@ -31,6 +31,10 @@ class Movie extends Model
         return $this->hasMany(Review::class);
     }
 
+    protected $casts = [
+        'cast' => 'array',
+    ];
+    
     public function averageRating()
     {
         $totalRating = $this->ratings()->sum('rating');

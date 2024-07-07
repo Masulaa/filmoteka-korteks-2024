@@ -126,8 +126,7 @@ class MovieController extends Controller
 
     public function show(Movie $movie)
     {
-        $cast = json_decode($movie->cast) ?? [];
-        return view('movie', compact('movie', 'cast'));
+        return view('movie', compact('movie'));
     }
 
     public function edit(Movie $movie)

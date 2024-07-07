@@ -7,7 +7,6 @@
 
     $id = Request::route('id');
     $movie = Movie::find($id);
-    $actors = json_decode($movie->cast);
     $averageRating = $movie->averageRating();
     $countRatings = $movie->countRatings();
 @endphp
@@ -29,7 +28,7 @@
                         <li class="px-3 py-1 text-sm text-white bg-gray-800 rounded-full">{{ trim($genre) }}</li>
                     @endforeach
                 </ul>
-                <p class="text-base">
+                <p class="b border-b-[1px] pb-6">
                     <span id="overview" class="block">
                         {{ Str::limit($movie->overview, 200, '') }}
                     </span>
@@ -43,21 +42,28 @@
                         </button>
                     @endif
                 </p>
-                <div class="mt-4 text-gray-300">
+                <div class="mt-1 text-gray-300">
                     <p><span class="font-semibold">Director:</span> {{ $movie->director }}</p>
                     <p><span class="font-semibold">Release Date:</span> {{ $movie->release_date }}</p>
                 </div>
 
-                @if (!empty($actors))
-                    <h3>Top Cast:</h3>
-                    <ul>
-                        @foreach ($actors as $actor)
-                            <li>{{ $actor }}</li>
-                        @endforeach
-                    </ul>
-                @else
-                    <p>No cast information available.</p>
-                @endif
+                <h3>Cast:</h3>
+                <div class="flex w-96 flex-wrap md:gap-4 sm:gap-[14px] gap-2  sm:-mt-2 xs:-mt-[6px] -mt-1">
+                    @foreach ($movie->cast as $actor)
+                        <div class="flex flex-col justify-start gap-2">
+                            @if ($actor['profile_path'])
+                                <div class="md:h-[96px] md:w-[64px] h-[54px] w-[40px]">
+                                    <img src="{{ $actor['profile_path'] }}" alt="{{ $actor['name'] }}"
+                                        class="object-cover rounded-md shadow-md ">
+                                </div>
+                            @endif
+                            <h4
+                                class="text-gray-300 md:text-[12px] sm:text-[10.75px] text-[10px] md:max-w-[64px] text-center font-semibold sm:-mt-0 leading-snug max-w-[40px]">
+                                {{ $actor['name'] }}</h4>
+                        </div>
+                    @endforeach
+                </div>
+
                 <div class="mt-4 rating">
                     <h3 class="mb-2 text-xl font-semibold">Rate this movie</h3>
                     <div id="rating-section" class="flex items-center" data-movie-id="{{ $movie->id }}">
