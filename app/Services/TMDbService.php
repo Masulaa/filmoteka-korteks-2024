@@ -105,14 +105,18 @@ class TMDbService
                             $existingMovie->update([
                                 'video_link' => $videoLink,
                             ]);
-                            echo "\033[31mMovie '{$movieTitle}' updated with new video link.\033[0m\n";
+                            echo "Movie '{$movieTitle}' \033[31mupdated\033[0m with new video link.\n";
                         } else {
-                            echo "\033[35mMovie '{$movieTitle}' already exists with the same video link. Skip.\033[0m\n";
+                            echo "Movie '{$movieTitle}' already exists with the same video link.\033[35m Skip.\033[0m\n";
                         }
                     } else {
+                        $director = $this->getDirector($movieData['id']);
+                        if ($director === null) {
+                            $director = 'unknown director';
+                        }
                         Movie::create([
                             'title' => $movieData['title'],
-                            'director' => $this->getDirector($movieData['id']),
+                            'director' => $director,
                             'release_date' => isset($movieData['release_date']) ? date('Y-m-d', strtotime($movieData['release_date'])) : null,
                             'genre' => $genreString,
                             'image' => $movieData['poster_path'] ? 'https://image.tmdb.org/t/p/w500'.$movieData['poster_path'] : null,
@@ -122,13 +126,13 @@ class TMDbService
                             'video_link' => $videoLink,
                         ]);
     
-                        echo "New movie '{$movieTitle}' added to the database.\n";
+                        echo "\033[33mNew\033[0m movie '{$movieTitle}' added to the database.\n";
                     }
     
                     $syncCount++;
                 }
     
-                sleep(2);
+                //sleep(5);
     
             } catch (\Exception $e) {
                 echo "An error occurred: {$e->getMessage()}";

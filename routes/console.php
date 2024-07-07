@@ -19,22 +19,25 @@ Artisan::command('movies:sync {count?}', function ($count = null) {
         $totalMovies = $count;
     }
 
-    $confirmation = $this->confirm("This command will download {$totalMovies} movies from TheMovieDB. This may take a long time. Are you sure you want to continue?");
+    $confirmation = $this->confirm("{$totalMovies} movies will be downloaded from TheMovieDB. This may take a long time. Are you sure you want to continue?");
     
     if (!$confirmation) {
         $this->info("Operation cancelled.");
         return;
     }
 
-    $this->comment("Synchronizing movies from TMDb...");
+    echo "\033[34m::\033[0m Synchronizing movies urls from github...\n";
 
-    $videoUrls = $tmdbService->fetchVideoUrlsFromGitHub();
+$videoUrls = $tmdbService->fetchVideoUrlsFromGitHub();
+$currentMovieNumber = 1;
 
-    foreach ($videoUrls as $movieTitle => $videoUrl) {
-        echo "Movie: $movieTitle\n";
-        echo "Video URL: $videoUrl\n";
-        echo "-----------------\n";
-    }
+foreach ($videoUrls as $movieTitle => $videoUrl) {
+    echo "($currentMovieNumber/".count($videoUrls).") $movieTitle\n";
+    $currentMovieNumber++;
+}
+
+
+    echo "\033[34m::\033[0m Synchronizing movies from TMDb...\n";
 
     $syncCount = $tmdbService->fetchPopularMovies($videoUrls, $totalMovies);
 
