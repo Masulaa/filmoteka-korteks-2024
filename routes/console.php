@@ -14,22 +14,24 @@ use App\Models\Movie;
  * зато нека се синхронизација врши у више итерација од по 94 филма.
 */
 
-Artisan::command('movies:sync {count}', function ($count) {
-    $this->comment("Synchronizing {$count} movies from TMDb...");
+Artisan::command('movies:sync', function () {
+    $this->comment("Synchronizing movies from TMDb...");
 
     $tmdbService = new TMDbService();
 
-    $requestsNeeded = ceil($count / 94);
+    // Приказаће се само филмови који су додати на ову листу. 
+    // Уколико треба да стоји линк а немамо видео оставите празан стринг 
 
-    $remainingMovies = $count;
+    $videoUrls = [
+        'Inside Out 2' => 'https://81u6xl9d.xyz/e/rhtx5mjiglep/?t=4xjSCfYnDFIIzQ%3D%3D&amp;sub.info=https%3A%2F%2Ffmovies24.to%2Fajax%2Fepisode%2Fsubtitles%2F360844&amp;autostart=true',
+        'Furiosa: A Mad Max Saga' => "",
+        "Look Who's Back" => 'https://81u6xl9d.xyz/e/ye83nb830cs2/?t=4xjSCfYkBVUKxQ%3D%3D&sub.info=https%3A%2F%2Ffmovies24.to%2Fajax%2Fepisode%2Fsubtitles%2F154234&autostart=true',
+    ];
 
-    for ($i = 0; $i < $requestsNeeded; $i++) {
-        $moviesToSync = min(94, $remainingMovies); 
-        $fetchedCount = $tmdbService->fetchPopularMovies($moviesToSync); 
-        $remainingMovies -= $fetchedCount;
+    $count = count($videoUrls);
 
-        $this->info("Successfully synchronized {$fetchedCount} movies (part " . ($i+1) . "/{$requestsNeeded})");
-    }
+    $syncCount = $tmdbService->fetchPopularMovies($count, $videoUrls);
 
-    $this->info("Finished synchronizing {$count} movies.");
-})->purpose('Synchronize movies from TMDb')->daily();
+    $this->info("Successfully synchronized {$syncCount} movies.");
+
+})->purpose('Synchronize movies with video URLs')->daily();

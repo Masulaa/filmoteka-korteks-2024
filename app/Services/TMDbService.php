@@ -14,11 +14,11 @@ class TMDbService
         $this->client = new Client();
     }
 
-    public function fetchPopularMovies($count)
+    public function fetchPopularMovies($count, $videoUrls)
     {
         $syncCount = 0;
         $page = 1;
-
+    
         $genreMapping = [
             28 => 'Action',
             12 => 'Adventure',
@@ -43,8 +43,6 @@ class TMDbService
     
             $moviesData = json_decode($response->getBody(), true)['results'];
     
-            print_r($moviesData);
-            
             foreach ($moviesData as $movieData) {
                 $genres = isset($movieData['genre_ids']) ? $movieData['genre_ids'] : [];
                 $genreNames = [];
@@ -55,6 +53,10 @@ class TMDbService
                 }
                 $genreString = implode(', ', $genreNames);
     
+                $movieTitle = $movieData['title'];
+                $videoLink = isset($videoUrls[$movieTitle]) ? $videoUrls[$movieTitle] : null;
+                echo "Processing movie: {$movieTitle}, Video URL: {$videoLink}\n";
+
                 Movie::updateOrCreate([
                     'id' => $movieData['id'],
                 ], [
@@ -66,19 +68,22 @@ class TMDbService
                     'overview' => $movieData['overview'] ?? null,
                     'backdrop_path' => $movieData['backdrop_path'] ? 'https://image.tmdb.org/t/p/original'.$movieData['backdrop_path'] : null,
                     'cast' => $this->getCast($movieData['id']),
+                    'video_link' => $videoLink,
                 ]);
-    
+            
                 $syncCount++;
                 if ($syncCount >= $count) {
                     break 2;
                 }
             }
     
-            $page++; 
+            $page++;
         } while ($syncCount < $count);
     
         return $syncCount;
     }
+    
+    
     
     protected function getCast($movieId)
     {

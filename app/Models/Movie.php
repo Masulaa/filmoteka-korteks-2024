@@ -18,6 +18,7 @@ class Movie extends Model
         'image',
         'overview',
         'backdrop_path',
+        'video_link',
         'cast' 
     ];
 

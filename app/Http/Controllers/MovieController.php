@@ -178,9 +178,12 @@ class MovieController extends Controller
     }
     public function watch($id)
     {
-        return "Prikazivanje filma sa ID-om $id";
-        #$movie = Movie::find($id);
-        
-        #return view('movies.watch', compact('movie'));
+        $movie = Movie::find($id);
+
+        if (!$movie) {
+            abort(404); 
+        }
+
+        return view('watch', compact('movie'));
     }
 }
