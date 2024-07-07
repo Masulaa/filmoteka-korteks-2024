@@ -32,14 +32,17 @@ class MovieController extends Controller
 
             if ($total_row > 0) {
                 foreach ($movies as $movie) {
+                    //add href so when i click on movie it redirects me to movies/id
                     $output .= '
-                    <li class="flex gap-2">
-                    <img width="56px " src="' . $movie->image . '" >
-                        <div class="flex flex-col">
-                        <h1 class="text-lg font-bold">' . $movie->title . '</h1>
-                        <span>' . $movie->director . ' | ' . $movie->release_date . '</span>
-                        <span>' . '</span>
-                        </div>
+                    <li >
+                        <a href="' . route('movie', $movie->id) . '" class="flex gap-2">
+                                <img width="56px " src="' . $movie->image . '" >
+                                <div class="flex flex-col">
+                                    <h1 class="text-lg font-bold">' . $movie->title . '</h1>
+                                    <span>' . $movie->director . ' | ' . $movie->release_date . '</span>
+                                    <span>' . '</span>
+                                </div>
+                        </a>
                     </li>';
                 }
             } else {
