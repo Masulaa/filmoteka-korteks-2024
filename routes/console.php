@@ -9,29 +9,32 @@ use App\Models\Movie;
 #    $this->comment(Inspiring::quote());
 #})->purpose('Display an inspiring quote')->hourly();
 
-/*
- * TMDb API изгледа има ограничење од 94 филма по позиву,
- * зато нека се синхронизација врши у више итерација од по 94 филма.
-*/
-
-Artisan::command('movies:sync', function () {
-    $this->comment("Synchronizing movies from TMDb...");
-
+Artisan::command('movies:sync {count?}', function ($count = null) {
     $tmdbService = new TMDbService();
 
-    // Приказаће се само филмови који су додати на ову листу. 
-    // Уколико треба да стоји линк а немамо видео оставите празан стринг 
+    if ($count === 'all') {
+        $totalMovies = $tmdbService->getNumberOfAllMovies();
+    } else {
+        $count = (int) $count;
+        $totalMovies = $count;
+    }
+
+    $confirmation = $this->confirm("This command will download {$totalMovies} movies from TheMovieDB. This may take a long time. Are you sure you want to continue?");
+    
+    if (!$confirmation) {
+        $this->info("Operation cancelled.");
+        return;
+    }
+
+    $this->comment("Synchronizing movies from TMDb...");
 
     $videoUrls = [
         'Inside Out 2' => 'https://81u6xl9d.xyz/e/rhtx5mjiglep/?t=4xjSCfYnDFIIzQ%3D%3D&amp;sub.info=https%3A%2F%2Ffmovies24.to%2Fajax%2Fepisode%2Fsubtitles%2F360844&amp;autostart=true',
-        'Furiosa: A Mad Max Saga' => "",
+        'Furiosa: A Mad Max Saga' => "https://81u6xl9d.xyz/e/rhtx5mjiglep/?t=4xjSCfYiDVQKzg%3D%3D&sub.info=https%3A%2F%2Ffmovies24.to%2Fajax%2Fepisode%2Fsubtitles%2F360844&autostart=true",
         "Look Who's Back" => 'https://81u6xl9d.xyz/e/ye83nb830cs2/?t=4xjSCfYkBVUKxQ%3D%3D&sub.info=https%3A%2F%2Ffmovies24.to%2Fajax%2Fepisode%2Fsubtitles%2F154234&autostart=true',
     ];
 
-    $count = count($videoUrls);
-
-    $syncCount = $tmdbService->fetchPopularMovies($count, $videoUrls);
+    $syncCount = $tmdbService->fetchPopularMovies($videoUrls, $totalMovies);
 
     $this->info("Successfully synchronized {$syncCount} movies.");
-
-})->purpose('Synchronize movies with video URLs')->daily();
+})->purpose('Synchronize movies from TheMovieDB')->daily();
