@@ -15,9 +15,7 @@ class Movie extends Model
         'release_date',
         'genre',
         'rating',
-        'image',
-        'overview',
-        'backdrop_path'
+        'image'
     ];
 
     public function ratings()
@@ -29,6 +27,10 @@ class Movie extends Model
     {
         return $this->hasMany(Review::class);
     }
+
+    protected $casts = [
+        'cast' => 'array',
+    ];
 
     public function averageRating()
     {
