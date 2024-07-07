@@ -30,6 +30,12 @@ Artisan::command('movies:sync {count?}', function ($count = null) {
 
     $videoUrls = $tmdbService->fetchVideoUrlsFromGitHub();
 
+    foreach ($videoUrls as $movieTitle => $videoUrl) {
+        echo "Movie: $movieTitle\n";
+        echo "Video URL: $videoUrl\n";
+        echo "-----------------\n";
+    }
+
     $syncCount = $tmdbService->fetchPopularMovies($videoUrls, $totalMovies);
 
     $this->info("Successfully synchronized {$syncCount} movies.");
