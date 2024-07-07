@@ -87,27 +87,33 @@ class TMDbService
                         }
                     }
                     $genreString = implode(', ', $genreNames);
-    
+                
                     $movieTitle = $movieData['title'];
                     $videoLink = isset($videoUrls[$movieTitle]) ? $videoUrls[$movieTitle] : null;
                     echo "Processing movie: {$movieTitle}, Video URL: {$videoLink}\n";
-    
-                    Movie::updateOrCreate([
-                        'id' => $movieData['id'],
-                    ], [
-                        'title' => $movieData['title'],
-                        'director' => $this->getDirector($movieData['id']),
-                        'release_date' => isset($movieData['release_date']) ? date('Y-m-d', strtotime($movieData['release_date'])) : null,
-                        'genre' => $genreString,
-                        'image' => $movieData['poster_path'] ? 'https://image.tmdb.org/t/p/w500'.$movieData['poster_path'] : null,
-                        'overview' => $movieData['overview'] ?? null,
-                        'backdrop_path' => $movieData['backdrop_path'] ? 'https://image.tmdb.org/t/p/original'.$movieData['backdrop_path'] : null,
-                        'cast' => $this->getCast($movieData['id']),
-                        'video_link' => $videoLink,
-                    ]);
-    
-                    $syncCount++;
+                
+                    $existingMovie = Movie::where('title', $movieData['title'])->first();
+                
+                    if (!$existingMovie) {
+                        Movie::create([
+                            'title' => $movieData['title'],
+                            'director' => $this->getDirector($movieData['id']),
+                            'release_date' => isset($movieData['release_date']) ? date('Y-m-d', strtotime($movieData['release_date'])) : null,
+                            'genre' => $genreString,
+                            'image' => $movieData['poster_path'] ? 'https://image.tmdb.org/t/p/w500'.$movieData['poster_path'] : null,
+                            'overview' => $movieData['overview'] ?? null,
+                            'backdrop_path' => $movieData['backdrop_path'] ? 'https://image.tmdb.org/t/p/original'.$movieData['backdrop_path'] : null,
+                            'cast' => $this->getCast($movieData['id']),
+                            'video_link' => $videoLink,
+                        ]);
+                
+                        $syncCount++;
+                    } else {
+                        echo "Movie '{$movieTitle}' already exists in database. Skip\n";
+                    }
                 }
+                
+                
     
                 sleep(2);
     

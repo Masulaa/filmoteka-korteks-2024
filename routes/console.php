@@ -28,6 +28,7 @@ Artisan::command('movies:sync {count?}', function ($count = null) {
 
     $this->comment("Synchronizing movies from TMDb...");
 
+    // ЗА САДА СТАТИЧКИ, касније правимo базу
     $videoUrls = [
         'Inside Out 2' => 'https://81u6xl9d.xyz/e/rhtx5mjiglep/?t=4xjSCfYnDFIIzQ%3D%3D&amp;sub.info=https%3A%2F%2Ffmovies24.to%2Fajax%2Fepisode%2Fsubtitles%2F360844&amp;autostart=true',
         'Furiosa: A Mad Max Saga' => "https://81u6xl9d.xyz/e/rhtx5mjiglep/?t=4xjSCfYiDVQKzg%3D%3D&sub.info=https%3A%2F%2Ffmovies24.to%2Fajax%2Fepisode%2Fsubtitles%2F360844&autostart=true",
