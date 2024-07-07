@@ -18,7 +18,8 @@ class Movie extends Model
         'image',
         'overview',
         'backdrop_path',
-        'cast'
+        'video_link',
+        'cast' 
     ];
 
     public function ratings()
