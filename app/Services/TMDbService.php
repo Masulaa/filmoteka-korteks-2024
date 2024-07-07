@@ -14,12 +14,6 @@ class TMDbService
         $this->client = new Client();
     }
 
-    /*
-    *  TODO:
-    *  - Поправити bug који не учитава 1 видео послије (око) 400 fetch-oваних 
-    *  (привремено рјешење је смањити $batchSize на 10 нпр, али ће то утицати на брзину преузимања)
-    */
-
     public function getNumberOfAllMovies(){
         $response = $this->client->request('GET', 'https://api.themoviedb.org/3/movie/popular', [
             'query' => [
@@ -51,11 +45,11 @@ class TMDbService
             10751 => 'Family',
         ];
     
-        $totalMovies = $numberOfMoviesToDownload;
-        $batchSize = 20; // max: 94, recommended: 20
-        $totalPages = ceil($totalMovies / $batchSize);
+        $moviesPerPage = 94;
     
-        for ($page = 1; $page <= $totalPages; $page++) {
+        $totalPages = ceil($numberOfMoviesToDownload / $moviesPerPage);
+    
+        while ($page <= $totalPages) {
             try {
                 $response = $this->client->request('GET', 'https://api.themoviedb.org/3/movie/popular', [
                     'query' => [
@@ -79,6 +73,10 @@ class TMDbService
                 }
     
                 foreach ($moviesData as $movieData) {
+                    if ($syncCount >= $numberOfMoviesToDownload) {
+                        break 2; 
+                    }
+    
                     $genres = isset($movieData['genre_ids']) ? $movieData['genre_ids'] : [];
                     $genreNames = [];
                     foreach ($genres as $genreId) {
@@ -87,14 +85,23 @@ class TMDbService
                         }
                     }
                     $genreString = implode(', ', $genreNames);
-                
+    
                     $movieTitle = $movieData['title'];
                     $videoLink = isset($videoUrls[$movieTitle]) ? $videoUrls[$movieTitle] : null;
                     echo "Processing movie: {$movieTitle}, Video URL: {$videoLink}\n";
-                
+    
                     $existingMovie = Movie::where('title', $movieData['title'])->first();
-                
-                    if (!$existingMovie) {
+    
+                    if ($existingMovie) {
+                        if ($existingMovie->video_link !== $videoLink) {
+                            $existingMovie->update([
+                                'video_link' => $videoLink,
+                            ]);
+                            echo "Movie '{$movieTitle}' updated with new video link.\n";
+                        } else {
+                            echo "Movie '{$movieTitle}' already exists with the same video link. Skip.\n";
+                        }
+                    } else {
                         Movie::create([
                             'title' => $movieData['title'],
                             'director' => $this->getDirector($movieData['id']),
@@ -106,14 +113,12 @@ class TMDbService
                             'cast' => $this->getCast($movieData['id']),
                             'video_link' => $videoLink,
                         ]);
-                
-                        $syncCount++;
-                    } else {
-                        echo "Movie '{$movieTitle}' already exists in database. Skip\n";
+    
+                        echo "New movie '{$movieTitle}' added to the database.\n";
                     }
+    
+                    $syncCount++;
                 }
-                
-                
     
                 sleep(2);
     
@@ -121,10 +126,14 @@ class TMDbService
                 echo "An error occurred: {$e->getMessage()}";
                 sleep(5);
             }
+    
+            $page++;
         }
     
         return $syncCount;
     }
+    
+    
     
     protected function getCast($movieId)
     {
