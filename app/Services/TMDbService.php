@@ -45,7 +45,7 @@ class TMDbService
             10751 => 'Family',
         ];
     
-        $moviesPerPage = 94;
+        $moviesPerPage = 20;
     
         $totalPages = ceil($numberOfMoviesToDownload / $moviesPerPage);
     
