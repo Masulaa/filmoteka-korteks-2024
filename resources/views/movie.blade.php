@@ -83,7 +83,7 @@
                     <p id="rating-message" class="mt-2"></p>
                     <p class="mt-2">Average Rating: <span id="average-rating">{{ $movie->averageRating() }}</span>
                         ({{ $movie->countRatings() }} ratings)</p>
-                </div>
+                        <a href="{{ route('movies.watch', ['id' => $movie->id]) }}"><button>WATCH</button></a>                </div>
             </div>
         </div>
     </section>

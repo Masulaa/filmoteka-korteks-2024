@@ -176,4 +176,11 @@ class MovieController extends Controller
 
         return redirect()->route('movies.index')->with('success', 'Movie deleted successfully.');
     }
+    public function watch($id)
+    {
+        return "Prikazivanje filma sa ID-om $id";
+        #$movie = Movie::find($id);
+        
+        #return view('movies.watch', compact('movie'));
+    }
 }

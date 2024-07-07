@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->string('genre'); 
             $table->string('image')->nullable(); 
             $table->text('overview')->nullable(); 
-            $table->string('backdrop_path')->nullable();
+            $table->string('video_link')->nullable(); 
             $table->text('cast')->nullable();
             $table->timestamps();
         });
