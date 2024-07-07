@@ -43,6 +43,8 @@ class TMDbService
     
             $moviesData = json_decode($response->getBody(), true)['results'];
     
+            print_r($moviesData);
+            
             foreach ($moviesData as $movieData) {
                 $genres = isset($movieData['genre_ids']) ? $movieData['genre_ids'] : [];
                 $genreNames = [];
@@ -63,6 +65,7 @@ class TMDbService
                     'image' => $movieData['poster_path'] ? 'https://image.tmdb.org/t/p/w500'.$movieData['poster_path'] : null,
                     'overview' => $movieData['overview'] ?? null,
                     'backdrop_path' => $movieData['backdrop_path'] ? 'https://image.tmdb.org/t/p/original'.$movieData['backdrop_path'] : null,
+                    'cast' => $this->getCast($movieData['id']), // Add this line
                 ]);
     
                 $syncCount++;
@@ -77,7 +80,21 @@ class TMDbService
         return $syncCount;
     }
     
-
+    protected function getCast($movieId)
+    {
+        try {
+            $response = $this->client->request('GET', "https://api.themoviedb.org/3/movie/{$movieId}/credits", [
+                'query' => [
+                    'api_key' => env('TMDB_API_KEY'),
+                ],
+            ]);
+            $creditsData = json_decode($response->getBody(), true);
+            $cast = array_slice($creditsData['cast'] ?? [], 0, 5); // Get top 5 cast members
+            return json_encode(array_column($cast, 'name'));
+        } catch (\Exception $e) {
+            return json_encode([]);
+        }
+    }
     
     protected function getDirector($movieId)
     {

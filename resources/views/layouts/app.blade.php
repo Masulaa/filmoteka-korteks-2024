@@ -19,8 +19,9 @@
 <body class="font-sans antialiased ">
     <div class="flex flex-col min-h-screen bg-gray-100 dark:bg-gray-900">
         @include('layouts.header')
-        @include('layouts.search')
-
+        @if (!Route::is('movie'))
+            @include('layouts.search')
+        @endif
         <!-- Page Content -->
         <main class="flex-grow">
             @isset($slot)
