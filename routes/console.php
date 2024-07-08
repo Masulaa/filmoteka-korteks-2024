@@ -45,6 +45,8 @@ Artisan::command('movies:sync {count?}', function ($count = null) {
     $this->info("Successfully synchronized {$syncCount} movies.");
 })->purpose('Synchronize movies from TheMovieDB');
 
+
+
 Artisan::command('movies:json {count}', function ($count) {
     $syncCount = 0;
     $page = 1;
@@ -81,7 +83,12 @@ Artisan::command('movies:json {count}', function ($count) {
                 }
 
                 $movieTitle = $movieData['title'];
-                $movies[$movieTitle] = "";
+                $tmdb_id = $movieData['id']; // Koristimo 'id' umjesto 'tmdb_id'
+
+                // Formiranje potpunog URL-a za ugradnju filma
+                $embedUrl = "https://vidsrc.pro/embed/movie/{$tmdb_id}";
+
+                $movies[$movieTitle] = $embedUrl;
 
                 $syncCount++;
             }
@@ -94,9 +101,9 @@ Artisan::command('movies:json {count}', function ($count) {
         $page++;
     }
 
-    $jsonContent = json_encode($movies, JSON_PRETTY_PRINT);
+    // Ispravno enkodiranje JSON-a
+    $jsonContent = json_encode($movies, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
     $this->line($jsonContent);
 
-    $this->info("Successfully generated JSON with {$syncCount} movies.");
 })->describe('Fetch popular movies from TheMovieDB and display the JSON content in the console');
 
