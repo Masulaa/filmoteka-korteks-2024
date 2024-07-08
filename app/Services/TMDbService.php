@@ -21,7 +21,7 @@ class TMDbService
                 'page' => 1,
             ],
         ]);
-    
+
         $totalMovies = json_decode($response->getBody(), true)['total_results'];
         return $totalMovies;
     }
@@ -39,7 +39,7 @@ class TMDbService
         $syncCount = 0;
         $page = 1;
         $nullResponseCount = 0;
-    
+
         $genreMapping = [
             28 => 'Action',
             12 => 'Adventure',
@@ -53,11 +53,11 @@ class TMDbService
             878 => 'Science Fiction',
             10751 => 'Family',
         ];
-    
+
         $moviesPerPage = 20;
-    
+
         $totalPages = ceil($numberOfMoviesToDownload / $moviesPerPage);
-    
+
         while ($page <= $totalPages) {
             try {
                 $response = $this->client->request('GET', 'https://api.themoviedb.org/3/movie/popular', [
@@ -66,9 +66,9 @@ class TMDbService
                         'page' => $page,
                     ],
                 ]);
-    
+
                 $moviesData = json_decode($response->getBody(), true)['results'];
-    
+
                 if (empty($moviesData)) {
                     $nullResponseCount++;
                     if ($nullResponseCount >= 5) {
@@ -80,12 +80,12 @@ class TMDbService
                 } else {
                     $nullResponseCount = 0;
                 }
-    
+
                 foreach ($moviesData as $movieData) {
                     if ($syncCount >= $numberOfMoviesToDownload) {
-                        break 2; 
+                        break 2;
                     }
-    
+
                     $genres = isset($movieData['genre_ids']) ? $movieData['genre_ids'] : [];
                     $genreNames = [];
                     foreach ($genres as $genreId) {
@@ -94,10 +94,10 @@ class TMDbService
                         }
                     }
                     $genreString = implode(', ', $genreNames);
-    
+
                     $movieTitle = $movieData['title'];
                     $videoLink = isset($videoUrls[$movieTitle]) ? $videoUrls[$movieTitle] : null;
-    
+
                     $existingMovie = Movie::where('title', $movieData['title'])->first();
                     echo "($syncCount/$numberOfMoviesToDownload) ";
                     if ($existingMovie) {
@@ -131,23 +131,23 @@ class TMDbService
                         }
                         echo "\n";
                     }
-    
+
                     $syncCount++;
                 }
-    
+
                 //sleep(5);
-    
+
             } catch (\Exception $e) {
                 echo "An error occurred: {$e->getMessage()}";
                 sleep(5);
             }
-    
+
             $page++;
         }
-    
+
         return $syncCount;
     }
-    
+
     protected function getCast($movieId)
     {
         $response = $this->client->request('GET', "https://api.themoviedb.org/3/movie/{$movieId}/credits", [
