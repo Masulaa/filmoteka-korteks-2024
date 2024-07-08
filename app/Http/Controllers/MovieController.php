@@ -7,6 +7,7 @@ use App\Models\Rating;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use DB;
+use Illuminate\Support\Facades\Log;
 
 class MovieController extends Controller
 {
@@ -68,18 +69,32 @@ class MovieController extends Controller
 
     public function filter(Request $request)
     {
-        $query = Movie::query();
-
-        if ($request->has('genre') && $request->genre != '') {
-            $query->where('genre', $request->genre);
+        try {
+            $query = Movie::query();
+    
+            if ($request->filled('genre')) {
+                $query->where('genre', 'like', '%' . $request->genre . '%');
+            }
+    
+            if ($request->filled('year')) {
+                $query->whereYear('release_date', $request->year);
+            }
+    
+            $movies = $query->paginate(20);
+    
+            if ($request->ajax()) {
+                return view('movieslist', compact('movies'))->render();
+            }
+    
+            return view('home', compact('movies'));
+        } catch (\Exception $e) {
+            Log::error('Movie filter error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return response()->json(['error' => 'An error occurred while filtering movies: ' . $e->getMessage()], 500);
         }
-
-
-        $movies = $query->get();
-
-        return response()->json([
-            'html' => view('movies.partials.movies', compact('movies'))->render()
-        ]);
     }
 
 
