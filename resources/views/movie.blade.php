@@ -83,7 +83,9 @@
                     <p id="rating-message" class="mt-2"></p>
                     <p class="mt-2">Average Rating: <span id="average-rating">{{ $movie->averageRating() }}</span>
                         ({{ $movie->countRatings() }} ratings)</p>
-                        <a href="{{ route('movies.watch', ['id' => $movie->id]) }}" class="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg text-xl">WATCH</a>            </div>
+                        <a href="{{ route('movies.watch', ['id' => $movie->id]) }}" class="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg text-xl">WATCH MOVIE</a>
+                        <a href="{{ $movie -> trailer_link}}" class="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg text-xl">WATCH TRAILER</a>
+                   </div>
         </div>
     </section>
     <div style="background-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0.001));" class="mb-20">
