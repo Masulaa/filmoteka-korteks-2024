@@ -125,8 +125,11 @@ class TMDbService
                             'cast' => $this->getCast($movieData['id']),
                             'video_link' => $videoLink,
                         ]);
-    
-                        echo "\033[33mNew\033[0m movie '{$movieTitle}' added to the database.\n";
+                        echo "\033[33mNew\033[0m movie '{$movieTitle}' added to the database.";
+                        if($videoLink!=null){
+                            echo " (\033[32mHas Video\033[0m) ";
+                        }
+                        echo "\n";
                     }
     
                     $syncCount++;
