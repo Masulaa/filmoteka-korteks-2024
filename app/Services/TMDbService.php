@@ -107,7 +107,7 @@ class TMDbService
                             ]);
                             echo "Movie '{$movieTitle}' \033[31mupdated\033[0m with new video link.\n";
                         } else {
-                            echo "Movie '{$movieTitle}' already exists with the same video link.\033[35m Skip.\033[0m\n";
+                            echo "Movie '{$movieTitle}' already exists.\033[35m Skip.\033[0m\n";
                         }
                     } else {
                         $director = $this->getDirector($movieData['id']);
