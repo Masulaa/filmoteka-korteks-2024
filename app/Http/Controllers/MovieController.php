@@ -76,8 +76,9 @@ class MovieController extends Controller
                 $query->where('genre', 'like', '%' . $request->genre . '%');
             }
     
-            if ($request->filled('year')) {
-                $query->whereYear('release_date', $request->year);
+            if ($request->filled('min_year') && $request->filled('max_year')) {
+                $query->whereYear('release_date', '>=', $request->min_year)
+                      ->whereYear('release_date', '<=', $request->max_year);
             }
     
             $movies = $query->paginate(20);
