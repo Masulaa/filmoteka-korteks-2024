@@ -1,8 +1,27 @@
-<div class="px-4 mx-auto mt-8 max-w-7xl sm:px-6 lg:px-8">
+<div class="px-4 mx-auto mt-8 filter-toggle max-w-7xl sm:px-6 lg:px-8" style="display:none">
     <form id="filter-form" action="{{ route('movies.filter') }}" method="GET"
         class="flex flex-col max-w-md mx-auto space-y-6">
-        <div class="p-8 dark:bg-gray-800 w-80 rounded-xl filter-container">
-            <h2 class="mb-6 text-2xl font-bold text-center dark:text-white">Filter Movies</h2>
+
+        <div class="p-8 dark:bg-gray-800 rounded-xl filter-container">
+
+            <div class="flex items-center justify-between pb-2 mb-6 border-b rounded-t dark:border-gray-600">
+                <div class="invisible w-8 h-8 ">
+
+                </div>
+                <h3 class="text-xl font-semibold text-center text-gray-900 dark:text-white w-80">
+                    Filters
+                </h3>
+                <button type="button" onclick="toggleFilter()"
+                    class="inline-flex items-center justify-center w-8 h-8 text-sm text-gray-400 bg-transparent rounded-lg hover:bg-gray-200 hover:text-gray-900 ms-auto dark:hover:bg-gray-600 dark:hover:text-white"
+                    data-modal-hide="default-modal">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
 
             <div class="max-w-full mx-auto mb-6">
                 <h3 class="mb-4 text-lg font-semibold dark:text-white/90">Select Year Range</h3>
@@ -56,8 +75,11 @@
                 Movies</button>
         </div>
     </form>
-</div>
 
+</div>
+<div class="flex justify-center mt-6 filter-btn">
+
+</div>
 <style>
     .range-input input {
         position: absolute;
@@ -140,6 +162,19 @@
 </style>
 
 <script>
+    function toggleFilter() {
+        const filter = document.querySelector('.filter-toggle');
+        const btn = document.querySelector('.filter-btn');
+        if (filter.style.display === "none" || filter.style.display === "") {
+            filter.style.display = "block"; // or whatever display style you want
+            btn.style.display = "none"; // or whatever display style you want
+        } else {
+            filter.style.display = "none";
+            btn.style.display = ""; // or whatever display style you want
+        }
+    }
+
+
     const rangeMin = 1;
     const range = document.querySelector(".range-selected");
     const rangeInput = document.querySelectorAll(".range-input input");
