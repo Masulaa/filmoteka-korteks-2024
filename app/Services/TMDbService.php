@@ -102,7 +102,7 @@ public function fetchPopularMovies($numberOfMoviesToDownload)
                 $videoLink = null;
                 foreach ($videosData as $video) {
                     if ($video['site'] == 'YouTube' && $video['type'] == 'Trailer') {
-                        $videoLink = "https://www.youtube.com/watch?v={$video['key']}";
+                        $videoId = $video['key'];
                         break;
                     }
                 }
@@ -132,7 +132,7 @@ public function fetchPopularMovies($numberOfMoviesToDownload)
                         'overview' => $movieData['overview'] ?? null,
                         'backdrop_path' => $movieData['backdrop_path'] ? 'https://image.tmdb.org/t/p/original'.$movieData['backdrop_path'] : null,
                         'cast' => $this->getCast($movieData['id']),
-                        'trailer_link' => $videoLink,
+                        'trailer_link' => $videoId,
                         'video_id' => $movieData['id']
                     ]);
                     echo "\033[33mNew\033[0m movie '{$movieTitle}' added to the database.";
