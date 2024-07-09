@@ -65,7 +65,6 @@
                         </div>
                     @endforeach
                 </div>
-
                 {{-- <div class="mt-4 rating">
                     <h3 class="mb-2 text-xl font-semibold">Rate this series</h3>
                     <div id="rating-section" class="flex items-center" data-series-id="{{ $series->id }}">
@@ -94,9 +93,11 @@
                 </div> --}}
             </div>
         </div>
+        <h1 class="p-2 text-lg font-bold text-center text-gray-100/90">Reviews and ratings are currently unavailable.
+        </h1>
     </section>
-    <div style="background-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0.001));" class="mb-20">
-        {{-- <section class="mx-auto reviews max-w-7xl">
+    {{--   <div style="background-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0.001));" class="mb-20">
+       <section class="mx-auto reviews max-w-7xl">
             <h3 class="mb-4 text-2xl font-bold text-white">Reviews</h3>
             <div class="mb-6">
                 <h4 class="mb-2 text-xl font-semibold text-white">Add a Review</h4>
@@ -121,9 +122,42 @@
                     <p class="text-gray-500">No reviews yet.</p>
                 @endforelse
             </div>
-        </section> --}}
-    </div>
+        </section> 
+    </div> --}}
     <script>
         // JS HERE
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const overviewSpan = document.getElementById('overview');
+            const overviewFullSpan = document.getElementById('overview-full');
+            const toggleButton = document.getElementById('toggle-overview');
+
+            if (toggleButton) {
+                toggleButton.addEventListener('click', function() {
+                    if (overviewSpan.classList.contains('hidden')) {
+                        overviewSpan.classList.remove('hidden');
+                        overviewFullSpan.classList.add('hidden');
+                        toggleButton.textContent = 'Show more';
+                    } else {
+                        overviewSpan.classList.add('hidden');
+                        overviewFullSpan.classList.remove('hidden');
+                        toggleButton.textContent = 'Show less';
+                    }
+                });
+            }
+        });
+
+        function toggleOverview() {
+            const overview = document.getElementById('overview');
+            const button = overview.nextElementSibling;
+
+            if (overview.classList.contains('truncate')) {
+                overview.classList.remove('truncate');
+                button.textContent = 'show less';
+            } else {
+                overview.classList.add('truncate');
+                button.textContent = 'show more';
+            }
+        }
     </script>
 @endsection
