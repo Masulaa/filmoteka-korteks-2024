@@ -16,7 +16,7 @@ class ContactController extends Controller
 
     public function submit(ContactRequest $request)
     {
-        Mail::to('lukamasulovic2@gmail.com')->send(new ContactMail($request->name, $request->email, $request->content));
+        Mail::to('my@mail.com')->send(new ContactMail($request->name, $request->email, $request->content));
 
         return to_route('home');
     }

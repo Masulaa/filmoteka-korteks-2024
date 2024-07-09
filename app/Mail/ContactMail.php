@@ -28,7 +28,7 @@ class ContactMail extends Mailable
      */
     public function build()
     {
-        return $this->subject('Contact from essential.test')
+        return $this->subject('New mail')
             ->replyTo($this->email)
             ->markdown('contact');
     }
