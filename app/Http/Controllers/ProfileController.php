@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\Rating;
+use App\Models\Review;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -56,5 +58,15 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
+    }
+
+    public function reviewsAndRatings()
+    {
+        $user = Auth::user();
+
+        $reviews = Review::where('user_id', $user->id)->with('movie')->get();
+        $ratings = Rating::where('user_id', $user->id)->with('movie')->get();
+
+        return view('profile.reviews-ratings', compact('reviews', 'ratings'));
     }
 }
