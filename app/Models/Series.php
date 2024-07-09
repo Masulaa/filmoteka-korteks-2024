@@ -31,23 +31,30 @@ class Series extends Model
         'seasons' => 'array',
     ];
 
-    public function ratings()
-    {
-        return $this->morphMany(Rating::class, 'ratable');
-    }
+    // public function ratings()
+    // {
+    //     return $this->hasMany(Rating::class);
+    // }
 
-    public function reviews()
-    {
-        return $this->morphMany(Review::class, 'reviewable');
-    }
+    // public function reviews()
+    // {
+    //     return $this->hasMany(Review::class);
+    // }
 
-    public function averageRating()
-    {
-        return $this->ratings()->avg('rating') ?: 0;
-    }
+    // public function averageRating()
+    // {
+    //     $totalRating = $this->ratings()->sum('rating');
+    //     $countRatings = $this->ratings()->count();
 
-    public function countRatings()
-    {
-        return $this->ratings()->count();
-    }
+    //     if ($countRatings > 0) {
+    //         return round($totalRating / $countRatings, 1);
+    //     }
+
+    //     return 0;
+    // }
+
+    // public function countRatings()
+    // {
+    //     return $this->ratings()->count();
+    // }
 }

@@ -270,7 +270,7 @@ public function fetchPopularMovies($numberOfMoviesToDownload)
                     if ($syncCount >= $numberOfSeriesToDownload) {
                         break 2;
                     }
-    
+                    
                     $genres = isset($seriesItem['genre_ids']) ? $seriesItem['genre_ids'] : [];
                     $genreNames = [];
                     foreach ($genres as $genreId) {

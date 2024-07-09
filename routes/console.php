@@ -23,7 +23,7 @@ Artisan::command('movies:sync {count?}', function ($count = null) {
             return;
         }
     }
-
+    
     if ($count === 'all') {
         $totalMovies = $tmdbService->getNumberOfAllMovies();
     } else {
