@@ -26,135 +26,119 @@ class TMDbService
         return $totalMovies;
     }
 
-public function fetchPopularMovies($numberOfMoviesToDownload)
-{
-    echo "\033[34m::\033[0m Synchronizing movies from TMDb...\n";
+    public function fetchPopularMovies($numberOfMoviesToDownload)
+    {
+        echo "\033[34m::\033[0m Synchronizing movies from TMDb...\n";
 
-    $syncCount = 0;
-    $page = 1;
-    $nullResponseCount = 0;
+        $syncCount = 0;
+        $page = 1;
+        $nullResponseCount = 0;
 
-    $genreMapping = [
-        28 => 'Action',
-        12 => 'Adventure',
-        16 => 'Animation',
-        35 => 'Comedy',
-        80 => 'Crime',
-        18 => 'Drama',
-        14 => 'Fantasy',
-        27 => 'Horror',
-        9648 => 'Mystery',
-        878 => 'Science Fiction',
-        10751 => 'Family',
-    ];
+        $genreMapping = [
+            28 => 'Action', 12 => 'Adventure', 16 => 'Animation',
+            35 => 'Comedy', 80 => 'Crime', 18 => 'Drama',
+            14 => 'Fantasy', 27 => 'Horror', 9648 => 'Mystery',
+            878 => 'Science Fiction', 10751 => 'Family',
+        ];
 
-    $moviesPerPage = 20;
+        $moviesPerPage = 20;
+        $totalPages = ceil($numberOfMoviesToDownload / $moviesPerPage);
 
-    $totalPages = ceil($numberOfMoviesToDownload / $moviesPerPage);
-
-    while ($page <= $totalPages) {
-        try {
-            $response = $this->client->request('GET', 'https://api.themoviedb.org/3/movie/popular', [
-                'query' => [
-                    'api_key' => env('TMDB_API_KEY'),
-                    'page' => $page,
-                ],
-            ]);
-
-            $moviesData = json_decode($response->getBody(), true)['results'];
-
-            if (empty($moviesData)) {
-                $nullResponseCount++;
-                if ($nullResponseCount >= 5) {
-                    echo "Received null responses 5 times in a row. Stopping synchronization.";
-                    break;
-                }
-                sleep(2);
-                continue;
-            } else {
-                $nullResponseCount = 0;
-            }
-
-            foreach ($moviesData as $movieData) {
-                if ($syncCount >= $numberOfMoviesToDownload) {
-                    break 2;
-                }
-
-                $genres = isset($movieData['genre_ids']) ? $movieData['genre_ids'] : [];
-                $genreNames = [];
-                foreach ($genres as $genreId) {
-                    if (isset($genreMapping[$genreId])) {
-                        $genreNames[] = $genreMapping[$genreId];
-                    }
-                }
-                $genreString = implode(', ', $genreNames);
-
-                $movieTitle = $movieData['title'];
-
-                $videosResponse = $this->client->request('GET', "https://api.themoviedb.org/3/movie/{$movieData['id']}/videos", [
+        while ($page <= $totalPages) {
+            try {
+                $response = $this->client->request('GET', 'https://api.themoviedb.org/3/movie/popular', [
                     'query' => [
                         'api_key' => env('TMDB_API_KEY'),
+                        'page' => $page,
                     ],
                 ]);
+                $moviesData = json_decode($response->getBody(), true)['results'];
 
-                $videosData = json_decode($videosResponse->getBody(), true)['results'];
-
-                $videoLink = null;
-                foreach ($videosData as $video) {
-                    if ($video['site'] == 'YouTube' && $video['type'] == 'Trailer') {
-                        $videoId = $video['key'];
+                if (empty($moviesData)) {
+                    $nullResponseCount++;
+                    if ($nullResponseCount >= 5) {
+                        echo "Received null responses 5 times in a row. Stopping synchronization.";
                         break;
                     }
-                }
-
-                $existingMovie = Movie::where('title', $movieData['title'])->first();
-                echo "($syncCount/$numberOfMoviesToDownload) ";
-                if ($existingMovie) {
-                    if ($existingMovie->video_link !== $videoLink) {
-                        $existingMovie->update([
-                            'video_link' => $videoLink,
-                        ]);
-                        echo "Movie '{$movieTitle}' \033[31mupdated\033[0m with new video link.\n";
-                    } else {
-                        echo "Movie '{$movieTitle}' already exists.\033[35m Skip.\033[0m\n";
-                    }
+                    sleep(2);
+                    continue;
                 } else {
-                    $director = $this->getDirector($movieData['id']);
-                    if ($director === null) {
-                        $director = 'unknown director';
+                    $nullResponseCount = 0;
+                }
+                foreach ($moviesData as $movieData) {
+                    if ($syncCount >= $numberOfMoviesToDownload) {
+                        break 2;
                     }
-                    Movie::create([
-                        'title' => $movieData['title'],
-                        'director' => $director,
-                        'release_date' => isset($movieData['release_date']) ? date('Y-m-d', strtotime($movieData['release_date'])) : null,
-                        'genre' => $genreString,
-                        'image' => $movieData['poster_path'] ? 'https://image.tmdb.org/t/p/w500'.$movieData['poster_path'] : null,
-                        'overview' => $movieData['overview'] ?? null,
-                        'backdrop_path' => $movieData['backdrop_path'] ? 'https://image.tmdb.org/t/p/original'.$movieData['backdrop_path'] : null,
-                        'cast' => $this->getCast($movieData['id']),
-                        'trailer_link' => $videoId,
-                        'video_id' => $movieData['id']
-                    ]);
-                    echo "\033[33mNew\033[0m movie '{$movieTitle}' added to the database.";
-                    if ($videoLink != null) {
-                        echo " (\033[32mHas Video\033[0m) ";
+                    $existingMovie = Movie::where('title', $movieData['title'])->first();
+                    echo "($syncCount/$numberOfMoviesToDownload) ";
+                    if ($existingMovie) {
+                        echo "Movie '{$movieData['title']}' already exists.\033[35m Skip.\033[0m\n";
+                    } else {
+                        $videoId = $this->getYouTubeTrailerId($movieData['id']);
+
+                        Movie::create([
+                            'title' => $movieData['title'],
+                            'director' => $this->getDirectorName($movieData['id']),
+                            'release_date' => isset($movieData['release_date']) ? date('Y-m-d', strtotime($movieData['release_date'])) : null,
+                            'genre' => $this->getGenres($movieData['genre_ids'], $genreMapping),
+                            'image' => $this->getPosterUrl($movieData['poster_path']),
+                            'overview' => $movieData['overview'] ?? null,
+                            'backdrop_path' => $this->getBackdropUrl($movieData['backdrop_path']),
+                            'cast' => $this->getCast($movieData['id']),
+                            'trailer_link' => $videoId,
+                            'video_id' => $movieData['id']
+                        ]);
+                        echo "\033[33mNew\033[0m movie '{$movieData['title']}' added to the database.\n";
                     }
-                    echo "\n";
+                    $syncCount++;
                 }
 
-                $syncCount++;
+            } catch (\Exception $e) {
+                echo "An error occurred: {$e->getMessage()}";
             }
-
-        } catch (\Exception $e) {
-            echo "An error occurred: {$e->getMessage()}";
-            sleep(5);
+            $page++;
         }
-
-        $page++;
+        echo "Successfully synchronized {$syncCount} movies.";
     }
 
-    return $syncCount;
-}
+    private function getYouTubeTrailerId($movieId)
+    {
+        $response = $this->client->request('GET', "https://api.themoviedb.org/3/movie/{$movieId}/videos", [
+            'query' => [
+                'api_key' => env('TMDB_API_KEY'),
+            ],
+        ]);
+        $videosData = json_decode($response->getBody(), true)['results'];
+        foreach ($videosData as $video) {
+            if ($video['site'] == 'YouTube' && $video['type'] == 'Trailer') {
+                return $video['key'];
+            }
+        }
+        return null;
+    }
+
+    private function getDirectorName($movieId)
+    {
+        $director = $this->getDirector($movieId);
+        return $director === null ? 'unknown director' : $director;
+    }
+
+    private function getGenres($genreIds, $genreMapping)
+    {
+        $genreNames = [];
+        foreach ($genreIds as $genreId) {
+            if (isset($genreMapping[$genreId])) {
+                $genreNames[] = $genreMapping[$genreId];
+            }
+        }
+        return implode(', ', $genreNames);
+    }
+
+    private function getPosterUrl($posterPath)
+    { return $posterPath ? 'https://image.tmdb.org/t/p/w500' . $posterPath : null; }
+
+    private function getBackdropUrl($backdropPath)
+    { return $backdropPath ? 'https://image.tmdb.org/t/p/original' . $backdropPath : null; }
 
     protected function getCast($movieId)
     {

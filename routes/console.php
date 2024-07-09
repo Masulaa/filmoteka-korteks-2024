@@ -28,7 +28,6 @@ Artisan::command('movies:sync {count?}', function ($count = null) {
         $totalMovies = $count;
     }
 
-    $syncCount = $tmdbService->fetchPopularMovies($totalMovies);
+    $tmdbService->fetchPopularMovies($totalMovies);
 
-    $this->info("Successfully synchronized {$syncCount} movies.");
 })->purpose('Synchronize movies from TheMovieDB');
