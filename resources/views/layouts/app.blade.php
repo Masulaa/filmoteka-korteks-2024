@@ -20,6 +20,10 @@
             @include('layouts.filter')
             @include('layouts.search')
         @endif
+        @if (isset($series) && $series->count() > 0)
+            @include('series.filter')
+            @include('series.search')
+        @endif
 
         <!-- Page Content -->
         <main class="flex-grow">

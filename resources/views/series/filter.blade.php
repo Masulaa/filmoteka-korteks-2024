@@ -1,5 +1,5 @@
 <div class="px-4 mx-auto mt-8 filter-toggle max-w-7xl sm:px-6 lg:px-8" style="display:none">
-    <form id="filter-form" action="{{ route('movies.filter') }}" method="GET"
+    <form id="filter-form" action="{{ route('series.filter') }}" method="GET"
         class="flex flex-col max-w-md mx-auto space-y-6">
 
         <div class="p-8 dark:bg-gray-800 rounded-xl filter-container">
@@ -38,12 +38,12 @@
                     <div class="range-price">
                         <div class="field">
                             <label for="min_year">Min Year</label>
-                            <input type="number" name="min_year_display" value="1900" min="1900"
+                            <input type="number" name="min_year" value="1900" min="1900"
                                 max="{{ date('Y') }}">
                         </div>
                         <div class="field">
                             <label for="max_year">Max Year</label>
-                            <input type="number" name="max_year_display" value="{{ date('Y') }}" min="1900"
+                            <input type="number" name="max_year" value="{{ date('Y') }}" min="1900"
                                 max="{{ date('Y') }}">
                         </div>
                     </div>
@@ -72,7 +72,7 @@
 
             <button type="submit"
                 class="w-full px-4 py-2 text-white transition-colors duration-300 bg-blue-500 rounded-lg hover:bg-blue-600">Filter
-                Movies</button>
+                Series</button>
         </div>
     </form>
 
@@ -161,10 +161,8 @@
     }
 </style>
 
-
-
 <script>
-    function toggleFilter() {
+    function seriesToggleFilter() {
         const filter = document.querySelector('.filter-toggle');
         const btn = document.querySelector('.filter-btn');
         if (filter.style.display === "none" || filter.style.display === "") {
@@ -175,7 +173,6 @@
             btn.style.display = ""; // or whatever display style you want
         }
     }
-
 
     const rangeMin = 1;
     const range = document.querySelector(".range-selected");
@@ -196,52 +193,22 @@
         rangePrice[0].value = minRange;
         rangePrice[1].value = maxRange;
         range.style.left = ((minRange - rangeInput[0].min) / (rangeInput[0].max - rangeInput[0].min)) * 100 + "%";
-        range.style.right = 100 - ((maxRange - rangeInput[0].min) / (rangeInput[1].max - rangeInput[1].min)) * 100 +
+        range.style.right = 100 - ((maxRange - rangeInput[1].min) / (rangeInput[1].max - rangeInput[1].min)) * 100 +
             "%";
     }
-
     rangeInput.forEach((input) => {
         input.addEventListener("input", setRange);
     });
-
-    rangePrice.forEach((input) => {
-        input.addEventListener("input", (e) => {
-            let minPrice = parseInt(rangePrice[0].value);
-            let maxPrice = parseInt(rangePrice[1].value);
-            if (minPrice < parseInt(rangeInput[0].min)) {
-                minPrice = parseInt(rangeInput[0].min);
-                rangePrice[0].value = minPrice;
+    rangePrice.forEach((input, index) => {
+        input.addEventListener("change", (e) => {
+            if (e.target.value > parseInt(rangeInput[index].max)) {
+                e.target.value = rangeInput[index].max;
             }
-            if (maxPrice > parseInt(rangeInput[1].max)) {
-                maxPrice = parseInt(rangeInput[1].max);
-                rangePrice[1].value = maxPrice;
+            if (e.target.value < parseInt(rangeInput[index].min)) {
+                e.target.value = rangeInput[index].min;
             }
-            if (maxPrice - minPrice >= rangeMin && maxPrice <= parseInt(rangeInput[1].max)) {
-                if (e.target.name === "min_year_display") {
-                    rangeInput[0].value = minPrice;
-                } else {
-                    rangeInput[1].value = maxPrice;
-                }
-                setRange();
-            }
+            rangeInput[index].value = e.target.value;
+            setRange();
         });
-    });
-
-    setRange();
-
-    document.getElementById('filter-form').addEventListener('submit', function(event) {
-        const form = event.target;
-        const genre = form.querySelector('[name="genre"]').value;
-        const minYear = form.querySelector('[name="min_year"]').value;
-        const maxYear = form.querySelector('[name="max_year"]').value;
-
-        if (!genre) {
-            form.querySelector('[name="genre"]').disabled = true;
-        }
-        if (minYear === form.querySelector('[name="min_year"]').min && maxYear === form.querySelector(
-                '[name="max_year"]').max) {
-            form.querySelector('[name="min_year"]').disabled = true;
-            form.querySelector('[name="max_year"]').disabled = true;
-        }
     });
 </script>

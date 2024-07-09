@@ -33,6 +33,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/series', [SeriesController::class, 'index'])->name('series.home');
     Route::get('/series/{id}', [SeriesController::class, 'show'])->name('series.show');
+    Route::get('/series-filter', [SeriesController::class, 'filter'])->name('series.filter');
+    Route::get('/series-search', [SeriesController::class, 'action'])->name('series.action');
 
 
 });

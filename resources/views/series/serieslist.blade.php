@@ -35,6 +35,9 @@
                 criteria.</p>
         @endif
 
+
+        {{ $series->links() }}
+
         <div class="mt-8">
             {{ $series->links() }}
         </div>
