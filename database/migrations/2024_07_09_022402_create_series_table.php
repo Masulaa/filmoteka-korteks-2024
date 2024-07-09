@@ -15,14 +15,18 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('creator');
-            $table->date('release_date')->nullable();
+            $table->date('first_air_date')->nullable();
             $table->string('genre');
             $table->string('image')->nullable();
             $table->text('overview');
             $table->string('backdrop_path')->nullable();
-            $table->integer('seasons')->default(1);
-            $table->integer('episodes')->default(1);
+            $table->integer('number_of_seasons')->default(1);
+            $table->integer('number_of_episodes')->default(1);
+            $table->string('homepage')->nullable();
+            $table->string('status')->nullable();
+            $table->json('seasons')->nullable();
             $table->json('cast');
+            $table->string('trailer_link')->nullable();
             $table->timestamps();
         });
     }
@@ -35,3 +39,4 @@ return new class extends Migration
         Schema::dropIfExists('series');
     }
 };
+

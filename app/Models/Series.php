@@ -12,18 +12,23 @@ class Series extends Model
     protected $fillable = [
         'title',
         'creator',
-        'release_date',
+        'first_air_date',
         'genre',
         'image',
         'overview',
         'backdrop_path',
+        'number_of_seasons',
+        'number_of_episodes',
+        'homepage',
+        'status',
         'seasons',
-        'episodes',
-        'cast'
+        'cast',
+        'trailer_link'
     ];
 
     protected $casts = [
         'cast' => 'array',
+        'seasons' => 'array',
     ];
 
     public function ratings()

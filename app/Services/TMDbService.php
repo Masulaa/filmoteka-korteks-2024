@@ -284,6 +284,20 @@ public function fetchPopularMovies($numberOfMoviesToDownload)
                     $seriesTitle = $seriesItem['name'];
     
                     
+                    $videosResponse = $this->client->request('GET', "https://api.themoviedb.org/3/tv/{$seriesItem['id']}/videos", [
+                        'query' => [
+                            'api_key' => env('TMDB_API_KEY'),
+                        ],
+                    ]);
+    
+                    $videosData = json_decode($videosResponse->getBody(), true)['results'];
+    
+                    foreach ($videosData as $video) {
+                        if ($video['site'] == 'YouTube' && $video['type'] == 'Trailer') {
+                            $videoId = $video['key'];
+                            break;
+                        }
+                    }
     
                     $videoLink = null;
 
@@ -300,20 +314,24 @@ public function fetchPopularMovies($numberOfMoviesToDownload)
                             echo "Series '{$seriesTitle}' already exists.\033[35m Skip.\033[0m\n";
                         }
                     } else {
-                        $creator = $this->getSeriesCreator($seriesItem['id']);
-                        if ($creator === null) {
-                            $creator = 'unknown creator';
-                        }
+
+                        $details = $this->getSeriesDetails($seriesItem['id']);
                         Series::create([
                             'title' => $seriesItem['name'],
-                            'creator' => $creator,
+                            'creator' => $details['creator'],
+                            'number_of_episodes' => $details['number_of_episodes'],
+                            'number_of_seasons' => $details['number_of_seasons'],
+                            'homepage' => $details['homepage'],
+                            'status' => $details['status'],
+                            'seasons' => json_encode($details['seasons']),
                             'first_air_date' => isset($seriesItem['first_air_date']) ? date('Y-m-d', strtotime($seriesItem['first_air_date'])) : null,
                             'genre' => $genreString,
                             'image' => $seriesItem['poster_path'] ? 'https://image.tmdb.org/t/p/w500'.$seriesItem['poster_path'] : null,
                             'overview' => $seriesItem['overview'] ?? null,
                             'backdrop_path' => $seriesItem['backdrop_path'] ? 'https://image.tmdb.org/t/p/original'.$seriesItem['backdrop_path'] : null,
                             'cast' => $this->getSeriesCast($seriesItem['id']),
-                            'video_id' => $seriesItem['id']
+                            'trailer_link' => $videoId
+
                         ]);
                         echo "\033[33mNew\033[0m series '{$seriesTitle}' added to the database.";
                         if ($videoLink != null) {
@@ -360,7 +378,7 @@ public function fetchPopularMovies($numberOfMoviesToDownload)
         return $detailedCast;
     }
     
-    protected function getSeriesCreator($seriesId)
+    protected function getSeriesDetails($seriesId)
     {
         $response = $this->client->request('GET', "https://api.themoviedb.org/3/tv/{$seriesId}", [
             'query' => [
@@ -370,11 +388,18 @@ public function fetchPopularMovies($numberOfMoviesToDownload)
     
         $seriesData = json_decode($response->getBody(), true);
     
-        if (isset($seriesData['created_by']) && !empty($seriesData['created_by'])) {
-            return $seriesData['created_by'][0]['name'];
-        }
+        $details = [];
     
-        return null;
+        $details['creator'] = isset($seriesData['created_by']) && !empty($seriesData['created_by']) ? $seriesData['created_by'][0]['name'] : 'unknown creator';
+        $details['number_of_episodes'] = $seriesData['number_of_episodes'] ?? null;
+        $details['number_of_seasons'] = $seriesData['number_of_seasons'] ?? null;
+        $details['homepage'] = $seriesData['homepage'] ?? null;
+        $details['status'] = $seriesData['status'] ?? null;
+        $details['seasons'] = $seriesData['seasons'] ?? [];
+    
+        return $details;
     }
+    
+    
 
 }
