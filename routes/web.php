@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\RatingController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\ContactController;
 use Illuminate\Support\Facades\Route;
 
 // Public
@@ -25,7 +26,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/movies/{id}', [MovieController::class, 'show'])->name('movie');
     Route::get('/action', [MovieController::class, 'action'])->name('action');
 
-    Route::get('/contact', [ContactController::class, 'show'])->name('contact.show');
+    // Route::get('/contact', function () {
+//     Mail::to('test@email.com')->send(new TestMail());
+// });
+
+    Route::get('/contact', [ContactController::class, 'show'])->name('contactsshow');
     Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
 
     Route::post('/movies/{movie}/rate', [RatingController::class, 'store'])->name('movies.rate')->middleware('auth');
