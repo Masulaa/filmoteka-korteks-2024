@@ -64,7 +64,7 @@
                                                 class="font-semibold text-indigo-600">{{ $rating->rating }}/10</span></p>
                                     </div>
                                 </div>
-                                <form action="{{ route('reviews.destroy', $review->id) }}" method="POST">
+                                <form action="{{ route('ratings.destroy', $rating->id) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit"

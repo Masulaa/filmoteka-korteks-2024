@@ -10,7 +10,7 @@
 
             </div>
             <input type="text" id="search"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-s-lg focus:ring-blue-500 focus:border-blue-500 block w-full py-2.5 pl-10 pr-8 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-s-lg focus:ring-indigo-700 focus:border-indigo-700 block w-full py-2.5 pl-10 pr-8 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-indigo-700 dark:focus:border-indigo-700"
                 placeholder="Search..." required />
 
             <div id="movie_results"
@@ -21,7 +21,7 @@
             </div>
         </div>
     </div>
-    <button onclick="toggleFilter()" class="px-5 py-3 bg-blue-500 rounded-r-lg">
+    <button onclick="toggleFilter()" class="px-5 py-3 bg-indigo-700 rounded-r-lg">
         <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
                 d="M3 1L3 11M3 11C1.89543 11 1 11.8954 1 13C1 14.1046 1.89543 15 3 15M3 11C4.10457 11 5 11.8954 5 13C5 14.1046 4.10457 15 3 15M3 15L3 17M9 1V3M9 3C7.89543 3 7 3.89543 7 5C7 6.10457 7.89543 7 9 7M9 3C10.1046 3 11 3.89543 11 5C11 6.10457 10.1046 7 9 7M9 7V17M15 1V11M15 11C13.8954 11 13 11.8954 13 13C13 14.1046 13.8954 15 15 15M15 11C16.1046 11 17 11.8954 17 13C17 14.1046 16.1046 15 15 15M15 15V17"

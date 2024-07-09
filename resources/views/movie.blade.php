@@ -77,16 +77,20 @@
                         <span class="ml-2">Your rating: <span id="selected-rating">Not rated</span></span>
                     </div>
                     <button id="submit-rating"
-                        class="px-4 py-2 mt-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700" disabled>
+                        class="px-4 py-2 mt-2 font-bold text-white bg-indigo-700 rounded hover:bg-indigo-900" disabled>
                         Submit Rating
                     </button>
                     <p id="rating-message" class="mt-2"></p>
                     <p class="mt-2">Average Rating: <span id="average-rating">{{ $movie->averageRating() }}</span>
                         ({{ $movie->countRatings() }} ratings)</p>
-                        <a href="{{ route('movies.watch', ['id' => $movie->id]) }}" class="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg text-xl">WATCH MOVIE</a>
-                        <a href="https://www.youtube.com/watch?v={{ $movie -> trailer_link}}" class="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg text-xl">WATCH TRAILER</a>
-                   </div>
-        </div>
+                    <a href="{{ route('movies.watch', ['id' => $movie->id]) }}"
+                        class="inline-block px-6 py-3 text-xl font-bold text-white bg-indigo-700 rounded-lg hover:bg-indigo-900">WATCH
+                        MOVIE</a>
+                    <a href="https://www.youtube.com/watch?v={{ $movie->trailer_link }}"
+                        class="inline-block px-6 py-3 text-xl font-bold text-white bg-indigo-700 rounded-lg hover:bg-indigo-900">WATCH
+                        TRAILER</a>
+                </div>
+            </div>
     </section>
     <div style="background-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0.001));" class="mb-20">
         <section class="mx-auto reviews max-w-7xl">
