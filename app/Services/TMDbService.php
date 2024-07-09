@@ -241,7 +241,6 @@ public function fetchPopularMovies($numberOfMoviesToDownload)
         ];
     
         $seriesPerPage = 20;
-    
         $totalPages = ceil($numberOfSeriesToDownload / $seriesPerPage);
     
         while ($page <= $totalPages) {
@@ -283,7 +282,6 @@ public function fetchPopularMovies($numberOfMoviesToDownload)
     
                     $seriesTitle = $seriesItem['name'];
     
-                    
                     $videosResponse = $this->client->request('GET', "https://api.themoviedb.org/3/tv/{$seriesItem['id']}/videos", [
                         'query' => [
                             'api_key' => env('TMDB_API_KEY'),
@@ -292,15 +290,13 @@ public function fetchPopularMovies($numberOfMoviesToDownload)
     
                     $videosData = json_decode($videosResponse->getBody(), true)['results'];
     
+                    $videoLink = null;
                     foreach ($videosData as $video) {
                         if ($video['site'] == 'YouTube' && $video['type'] == 'Trailer') {
-                            $videoId = $video['key'];
+                            $videoLink = "https://www.youtube.com/watch?v={$video['key']}";
                             break;
                         }
                     }
-    
-                    $videoLink = null;
-
     
                     $existingSeries = Series::where('title', $seriesItem['name'])->first();
                     echo "($syncCount/$numberOfSeriesToDownload) ";
@@ -314,7 +310,6 @@ public function fetchPopularMovies($numberOfMoviesToDownload)
                             echo "Series '{$seriesTitle}' already exists.\033[35m Skip.\033[0m\n";
                         }
                     } else {
-
                         $details = $this->getSeriesDetails($seriesItem['id']);
                         Series::create([
                             'title' => $seriesItem['name'],
@@ -330,8 +325,7 @@ public function fetchPopularMovies($numberOfMoviesToDownload)
                             'overview' => $seriesItem['overview'] ?? null,
                             'backdrop_path' => $seriesItem['backdrop_path'] ? 'https://image.tmdb.org/t/p/original'.$seriesItem['backdrop_path'] : null,
                             'cast' => $this->getSeriesCast($seriesItem['id']),
-                            'trailer_link' => $videoId
-
+                            'trailer_link' => $videoLink
                         ]);
                         echo "\033[33mNew\033[0m series '{$seriesTitle}' added to the database.";
                         if ($videoLink != null) {
