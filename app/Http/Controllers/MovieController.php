@@ -66,7 +66,6 @@ class MovieController extends Controller
     {
         return view('movies.create');
     }
-
     public function filter(Request $request)
     {
         try {
@@ -81,7 +80,7 @@ class MovieController extends Controller
                       ->whereYear('release_date', '<=', $request->max_year);
             }
     
-            $movies = $query->paginate(20);
+            $movies = $query->paginate(20)->appends($request->except('page'));
     
             if ($request->ajax()) {
                 return view('movieslist', compact('movies'))->render();
