@@ -26,9 +26,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/movies/{id}', [MovieController::class, 'show'])->name('movie');
     Route::get('/action', [MovieController::class, 'action'])->name('action');
 
-    // Route::get('/contact', function () {
-//     Mail::to('test@email.com')->send(new TestMail());
-// });
 
     Route::get('/contact', [ContactController::class, 'show'])->name('contactsshow');
     Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');

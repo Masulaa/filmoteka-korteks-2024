@@ -8,6 +8,13 @@
                 <x-application-logo class="block w-auto text-gray-800 fill-current h-9 dark:text-gray-200" />
             </a>
             <ul class="flex flex-wrap items-center mb-4 text-sm font-medium text-gray-500 sm:mb-0 dark:text-gray-400">
+
+                <li>
+                    <a href="/home" class="hover:underline me-4 md:me-6">Home</a>
+                </li>
+                <li>
+                    <a href="/dashboard" class="hover:underline me-4 md:me-6">Dashboard</a>
+                </li>
                 <li>
                     <a href="/about" class="hover:underline me-4 md:me-6">About Us</a>
                 </li>
