@@ -2,12 +2,10 @@
     <form id="filter-form" action="{{ route('movies.filter') }}" method="GET"
         class="flex flex-col max-w-md mx-auto space-y-6">
 
-        <div class="p-8 dark:bg-gray-800 rounded-xl filter-container">
+        <div class="p-8 bg-white shadow-lg dark:bg-gray-800 rounded-xl filter-container">
 
             <div class="flex items-center justify-between pb-2 mb-6 border-b rounded-t dark:border-gray-600">
-                <div class="invisible w-8 h-8 ">
-
-                </div>
+                <div class="invisible w-8 h-8"></div>
                 <h3 class="text-xl font-semibold text-center text-gray-900 dark:text-white w-80">
                     Filters
                 </h3>
@@ -24,10 +22,10 @@
             </div>
 
             <div class="max-w-full mx-auto mb-6">
-                <h3 class="mb-4 text-lg font-semibold dark:text-white/90">Select Year Range</h3>
+                <h3 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">Select Year Range</h3>
                 <div class="range">
-                    <div class="relative h-1 mx-5 rounded-sm bg-white/90">
-                        <span class="absolute h-full bg-indigo-700 rounded-md range-selected"></span>
+                    <div class="relative h-1 mx-5 bg-gray-200 rounded-sm dark:bg-gray-700">
+                        <span class="absolute h-full bg-indigo-600 rounded-md dark:bg-indigo-500 range-selected"></span>
                     </div>
                     <div class="relative range-input">
                         <input type="range" class="min" name="min_year" min="1900" max="{{ date('Y') }}"
@@ -37,23 +35,26 @@
                     </div>
                     <div class="range-price">
                         <div class="field">
-                            <label for="min_year">Min Year</label>
+                            <label for="min_year" class="text-gray-700 dark:text-gray-300">Min Year</label>
                             <input type="number" name="min_year_display" value="1900" min="1900"
-                                max="{{ date('Y') }}">
+                                max="{{ date('Y') }}"
+                                class="text-gray-900 bg-white dark:bg-gray-700 dark:text-white">
                         </div>
                         <div class="field">
-                            <label for="max_year">Max Year</label>
+                            <label for="max_year" class="text-gray-700 dark:text-gray-300">Max Year</label>
                             <input type="number" name="max_year_display" value="{{ date('Y') }}" min="1900"
-                                max="{{ date('Y') }}">
+                                max="{{ date('Y') }}"
+                                class="text-gray-900 bg-white dark:bg-gray-700 dark:text-white">
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="mb-6 genre-select">
-                <label for="genre" class="block mb-2 text-sm font-medium text-white/90">Select Genre</label>
+                <label for="genre" class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Select
+                    Genre</label>
                 <select name="genre"
-                    class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-700 focus:border-indigo-700 block w-full p-2.5 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-indigo-700 dark:focus:border-indigo-700">
+                    class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-600 focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-indigo-500 dark:focus:border-indigo-500">
                     <option value="">All Genres</option>
                     <option value="Action" {{ request('genre') == 'Action' ? 'selected' : '' }}>Action</option>
                     <option value="Adventure" {{ request('genre') == 'Adventure' ? 'selected' : '' }}>Adventure</option>
@@ -71,15 +72,17 @@
             </div>
 
             <button type="submit"
-                class="w-full px-4 py-2 text-white transition-colors duration-300 bg-indigo-700 rounded-lg hover:bg-blue-600">Filter
-                Movies</button>
+                class="w-full px-4 py-2 text-white transition-colors duration-300 bg-indigo-600 rounded-lg hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600">
+                Filter Movies
+            </button>
         </div>
     </form>
-
 </div>
+
 <div class="flex justify-center mt-6 filter-btn">
-
+    <!-- Add your filter button here if needed -->
 </div>
+
 <style>
     .range-input input {
         position: absolute;
@@ -96,7 +99,7 @@
         height: 20px;
         width: 20px;
         border-radius: 50%;
-        border: 3px solid #3498db;
+        border: 3px solid #4f46e5;
         background-color: #fff;
         pointer-events: auto;
         -webkit-appearance: none;
@@ -112,7 +115,7 @@
         height: 20px;
         width: 20px;
         border-radius: 50%;
-        border: 3px solid #3498db;
+        border: 3px solid #4f46e5;
         background-color: #fff;
         pointer-events: auto;
         -moz-appearance: none;
@@ -140,24 +143,41 @@
     .range-price label {
         font-size: 14px;
         margin-bottom: 5px;
-        color: #fff;
     }
 
     .range-price input {
         width: 80px;
         padding: 8px;
-        border: 1px solid #3A4452;
+        border: 1px solid #e2e8f0;
         border-radius: 5px;
-        background-color: transparent;
         font-size: 16px;
         text-align: center;
-        color: #fff;
         transition: border-color 0.3s;
     }
 
     .range-price input:focus {
         outline: none;
-        border-color: #3498db;
+        border-color: #4f46e5;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        .range-input input::-webkit-slider-thumb {
+            border-color: #6366f1;
+            background-color: #1f2937;
+        }
+
+        .range-input input::-moz-range-thumb {
+            border-color: #6366f1;
+            background-color: #1f2937;
+        }
+
+        .range-price input {
+            border-color: #4b5563;
+        }
+
+        .range-price input:focus {
+            border-color: #6366f1;
+        }
     }
 </style>
 

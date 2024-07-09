@@ -1,33 +1,29 @@
-<div class="flex items-center justify-center mt-4">
-    <div class="flex flex-col items-center justify-center ">
-        <div class="relative w-80">
-            <div class="absolute inset-y-0 flex items-center justify-between pointer-events-none start-0 ps-3">
-                <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                    viewBox="0 0 20 20">
-                    <path stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
-                </svg>
-
-            </div>
-            <input type="text" id="search"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-s-lg focus:ring-indigo-700 focus:border-indigo-700 block w-full py-2.5 pl-10 pr-8 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-indigo-700 dark:focus:border-indigo-700"
-                placeholder="Search..." required />
-
-            <div id="movie_results"
-                class="absolute left-0 right-0 z-10 overflow-hidden bg-white rounded-b-lg shadow-lg top-full dark:bg-gray-800"
-                style="display: none;">
-                <ul id="movie_data" class="flex flex-col gap-3 p-4  max-w-96 text-slate-800 dark:text-white">
-                </ul>
-            </div>
+<div class="flex items-center justify-center mt-8 mb-12">
+    <div class="relative max-w-xl w-80">
+        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+            <svg class="w-5 h-5 text-gray-400 dark:text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                fill="none" viewBox="0 0 20 20">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+            </svg>
+        </div>
+        <input type="text" id="search"
+            class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-l-lg bg-gray-50 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-indigo-500 dark:focus:border-indigo-500"
+            placeholder="Search movies..." required />
+        <div id="movie_results"
+            class="absolute left-0 right-0 z-10 mt-1 overflow-hidden bg-white rounded-lg shadow-lg dark:bg-gray-700"
+            style="display: none;">
+            <ul id="movie_data" class="py-2 overflow-y-auto text-gray-700 max-h-60 dark:text-gray-200">
+            </ul>
         </div>
     </div>
-    <button onclick="toggleFilter()" class="px-5 py-3 bg-indigo-700 rounded-r-lg">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-                d="M3 1L3 11M3 11C1.89543 11 1 11.8954 1 13C1 14.1046 1.89543 15 3 15M3 11C4.10457 11 5 11.8954 5 13C5 14.1046 4.10457 15 3 15M3 15L3 17M9 1V3M9 3C7.89543 3 7 3.89543 7 5C7 6.10457 7.89543 7 9 7M9 3C10.1046 3 11 3.89543 11 5C11 6.10457 10.1046 7 9 7M9 7V17M15 1V11M15 11C13.8954 11 13 11.8954 13 13C13 14.1046 13.8954 15 15 15M15 11C16.1046 11 17 11.8954 17 13C17 14.1046 16.1046 15 15 15M15 15V17"
-                stroke="white" stroke-width="2" stroke-linecap="round" />
+    <button onclick="toggleFilter()"
+        class="p-4 text-white bg-indigo-600 rounded-r-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:bg-indigo-500 dark:hover:bg-indigo-600">
+        <svg class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd"
+                d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z"
+                clip-rule="evenodd" />
         </svg>
-
     </button>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
