@@ -31,7 +31,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::get('/series', [SeriesController::class, 'index'])->name('series.home');
+    Route::get('/tv', [SeriesController::class, 'index'])->name('series.home');
     Route::get('/series/{id}', [SeriesController::class, 'show'])->name('series.show');
     Route::get('/series-filter', [SeriesController::class, 'filter'])->name('series.filter');
     Route::get('/series-search', [SeriesController::class, 'action'])->name('series.action');

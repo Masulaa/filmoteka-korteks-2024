@@ -20,7 +20,7 @@
             @include('layouts.filter')
             @include('layouts.search')
         @endif
-        @if (isset($series) && $series->count() > 0)
+        @if (isset($series) && $series->count() > 0 && Route::is('series.home'))
             @include('series.filter')
             @include('series.search')
         @endif
