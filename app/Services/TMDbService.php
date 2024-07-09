@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Movie;
+use App\Models\Series;
 use GuzzleHttp\Client;
 
 class TMDbService
@@ -16,6 +17,18 @@ class TMDbService
 
     public function getNumberOfAllMovies(){
         $response = $this->client->request('GET', 'https://api.themoviedb.org/3/movie/popular', [
+            'query' => [
+                'api_key' => env('TMDB_API_KEY'),
+                'page' => 1,
+            ],
+        ]);
+
+        $totalMovies = json_decode($response->getBody(), true)['total_results'];
+        return $totalMovies;
+    }
+
+    public function getNumberOfAllSeries(){
+        $response = $this->client->request('GET', 'https://api.themoviedb.org/3/tv/popular', [
             'query' => [
                 'api_key' => env('TMDB_API_KEY'),
                 'page' => 1,
@@ -199,4 +212,169 @@ public function fetchPopularMovies($numberOfMoviesToDownload)
 
         return null;
     }
+
+    public function fetchPopularSeries($numberOfSeriesToDownload)
+    {
+        echo "\033[34m::\033[0m Synchronizing TV series from TMDb...\n";
+    
+        $syncCount = 0;
+        $page = 1;
+        $nullResponseCount = 0;
+    
+        $genreMapping = [
+            10759 => 'Action & Adventure',
+            16 => 'Animation',
+            35 => 'Comedy',
+            80 => 'Crime',
+            99 => 'Documentary',
+            18 => 'Drama',
+            10751 => 'Family',
+            10762 => 'Kids',
+            9648 => 'Mystery',
+            10763 => 'News',
+            10764 => 'Reality',
+            10765 => 'Sci-Fi & Fantasy',
+            10766 => 'Soap',
+            10767 => 'Talk',
+            10768 => 'War & Politics',
+            37 => 'Western'
+        ];
+    
+        $seriesPerPage = 20;
+    
+        $totalPages = ceil($numberOfSeriesToDownload / $seriesPerPage);
+    
+        while ($page <= $totalPages) {
+            try {
+                $response = $this->client->request('GET', 'https://api.themoviedb.org/3/tv/popular', [
+                    'query' => [
+                        'api_key' => env('TMDB_API_KEY'),
+                        'page' => $page,
+                    ],
+                ]);
+    
+                $seriesData = json_decode($response->getBody(), true)['results'];
+    
+                if (empty($seriesData)) {
+                    $nullResponseCount++;
+                    if ($nullResponseCount >= 5) {
+                        echo "Received null responses 5 times in a row. Stopping synchronization.";
+                        break;
+                    }
+                    sleep(2);
+                    continue;
+                } else {
+                    $nullResponseCount = 0;
+                }
+    
+                foreach ($seriesData as $seriesItem) {
+                    if ($syncCount >= $numberOfSeriesToDownload) {
+                        break 2;
+                    }
+    
+                    $genres = isset($seriesItem['genre_ids']) ? $seriesItem['genre_ids'] : [];
+                    $genreNames = [];
+                    foreach ($genres as $genreId) {
+                        if (isset($genreMapping[$genreId])) {
+                            $genreNames[] = $genreMapping[$genreId];
+                        }
+                    }
+                    $genreString = implode(', ', $genreNames);
+    
+                    $seriesTitle = $seriesItem['name'];
+    
+                    
+    
+                    $videoLink = null;
+
+    
+                    $existingSeries = Series::where('title', $seriesItem['name'])->first();
+                    echo "($syncCount/$numberOfSeriesToDownload) ";
+                    if ($existingSeries) {
+                        if ($existingSeries->video_link !== $videoLink) {
+                            $existingSeries->update([
+                                'video_link' => $videoLink,
+                            ]);
+                            echo "Series '{$seriesTitle}' \033[31mupdated\033[0m with new video link.\n";
+                        } else {
+                            echo "Series '{$seriesTitle}' already exists.\033[35m Skip.\033[0m\n";
+                        }
+                    } else {
+                        $creator = $this->getSeriesCreator($seriesItem['id']);
+                        if ($creator === null) {
+                            $creator = 'unknown creator';
+                        }
+                        Series::create([
+                            'title' => $seriesItem['name'],
+                            'creator' => $creator,
+                            'first_air_date' => isset($seriesItem['first_air_date']) ? date('Y-m-d', strtotime($seriesItem['first_air_date'])) : null,
+                            'genre' => $genreString,
+                            'image' => $seriesItem['poster_path'] ? 'https://image.tmdb.org/t/p/w500'.$seriesItem['poster_path'] : null,
+                            'overview' => $seriesItem['overview'] ?? null,
+                            'backdrop_path' => $seriesItem['backdrop_path'] ? 'https://image.tmdb.org/t/p/original'.$seriesItem['backdrop_path'] : null,
+                            'cast' => $this->getSeriesCast($seriesItem['id']),
+                            'video_id' => $seriesItem['id']
+                        ]);
+                        echo "\033[33mNew\033[0m series '{$seriesTitle}' added to the database.";
+                        if ($videoLink != null) {
+                            echo " (\033[32mHas Video\033[0m) ";
+                        }
+                        echo "\n";
+                    }
+    
+                    $syncCount++;
+                }
+    
+            } catch (\Exception $e) {
+                echo "An error occurred: {$e->getMessage()}";
+                sleep(5);
+            }
+    
+            $page++;
+        }
+    
+        return $syncCount;
+    }
+    
+    protected function getSeriesCast($seriesId)
+    {
+        $response = $this->client->request('GET', "https://api.themoviedb.org/3/tv/{$seriesId}/credits", [
+            'query' => [
+                'api_key' => env('TMDB_API_KEY'),
+            ],
+        ]);
+        $creditsData = json_decode($response->getBody(), true);
+    
+        $cast = array_slice($creditsData['cast'], 0, 10); // Get top 10 cast members
+    
+        $detailedCast = [];
+        foreach ($cast as $actor) {
+            $detailedCast[] = [
+                'name' => $actor['name'],
+                'character' => $actor['character'],
+                'profile_path' => $actor['profile_path'] ? 'https://image.tmdb.org/t/p/w185' . $actor['profile_path'] : null,
+                'id' => $actor['id']
+            ];
+        }
+    
+        return $detailedCast;
+    }
+    
+    protected function getSeriesCreator($seriesId)
+    {
+        $response = $this->client->request('GET', "https://api.themoviedb.org/3/tv/{$seriesId}", [
+            'query' => [
+                'api_key' => env('TMDB_API_KEY'),
+            ],
+        ]);
+    
+        $seriesData = json_decode($response->getBody(), true);
+    
+        if (isset($seriesData['created_by']) && !empty($seriesData['created_by'])) {
+            return $seriesData['created_by'][0]['name'];
+        }
+    
+        return null;
+    }
+
 }
