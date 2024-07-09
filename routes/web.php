@@ -40,7 +40,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profile/reviews-ratings', [ProfileController::class, 'reviewsAndRatings'])->name('profile.reviews-ratings');
 
     Route::get('movies/{id}/watch', 'App\Http\Controllers\MovieController@watch')->name('movies.watch');
-
+    Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])->name('reviews.destroy');
+    Route::delete('/ratings/{rating}', [RatingController::class, 'destroy'])->name('ratings.destroy');
 
 });
 

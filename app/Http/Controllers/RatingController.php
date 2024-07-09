@@ -10,6 +10,11 @@ use Illuminate\Support\Facades\Log;
 
 class RatingController extends Controller
 {
+    public function destroy(Rating $rating)
+{
+    $rating->delete();
+    return redirect()->back()->with('success', 'Rating deleted successfully.');
+}
     public function store(Request $request, Movie $movie)
     {
         Log::info('Rating store method called', ['user_id' => Auth::id(), 'movie_id' => $movie->id]);
