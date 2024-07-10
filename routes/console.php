@@ -9,25 +9,8 @@ Schedule::command('movies:sync')
 
 Artisan::command('movies:sync {count?}', function ($count = null) {
     $tmdbService = new TMDbService();
+    $count = $count ?: $tmdbService->getNumberOfAllMovies();
 
-    if (is_null($count)) {
-        $count = 'all';
-    } else {
-        $confirmation = $this->confirm("{$count} movies will be downloaded from TheMovieDB. This may take a long time. Are you sure you want to continue?");
-
-        if (!$confirmation) {
-            $this->info("Operation cancelled.");
-            return;
-        }
-    }
-
-    if ($count === 'all') {
-        $totalMovies = $tmdbService->getNumberOfAllMovies();
-    } else {
-        $count = (int) $count;
-        $totalMovies = $count;
-    }
-
-    $tmdbService->fetchPopularMovies($totalMovies);
+    $tmdbService->fetchPopularMovies($count);
 
 })->purpose('Synchronize movies from TheMovieDB');
