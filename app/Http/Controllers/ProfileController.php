@@ -3,18 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
-use App\Models\Rating;
-use App\Models\Review;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
+use App\Models\{ Rating, Review };
+use Illuminate\Http\{ RedirectResponse, Request };
+use Illuminate\Support\Facades\{ Auth, Redirect };
 use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
     /**
      * Display the user's profile form.
+     *
+     * @param Request $request
+     * @return View
      */
     public function edit(Request $request): View
     {
@@ -25,6 +25,9 @@ class ProfileController extends Controller
 
     /**
      * Update the user's profile information.
+     *
+     * @param ProfileUpdateRequest $request
+     * @return RedirectResponse
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
@@ -41,6 +44,9 @@ class ProfileController extends Controller
 
     /**
      * Delete the user's account.
+     *
+     * @param Request $request
+     * @return RedirectResponse
      */
     public function destroy(Request $request): RedirectResponse
     {
@@ -60,7 +66,12 @@ class ProfileController extends Controller
         return Redirect::to('/');
     }
 
-    public function reviewsAndRatings()
+    /**
+     * Display the user's reviews and ratings.
+     *
+     * @return View
+     */
+    public function reviewsAndRatings(): View
     {
         $user = Auth::user();
 

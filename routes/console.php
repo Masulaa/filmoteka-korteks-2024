@@ -2,15 +2,17 @@
 
 use Illuminate\Support\Facades\Artisan;
 use App\Services\TMDbService;
-use Illuminate\Support\Facades\Schedule;
+use Illuminate\Console\Scheduling\Schedule;
 
-Schedule::command('movies:sync')
-            ->dailyAt('03:00');
+/**
+ * Command to synchronize movies from TheMovieDB.
+ * @param int|null $count
+ * @return void
+ */
 
 Artisan::command('movies:sync {count?}', function ($count = null) {
     $tmdbService = new TMDbService();
-    $count = $count ?: $tmdbService->getNumberOfAllMovies();
-
-    $tmdbService->fetchPopularMovies($count);
-
+    $tmdbService->fetchPopularMovies($count ?: $tmdbService->getNumberOfAllMovies());
 })->purpose('Synchronize movies from TheMovieDB');
+
+app(Schedule::class)->command('movies:sync')->dailyAt('03:00');

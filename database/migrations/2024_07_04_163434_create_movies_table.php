@@ -9,16 +9,16 @@ return new class extends Migration {
     {
         Schema::create('movies', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->string('director');
-            $table->date('release_date');
-            $table->string('genre');
+            $table->string('title')->index();
+            $table->string('director')->index();
+            $table->date('release_date')->index();
+            $table->string('genre')->index();
             $table->string('image')->nullable();
             $table->text('overview')->nullable();
             $table->string('trailer_link')->nullable();
             $table->string('video_id')->nullable();
             $table->string('backdrop_path')->nullable();
-            $table->text('cast')->nullable();
+            $table->json('cast')->nullable();
             $table->timestamps();
         });
     }

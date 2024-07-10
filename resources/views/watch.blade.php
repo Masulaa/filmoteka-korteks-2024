@@ -27,7 +27,7 @@
                     @endforeach
                 </ul>
             </div>
-            <h2>For better experience use addblocker, e.g. <a href="https://ublockorigin.com/" target="_blank"
+            <h2>For better experience use ad blocker, e.g. <a href="https://ublockorigin.com/" target="_blank"
                     rel="noopener noreferrer" class="underline">uBlock Origin</a></h2>
         </div>
     @else

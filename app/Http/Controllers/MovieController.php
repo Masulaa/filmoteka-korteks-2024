@@ -2,21 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Movie;
-use App\Models\Rating;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use DB;
-use Illuminate\Support\Facades\Log;
+use App\Models\{ Movie, Rating };
+use Illuminate\Http\{ Request, JsonResponse, RedirectResponse };
+use Illuminate\Support\Facades\{ Storage, Log };
+use Illuminate\View\View; 
 
 class MovieController extends Controller
 {
+    /**
+     * Display a listing of the movies.
+     *
+     * @return \Illuminate\View\View
+     */
     public function index()
     {
         $movies = Movie::paginate(20);
         return view('home', compact('movies'));
     }
-    public function action(Request $request)
+    /**
+     * Handle AJAX request for action movies search.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function action(Request $request): JsonResponse
     {
         if ($request->ajax()) {
             $output = '';
@@ -33,16 +42,15 @@ class MovieController extends Controller
 
             if ($total_row > 0) {
                 foreach ($movies as $movie) {
-                    //add href so when i click on movie it redirects me to movies/id
                     $output .= '
-                    <li >
+                    <li>
                         <a href="' . route('movie', $movie->id) . '" class="flex gap-2">
-                                <img width="56px " src="' . $movie->image . '" >
-                                <div class="flex flex-col">
-                                    <h1 class="text-lg font-bold">' . $movie->title . '</h1>
-                                    <span>' . $movie->director . ' | ' . $movie->release_date . '</span>
-                                    <span>' . '</span>
-                                </div>
+                            <img width="56px" src="' . $movie->image . '">
+                            <div class="flex flex-col">
+                                <h1 class="text-lg font-bold">' . $movie->title . '</h1>
+                                <span>' . $movie->director . ' | ' . $movie->release_date . '</span>
+                                <span></span>
+                            </div>
                         </a>
                     </li>';
                 }
@@ -53,39 +61,53 @@ class MovieController extends Controller
                 </tr>';
             }
 
-            $data = array(
+            $data = [
                 'html' => $output,
                 'total' => $total_row
-            );
+            ];
 
             return response()->json($data);
         }
+
+        return response()->json(['error' => 'Invalid request'], 400);
     }
 
-    public function create()
+    /**
+     * Show the form for creating a new movie.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function create(): View
     {
         return view('movies.create');
     }
+
+    /**
+     * Filter movies based on criteria.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response|\Illuminate\View\View
+     */
     public function filter(Request $request)
     {
         try {
             $query = Movie::query();
-    
+
             if ($request->filled('genre')) {
                 $query->where('genre', 'like', '%' . $request->genre . '%');
             }
-    
+
             if ($request->filled('min_year') && $request->filled('max_year')) {
                 $query->whereYear('release_date', '>=', $request->min_year)
                       ->whereYear('release_date', '<=', $request->max_year);
             }
-    
+
             $movies = $query->paginate(20)->appends($request->except('page'));
-    
+
             if ($request->ajax()) {
                 return view('movieslist', compact('movies'))->render();
             }
-    
+
             return view('home', compact('movies'));
         } catch (\Exception $e) {
             Log::error('Movie filter error: ' . $e->getMessage(), [
@@ -98,7 +120,13 @@ class MovieController extends Controller
     }
 
 
-    public function store(Request $request)
+    /**
+     * Store a newly created movie in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function store(Request $request): RedirectResponse
     {
         $request->validate([
             'title' => 'required',
@@ -120,10 +148,17 @@ class MovieController extends Controller
             'image' => $path,
         ]);
 
-        return redirect()->route('movies.index')->with('success', 'Movie created successfully.');
+        return redirect()->route('home')->with('success', 'Movie created successfully.');
     }
 
-    public function rate(Request $request, $id)
+    /**
+     * Store a new rating for a movie.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function rate(Request $request, int $id): RedirectResponse
     {
         $request->validate([
             'rating' => 'required|integer|min:1|max:5',
@@ -141,18 +176,37 @@ class MovieController extends Controller
         return redirect()->back()->with('success', 'Rating submitted successfully!');
     }
 
-
-    public function show(Movie $movie)
+    /**
+     * Display the specified movie.
+     *
+     * @param \App\Models\Movie $movie
+     * @return \Illuminate\View\View
+     */
+    public function show(Movie $movie): View
     {
         return view('movie', compact('movie'));
     }
 
-    public function edit(Movie $movie)
+    /**
+     * Show the form for editing the specified movie.
+     *
+     * @param \App\Models\Movie $movie
+     * @return \Illuminate\View\View
+     */
+    public function edit(Movie $movie): View
     {
         return view('movies.edit', compact('movie'));
     }
 
-    public function update(Request $request, Movie $movie)
+
+    /**
+     * Update the specified movie in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\Movie $movie
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function update(Request $request, Movie $movie): RedirectResponse
     {
         $request->validate([
             'title' => 'required',
@@ -181,10 +235,16 @@ class MovieController extends Controller
             'image' => $path,
         ]);
 
-        return redirect()->route('movies.index')->with('success', 'Movie updated successfully.');
+        return redirect()->route('home')->with('success', 'Movie updated successfully.');
     }
 
-    public function destroy(Movie $movie)
+    /**
+     * Remove the specified movie from storage.
+     *
+     * @param \App\Models\Movie $movie
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function destroy(Movie $movie): RedirectResponse
     {
         if ($movie->image) {
             Storage::delete($movie->image);
@@ -192,15 +252,18 @@ class MovieController extends Controller
 
         $movie->delete();
 
-        return redirect()->route('movies.index')->with('success', 'Movie deleted successfully.');
+        return redirect()->route('home')->with('success', 'Movie deleted successfully.');
     }
-    public function watch($id)
-    {
-        $movie = Movie::find($id);
 
-        if (!$movie) {
-            abort(404); 
-        }
+    /**
+     * Watch the specified movie.
+     *
+     * @param int $id
+     * @return \Illuminate\View\View
+     */
+    public function watch(int $id): View
+    {
+        $movie = Movie::findOrFail($id);
 
         return view('watch', compact('movie'));
     }

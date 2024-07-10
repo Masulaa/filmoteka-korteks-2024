@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\Movie;
 use App\Models\Rating;
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class RatingsTableSeeder extends Seeder

@@ -2,20 +2,32 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Movie;
-use App\Models\Rating;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
+use App\Models\{ Movie, Rating };
+use Illuminate\Http\{ Request, JsonResponse, RedirectResponse };
+use Illuminate\Support\Facades\{ Auth, Log };
 
 class RatingController extends Controller
 {
-    public function destroy(Rating $rating)
-{
-    $rating->delete();
-    return redirect()->back()->with('success', 'Rating deleted successfully.');
-}
-    public function store(Request $request, Movie $movie)
+    /**
+     * Remove the specified rating from storage.
+     *
+     * @param Rating $rating
+     * @return RedirectResponse
+     */
+    public function destroy(Rating $rating): RedirectResponse
+    {
+        $rating->delete();
+        return redirect()->back()->with('success', 'Rating deleted successfully.');
+    }
+
+    /**
+     * Store a newly created rating in storage.
+     *
+     * @param Request $request
+     * @param Movie $movie
+     * @return JsonResponse
+     */
+    public function store(Request $request, Movie $movie): JsonResponse
     {
         Log::info('Rating store method called', ['user_id' => Auth::id(), 'movie_id' => $movie->id]);
 
