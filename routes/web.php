@@ -18,7 +18,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return view('dashboard');
     })->name('dashboard');
 
-    Route::get('/home', [MovieController::class, 'index'])->name('home');
+    Route::get('/movies', [MovieController::class, 'index'])->name('home');
     Route::get('/about', function () {
         return view('about');
     })->name('about');
