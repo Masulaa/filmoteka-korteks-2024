@@ -11,7 +11,7 @@ class ContactController extends Controller
 {
     public function show()
     {
-        return view('contactsshow');
+        return view('contact_form');
     }
 
     public function submit(ContactRequest $request)

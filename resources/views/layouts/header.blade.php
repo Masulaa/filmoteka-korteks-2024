@@ -19,7 +19,7 @@
                     <x-nav-link :href="route('about')" :active="request()->routeIs('about')">
                         {{ __('About Us') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('contactsshow')" :active="request()->routeIs('contactsshow')">
+                    <x-nav-link :href="route('contact')" :active="request()->routeIs('contact')">
                         {{ __('Contact Us') }}
                     </x-nav-link>
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
@@ -94,7 +94,7 @@
             <x-responsive-nav-link :href="route('about')" :active="request()->routeIs('dashboard')">
                 {{ __('About Us') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('contactsshow')" :active="request()->routeIs('dashboard')">
+            <x-responsive-nav-link :href="route('contact')" :active="request()->routeIs('dashboard')">
                 {{ __('Contact Us') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
