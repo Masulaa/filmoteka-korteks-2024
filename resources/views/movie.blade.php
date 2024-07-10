@@ -34,7 +34,8 @@
                     @foreach (explode(',', $movie->genre) as $genre)
                         <li
                             class="px-3 py-1 text-sm text-white transition-all duration-300 bg-gray-800 rounded-full dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-600">
-                            {{ trim($genre) }}</li>
+                            <a href="{{ route('movies.filter', ['genre' => trim($genre)]) }}">{{ trim($genre) }}</a>
+                        </li>
                     @endforeach
                 </ul>
                 <p class="border-b-[1px] pb-6 transition-all duration-300">
