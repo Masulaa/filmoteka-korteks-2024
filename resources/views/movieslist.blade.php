@@ -21,7 +21,7 @@
                                         class="object-cover w-full h-full transition-transform duration-300 group-hover:scale-110">
                                     <div
                                         class="absolute inset-0 flex items-center justify-center transition-all duration-300 bg-black bg-opacity-50 opacity-0 group-hover:scale-110 group-hover:opacity-100">
-                                        <button
+                                        <button disabled
                                             class="px-4 py-2 text-white transition-colors duration-300 bg-indigo-600 rounded-md hover:bg-indigo-700 animate-pulse">
                                             Add to Favorites
                                         </button>
