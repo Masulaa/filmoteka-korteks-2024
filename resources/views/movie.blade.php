@@ -4,9 +4,16 @@
     use Illuminate\Support\Facades\Request;
     use App\Models\Movie;
     use App\Models\User;
+    use App\Models\Rating;
 
     $id = Request::route('id');
     $movie = Movie::find($id);
+    $user = Auth::user();
+    $rating = Rating::where('movie_id', $movie->id)
+        ->where('user_id', $user->id)
+        ->first();
+
+    $userRating = $rating ? $rating->rating : 0;
     $averageRating = $movie->averageRating();
     $countRatings = $movie->countRatings();
 @endphp
@@ -69,9 +76,9 @@
                 <div class="mt-4 rating">
                     <h3 class="mb-2 text-xl font-semibold animate-fade-in">Rate this movie</h3>
                     <div id="rating-section" class="flex items-center space-x-1" data-movie-id="{{ $movie->id }}"
-                        data-user-rating="{{ $userRating ?? 0 }}">
+                        data-user-rating="{{ $userRating }}">
                         @for ($i = 1; $i <= 10; $i++)
-                            <svg class="w-8 h-8 text-gray-300 transition-colors duration-200 ease-in-out cursor-pointer star hover:text-yellow-300"
+                            <svg class="w-8 h-8 text-gray-300 transition-colors duration-200 ease-in-out cursor-pointer star {{ $i <= $userRating ? 'text-yellow-300' : '' }}"
                                 data-rating="{{ $i }}" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                 fill="currentColor" viewBox="0 0 22 20">
                                 <path
@@ -79,22 +86,24 @@
                             </svg>
                         @endfor
                         <span class="ml-2 text-lg">Your rating: <span id="selected-rating"
-                                class="font-semibold">${}</span></span>
+                                class="font-semibold">{{ $userRating }}</span></span>
                     </div>
                     <button id="submit-rating"
                         class="px-4 py-2 mt-2 font-bold text-white transition-colors duration-300 bg-indigo-700 rounded hover:bg-indigo-900"
-                        disabled>
+                        {{ $userRating ? '' : 'disabled' }}>
                         Submit Rating
                     </button>
                     <p id="rating-message" class="mt-2"></p>
                     <p class="mt-2">Average Rating: <span id="average-rating">{{ $movie->averageRating() }}</span>
                         ({{ $movie->countRatings() }} ratings)</p>
-                    <a href="{{ route('movies.watch', ['id' => $movie->id]) }}"
-                        class="inline-block px-6 py-3 text-xl font-bold text-white transition-colors duration-300 transform bg-indigo-700 rounded-lg hover:bg-indigo-900 hover:scale-105">WATCH
-                        MOVIE</a>
-                    <a href="https://www.youtube.com/watch?v={{ $movie->trailer_link }}"
-                        class="inline-block px-6 py-3 text-xl font-bold text-white transition-colors duration-300 transform bg-indigo-700 rounded-lg hover:bg-indigo-900 hover:scale-105">WATCH
-                        TRAILER</a>
+                    <div class="flex gap-4 my-4">
+                        <a href="{{ route('movies.watch', ['id' => $movie->id]) }}"
+                            class="inline-block px-6 py-3 text-xl font-bold text-white transition-colors duration-300 transform bg-indigo-700 rounded-lg hover:bg-indigo-900 hover:scale-105">Watch
+                            Movie</a>
+                        <a href="https://www.youtube.com/watch?v={{ $movie->trailer_link }}"
+                            class="inline-block px-6 py-3 text-xl font-bold text-white transition-colors duration-300 transform bg-indigo-700 rounded-lg hover:bg-indigo-900 hover:scale-105">
+                            Watch Trailer</a>
+                    </div>
                 </div>
             </div>
     </section>
@@ -130,9 +139,6 @@
         </section>
     </div>
     <script>
-        // JS > PHP
-
-
         document.addEventListener('DOMContentLoaded', function() {
             const overviewSpan = document.getElementById('overview');
             const overviewFullSpan = document.getElementById('overview-full');
@@ -153,39 +159,18 @@
             }
         });
 
-        function toggleOverview() {
-            const overview = document.getElementById('overview');
-            const button = overview.nextElementSibling;
-
-            if (overview.classList.contains('truncate')) {
-                overview.classList.remove('truncate');
-                button.textContent = 'show less';
-            } else {
-                overview.classList.add('truncate');
-                button.textContent = 'show more';
-            }
-        }
-
         document.addEventListener('DOMContentLoaded', function() {
             const ratingSection = document.getElementById('rating-section');
             const movieId = ratingSection.dataset.movieId;
+            const userRating = ratingSection.dataset.userRating;
             const stars = document.querySelectorAll('.star');
             const selectedRatingSpan = document.getElementById('selected-rating');
             const submitButton = document.getElementById('submit-rating');
-            let selectedRating = 0;
-
-            stars.forEach(star => {
-                star.addEventListener('click', function() {
-                    selectedRating = this.dataset.rating;
-                    updateStars(selectedRating);
-                    selectedRatingSpan.textContent = selectedRating;
-                    submitButton.disabled = false;
-                });
-            });
+            let selectedRating = userRating ? parseInt(userRating) : 0;
 
             function updateStars(rating) {
                 stars.forEach(star => {
-                    if (parseInt(star.dataset.rating) <= parseInt(rating)) {
+                    if (parseInt(star.dataset.rating) <= rating) {
                         star.classList.remove('text-gray-300');
                         star.classList.add('text-yellow-300');
                     } else {
@@ -194,6 +179,17 @@
                     }
                 });
             }
+
+            updateStars(selectedRating);
+
+            stars.forEach(star => {
+                star.addEventListener('click', function() {
+                    selectedRating = parseInt(this.dataset.rating);
+                    updateStars(selectedRating);
+                    selectedRatingSpan.textContent = selectedRating;
+                    submitButton.disabled = false;
+                });
+            });
 
             submitButton.addEventListener('click', function() {
                 if (selectedRating === 0) {
@@ -230,12 +226,10 @@
             });
         });
 
-
         document.querySelectorAll('.animate-fade-in').forEach((element, index) => {
             element.style.animationDelay = `${index * 0.1}s`;
         });
     </script>
-
 
     <style>
         @keyframes fadeIn {
