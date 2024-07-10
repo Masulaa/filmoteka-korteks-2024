@@ -8,153 +8,115 @@ use GuzzleHttp\Client;
 class TMDbService
 {
     protected $client;
+    protected $genreMapping = [
+        28 => 'Action', 12 => 'Adventure', 16 => 'Animation', 35 => 'Comedy', 80 => 'Crime', 18 => 'Drama', 14 => 'Fantasy', 27 => 'Horror', 9648 => 'Mystery', 878 => 'Science Fiction', 10751 => 'Family'
+    ];
 
     public function __construct()
     {
         $this->client = new Client();
     }
 
-    public function getNumberOfAllMovies(){
-        $response = $this->client->request('GET', 'https://api.themoviedb.org/3/movie/popular', [
-            'query' => [
-                'api_key' => env('TMDB_API_KEY'),
-                'page' => 1,
-            ],
-        ]);
-
-        $totalMovies = json_decode($response->getBody(), true)['total_results'];
-        return $totalMovies;
+    public function getNumberOfAllMovies()
+    {
+        return $this->fetchData('https://api.themoviedb.org/3/movie/popular', ['page' => 1])['total_results'];
     }
 
     public function fetchPopularMovies($numberOfMoviesToDownload)
     {
         echo "\033[34m::\033[0m Synchronizing movies from TMDb...\n";
-        $syncCount = $page = $nullResponseCount = 0;
-        $genreMapping = [28 => 'Action', 12 => 'Adventure', 16 => 'Animation', 35 => 'Comedy', 80 => 'Crime', 18 => 'Drama', 14 => 'Fantasy', 27 => 'Horror', 9648 => 'Mystery', 878 => 'Science Fiction', 10751 => 'Family'];
-        $moviesPerPage = 20;
-        $totalPages = ceil($numberOfMoviesToDownload / $moviesPerPage);
-    
+        $syncCount = $skipCount = $newCount = $page = $nullResponseCount = 0;
+        $totalPages = ceil($numberOfMoviesToDownload / 20);
+
         while ($page++ < $totalPages) {
-            try {
-                $response = $this->client->request('GET', 'https://api.themoviedb.org/3/movie/popular', [
-                    'query' => ['api_key' => env('TMDB_API_KEY'), 'page' => $page],
-                ]);
-                $moviesData = json_decode($response->getBody(), true)['results'];
-                if (empty($moviesData) && ++$nullResponseCount >= 5) {
-                    echo "Received null responses 5 times in a row. Stopping synchronization.";
-                    break;
+            $moviesData = $this->fetchData('https://api.themoviedb.org/3/movie/popular', ['page' => $page])['results'] ?? [];
+            if (empty($moviesData) && ++$nullResponseCount >= 5) break;
+
+            foreach ($moviesData as $movieData) {
+                $syncCount++;
+                $progress = floor(($syncCount / $numberOfMoviesToDownload) * 100);
+                $bar = str_repeat('#', floor($progress / 2)) . str_repeat('-', 50 - floor($progress / 2));
+
+                if (Movie::where('title', $movieData['title'])->exists()) {
+                    echo "\033[K($syncCount/$numberOfMoviesToDownload) Movie '{$movieData['title']}' already exists.\033[35m Skip\033[0m.\n";
+                    $skipCount++;
+                } else {
+                    $this->createOrUpdateMovie($movieData);
+                    $newCount++;
+                    echo "\033[K($syncCount/$numberOfMoviesToDownload) \033[33mNew\033[0m movie '{$movieData['title']}' added to the database.\n";
                 }
-                $nullResponseCount = empty($moviesData) ? ++$nullResponseCount : 0;
-                foreach ($moviesData as $movieData) {
-                    $syncCount++;
-                    if ($syncCount >= $numberOfMoviesToDownload) break 2;
-                    echo "($syncCount/$numberOfMoviesToDownload) ";
-                    if (Movie::where('title', $movieData['title'])->exists()) {
-                        echo "Movie '{$movieData['title']}' already exists.\033[35m Skip.\033[0m\n";
-                        continue;
-                    }
-                    $videoId = $this->getYouTubeTrailerId($movieData['id']);
-                    Movie::create([
-                        'title' => $movieData['title'],
-                        'director' => $this->getDirectorName($movieData['id']),
-                        'release_date' => isset($movieData['release_date']) ? date('Y-m-d', strtotime($movieData['release_date'])) : null,
-                        'genre' => $this->getGenres($movieData['genre_ids'], $genreMapping),
-                        'image' => $this->getPosterUrl($movieData['poster_path']),
-                        'overview' => $movieData['overview'] ?? null,
-                        'backdrop_path' => $this->getBackdropUrl($movieData['backdrop_path']),
-                        'cast' => $this->getCast($movieData['id']),
-                        'trailer_link' => $videoId,
-                        'video_id' => $movieData['id']
-                    ]);
-                    echo "\033[33mNew\033[0m movie '{$movieData['title']}' added to the database.\n";
-                }
-            } catch (\Exception $e) {
-                echo "An error occurred: {$e->getMessage()}";
+                echo "[$bar] $progress%\r";
             }
         }
-        echo "Successfully synchronized {$syncCount} movies.\n";
-    }    
+        echo "\033[KSuccessfully synchronized {$syncCount} movies.\nSkip: {$skipCount}\nNew: {$newCount}\n";
+    }
+
+    private function fetchData($url, $query)
+    {
+        try {
+            $response = $this->client->request('GET', $url, ['query' => array_merge(['api_key' => env('TMDB_API_KEY')], $query)]);
+            return json_decode($response->getBody(), true);
+        } catch (\Exception $e) {
+            echo "An error occurred: {$e->getMessage()}";
+            return [];
+        }
+    }
+
+    private function createOrUpdateMovie($movieData)
+    {
+        $videoId = $this->getYouTubeTrailerId($movieData['id']);
+        Movie::updateOrCreate(
+            ['title' => $movieData['title']],
+            [
+                'director' => $this->getDirector($movieData['id']),
+                'release_date' => isset($movieData['release_date']) ? date('Y-m-d', strtotime($movieData['release_date'])) : null,
+                'genre' => $this->getGenres($movieData['genre_ids']),
+                'image' => $this->getUrl($movieData['poster_path'], 'w500'),
+                'overview' => $movieData['overview'] ?? null,
+                'backdrop_path' => $this->getUrl($movieData['backdrop_path'], 'original'),
+                'cast' => $this->getCast($movieData['id']),
+                'trailer_link' => $videoId,
+                'video_id' => $movieData['id']
+            ]
+        );
+    }
 
     private function getYouTubeTrailerId($movieId)
     {
-        $response = $this->client->request('GET', "https://api.themoviedb.org/3/movie/{$movieId}/videos", [
-            'query' => [
-                'api_key' => env('TMDB_API_KEY'),
-            ],
-        ]);
-        $videosData = json_decode($response->getBody(), true)['results'];
-        foreach ($videosData as $video) {
-            if ($video['site'] == 'YouTube' && $video['type'] == 'Trailer') {
-                return $video['key'];
-            }
+        $videos = $this->fetchData("https://api.themoviedb.org/3/movie/{$movieId}/videos", [])['results'] ?? [];
+        foreach ($videos as $video) {
+            if ($video['site'] === 'YouTube' && $video['type'] === 'Trailer') return $video['key'];
         }
         return null;
     }
 
-    private function getDirectorName($movieId)
+    private function getDirector($movieId)
     {
-        $director = $this->getDirector($movieId);
-        return $director === null ? 'unknown director' : $director;
+        $crew = $this->fetchData("https://api.themoviedb.org/3/movie/{$movieId}/credits", [])['crew'] ?? [];
+        foreach ($crew as $member) {
+            if ($member['job'] === 'Director') return $member['name'];
+        }
+        return 'unknown director';
     }
 
-    private function getGenres($genreIds, $genreMapping)
+    private function getGenres($genreIds)
     {
-        $genreNames = [];
-        foreach ($genreIds as $genreId) {
-            if (isset($genreMapping[$genreId])) {
-                $genreNames[] = $genreMapping[$genreId];
-            }
-        }
-        return implode(', ', $genreNames);
+        return implode(', ', array_map(fn($id) => $this->genreMapping[$id] ?? '', $genreIds));
     }
 
-    private function getPosterUrl($posterPath)
-    { return $posterPath ? 'https://image.tmdb.org/t/p/w500' . $posterPath : null; }
-
-    private function getBackdropUrl($backdropPath)
-    { return $backdropPath ? 'https://image.tmdb.org/t/p/original' . $backdropPath : null; }
-
-    protected function getCast($movieId)
+    private function getUrl($path, $size)
     {
-        $response = $this->client->request('GET', "https://api.themoviedb.org/3/movie/{$movieId}/credits", [
-            'query' => [
-                'api_key' => env('TMDB_API_KEY'),
-            ],
-        ]);
-        $creditsData = json_decode($response->getBody(), true);
-
-        $cast = array_slice($creditsData['cast'], 0, 10); // Get top 10 cast members
-
-        $detailedCast = [];
-        foreach ($cast as $actor) {
-            $detailedCast[] = [
-                'name' => $actor['name'],
-                'character' => $actor['character'],
-                'profile_path' => $actor['profile_path'] ? 'https://image.tmdb.org/t/p/w185' . $actor['profile_path'] : null,
-                'id' => $actor['id']
-            ];
-        }
-
-        return $detailedCast;
+        return $path ? "https://image.tmdb.org/t/p/{$size}{$path}" : null;
     }
 
-
-    protected function getDirector($movieId)
+    private function getCast($movieId)
     {
-        $response = $this->client->request('GET', "https://api.themoviedb.org/3/movie/{$movieId}/credits", [
-            'query' => [
-                'api_key' => env('TMDB_API_KEY'),
-            ],
-        ]);
-
-        $creditsData = json_decode($response->getBody(), true);
-
-        foreach ($creditsData['crew'] as $crewMember) {
-            if ($crewMember['job'] === 'Director') {
-                return $crewMember['name'];
-            }
-        }
-
-        return null;
+        $cast = array_slice($this->fetchData("https://api.themoviedb.org/3/movie/{$movieId}/credits", [])['cast'] ?? [], 0, 10);
+        return array_map(fn($actor) => [
+            'name' => $actor['name'],
+            'character' => $actor['character'],
+            'profile_path' => $this->getUrl($actor['profile_path'], 'w185'),
+            'id' => $actor['id']
+        ], $cast);
     }
 }
