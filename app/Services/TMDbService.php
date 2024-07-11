@@ -38,6 +38,9 @@ class TMDbService
             if (empty($moviesData) && ++$nullResponseCount >= 5) break;
 
             foreach ($moviesData as $movieData) {
+                if ($syncCount >= $numberOfMoviesToDownload) {
+                    break 2;
+                }
                 $syncCount++;
                 $progress = floor(($syncCount / $numberOfMoviesToDownload) * 100);
                 $bar = str_repeat('#', floor($progress / 2)) . str_repeat('-', 50 - floor($progress / 2));
