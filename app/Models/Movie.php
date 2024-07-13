@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $title
  * @property string|null $director
  * @property string|null $release_date
- * @property string|null $genres
+ * @property string|null $genre_ids
  * @property float|null $rating
  * @property string|null $image
  * @property string|null $overview
@@ -59,7 +59,7 @@ class Movie extends Model
         'title',
         'director',
         'release_date',
-        'genres',
+        'genre_ids',
         'rating',
         'image',
         'overview',
@@ -123,5 +123,10 @@ class Movie extends Model
     public function countRatings()
     {
         return $this->ratings()->count();
+    }
+
+    public function genres()
+    {
+        return $this->belongsToMany(Movie::class, 'movie_genre', 'movie_id', 'genre_id');
     }
 }

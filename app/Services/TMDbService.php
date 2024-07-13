@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\Movie;
+use App\Models\{ Movie, Genre };
 use GuzzleHttp\{ Client, Exception\GuzzleException};
 
 class TMDbService
@@ -88,21 +88,31 @@ class TMDbService
     private function createOrUpdateMovie(array $movieData): void
     {
         $videoId = $this->getYouTubeTrailerId($movieData['id']);
-        Movie::updateOrCreate(
+    
+        // Provera postojanja žanrova u bazi
+        $existingGenres = Genre::whereIn('id', $movieData['genre_ids'])->pluck('id')->toArray();
+    
+        // Kreiranje ili ažuriranje filma
+        $movie = Movie::updateOrCreate(
             ['title' => $movieData['title']],
             [
                 'director' => $this->getDirector($movieData['id']),
                 'release_date' => isset($movieData['release_date']) ? date('Y-m-d', strtotime($movieData['release_date'])) : null,
-                'genres' => json_encode($movieData['genre_ids']),
                 'image' => $this->getUrl($movieData['poster_path'], 'w500'),
                 'overview' => $movieData['overview'] ?? null,
                 'backdrop_path' => $this->getUrl($movieData['backdrop_path'], 'original'),
                 'cast' => $this->getCast($movieData['id']),
                 'trailer_link' => $videoId,
-                'video_id' => $movieData['id']
+                'video_id' => $movieData['id'],
+                'genre_ids' => json_encode($movieData['genre_ids']),
             ]
         );
+    
+        // Sinhronizacija žanrova sa veznom tabelom movie_genre
+        $movie->genres()->sync($existingGenres);
     }
+    
+    
 
     /**
      * Get YouTube trailer ID for the given movie.

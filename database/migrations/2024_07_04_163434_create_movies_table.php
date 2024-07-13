@@ -12,7 +12,7 @@ return new class extends Migration {
             $table->string('title')->index();
             $table->string('director')->index();
             $table->date('release_date')->index();
-            $table->string('genres')->index()->nullable();
+            $table->json('genre_ids')->index()->nullable();
             $table->string('image')->nullable();
             $table->text('overview')->nullable();
             $table->string('trailer_link')->nullable();
