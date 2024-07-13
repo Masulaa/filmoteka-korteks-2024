@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{ Movie, Rating };
+use App\Models\{ Movie, Rating, Genre };
 use Illuminate\Http\{ Request, JsonResponse, RedirectResponse };
 use Illuminate\Support\Facades\{ Storage, Log };
 use Illuminate\View\View; 
@@ -33,7 +33,6 @@ class MovieController extends Controller
 
             $movies = Movie::where('title', 'like', '%' . $query . '%')
                 ->orWhere('director', 'like', '%' . $query . '%')
-                ->orWhere('genre', 'like', '%' . $query . '%')
                 ->orderBy('id', 'desc')
                 ->take(5)
                 ->get();
@@ -92,22 +91,24 @@ class MovieController extends Controller
     {
         try {
             $query = Movie::query();
-
+    
             if ($request->filled('genre')) {
-                $query->where('genre', 'like', '%' . $request->genre . '%');
+                $query->whereHas('genres', function ($q) use ($request) {
+                    $q->where('name', $request->genre);
+                });
             }
-
+    
             if ($request->filled('min_year') && $request->filled('max_year')) {
                 $query->whereYear('release_date', '>=', $request->min_year)
                       ->whereYear('release_date', '<=', $request->max_year);
             }
-
+    
             $movies = $query->paginate(20)->appends($request->except('page'));
-
+    
             if ($request->ajax()) {
                 return view('movieslist', compact('movies'))->render();
             }
-
+    
             return view('home', compact('movies'));
         } catch (\Exception $e) {
             Log::error('Movie filter error: ' . $e->getMessage(), [
@@ -118,6 +119,7 @@ class MovieController extends Controller
             return response()->json(['error' => 'An error occurred while filtering movies: ' . $e->getMessage()], 500);
         }
     }
+    
 
 
     /**

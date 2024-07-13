@@ -3,10 +3,7 @@
 @section('content')
 <div class="container">
     <h1 class="text-3xl font-bold tracking-tight ml-10 mt-4 text-white">{{ $movie->title }}</h1>
-
     @if ($movie->video_id)
-
-
         <div class="embed-responsive embed-responsive-16by9 mt-4 mb-4 flex justify-center">
             <iframe class="embed-responsive-item" src="https://vidsrc.pro/embed/movie/{{ $movie->video_id }}"
                 allowfullscreen allow="autoplay; fullscreen" allowfullscreen="yes" frameborder="no" scrolling="no"
@@ -22,8 +19,10 @@
                     {{ $movie->averageRating() }} ({{ $movie->countRatings() }} ratings)
                 </p>
                 <ul class="flex flex-row items-center sm:gap-[14px] xs:gap-3 gap-[6px] flex-wrap ml-3 ">
-                    @foreach (explode(',', $movie->genres) as $genre)
-                        <li class="px-3 py-1 text-sm text-white bg-gray-800 rounded-full">{{ trim($genre) }}</li>
+                    @foreach ($movie->genres as $genre)
+                        <li class="px-3 py-1 text-sm text-white transition-all duration-300 bg-gray-800 rounded-full dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-600">
+                            <a href="{{ route('movies.filter', ['genre' => $genre->name]) }}">{{ $genre->name }}</a>
+                        </li>
                     @endforeach
                 </ul>
             </div>

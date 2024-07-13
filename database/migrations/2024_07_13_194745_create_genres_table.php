@@ -20,19 +20,7 @@ class CreateGenresTable extends Migration
         });
 
         // ПРИВРЕМЕНО 
-        $genreMapping = [
-            28 => 'Action',
-            12 => 'Adventure',
-            16 => 'Animation',
-            35 => 'Comedy',
-            80 => 'Crime',
-            18 => 'Drama',
-            14 => 'Fantasy',
-            27 => 'Horror',
-            9648 => 'Mystery',
-            878 => 'Science Fiction',
-            10751 => 'Family'
-        ];
+        $genreMapping = [ 28 => 'Action', 12 => 'Adventure', 16 => 'Animation', 35 => 'Comedy', 80 => 'Crime', 18 => 'Drama', 14 => 'Fantasy', 27 => 'Horror', 9648 => 'Mystery', 878 => 'Science Fiction', 10751 => 'Family' ];
 
         $genres = [];
         foreach ($genreMapping as $id => $name) {

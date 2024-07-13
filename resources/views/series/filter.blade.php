@@ -52,21 +52,11 @@
 
             <div class="mb-6 genre-select">
                 <label for="genre" class="block mb-2 text-sm font-medium text-white/90">Select Genre</label>
-                <select name="genre"
-                    class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-700 focus:border-indigo-700 block w-full p-2.5 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-indigo-700 dark:focus:border-indigo-700">
-                    <option value="">All Genres</option>
-                    <option value="Action" {{ request('genre') == 'Action' ? 'selected' : '' }}>Action</option>
-                    <option value="Adventure" {{ request('genre') == 'Adventure' ? 'selected' : '' }}>Adventure</option>
-                    <option value="Animation" {{ request('genre') == 'Animation' ? 'selected' : '' }}>Animation</option>
-                    <option value="Comedy" {{ request('genre') == 'Comedy' ? 'selected' : '' }}>Comedy</option>
-                    <option value="Crime" {{ request('genre') == 'Crime' ? 'selected' : '' }}>Crime</option>
-                    <option value="Drama" {{ request('genre') == 'Drama' ? 'selected' : '' }}>Drama</option>
-                    <option value="Fantasy" {{ request('genre') == 'Fantasy' ? 'selected' : '' }}>Fantasy</option>
-                    <option value="Horror" {{ request('genre') == 'Horror' ? 'selected' : '' }}>Horror</option>
-                    <option value="Mystery" {{ request('genre') == 'Mystery' ? 'selected' : '' }}>Mystery</option>
-                    <option value="Science Fiction" {{ request('genre') == 'Science Fiction' ? 'selected' : '' }}>
-                        Science Fiction</option>
-                    <option value="Family" {{ request('genre') == 'Family' ? 'selected' : '' }}>Family</option>
+                <select name="genre" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-700 focus:border-indigo-700 block w-full p-2.5 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-indigo-700 dark:focus:border-indigo-700">
+                <option value="">All Genres</option>
+                @foreach ($genres as $genre)
+                    <option value="{{ $genre->name }}" {{ request('genre') == $genre->name ? 'selected' : '' }}>{{ $genre->name }}</option>
+                @endforeach
                 </select>
             </div>
 

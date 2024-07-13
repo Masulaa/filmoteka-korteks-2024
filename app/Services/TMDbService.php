@@ -89,10 +89,8 @@ class TMDbService
     {
         $videoId = $this->getYouTubeTrailerId($movieData['id']);
     
-        // Provera postojanja žanrova u bazi
         $existingGenres = Genre::whereIn('id', $movieData['genre_ids'])->pluck('id')->toArray();
     
-        // Kreiranje ili ažuriranje filma
         $movie = Movie::updateOrCreate(
             ['title' => $movieData['title']],
             [
@@ -104,11 +102,10 @@ class TMDbService
                 'cast' => $this->getCast($movieData['id']),
                 'trailer_link' => $videoId,
                 'video_id' => $movieData['id'],
-                'genre_ids' => json_encode($movieData['genre_ids']),
+                //'genre_ids' => json_encode($movieData['genre_ids']),
             ]
         );
     
-        // Sinhronizacija žanrova sa veznom tabelom movie_genre
         $movie->genres()->sync($existingGenres);
     }
     
