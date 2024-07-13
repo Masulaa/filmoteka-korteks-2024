@@ -31,7 +31,7 @@
                 class="text-gray-300 animate-fade-in dark:text-gray-200 sm:max-w-[80vw] max-w-[90vw] md:max-w-[520px] font-nunito flex flex-col lg:gap-5 sm:gap-4 xs:gap-[14px] gap-3 mb-8 flex-1">
                 <h2 class="text-4xl font-bold md:max-w-[420px] animate-fade-in">{{ $movie->title }}</h2>
                 <ul class="flex flex-row items-center sm:gap-[14px] xs:gap-3 gap-[6px] flex-wrap">
-                    @foreach (explode(',', $movie->genre) as $genre)
+                    @foreach (explode(',', $movie->genres) as $genre)
                         <li
                             class="px-3 py-1 text-sm text-white transition-all duration-300 bg-gray-800 rounded-full dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-600">
                             <a href="{{ route('movies.filter', ['genre' => trim($genre)]) }}">{{ trim($genre) }}</a>

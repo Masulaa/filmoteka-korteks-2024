@@ -93,7 +93,7 @@ class TMDbService
             [
                 'director' => $this->getDirector($movieData['id']),
                 'release_date' => isset($movieData['release_date']) ? date('Y-m-d', strtotime($movieData['release_date'])) : null,
-                'genre' => $this->getGenres($movieData['genre_ids']),
+                'genres' => json_encode($movieData['genre_ids']),
                 'image' => $this->getUrl($movieData['poster_path'], 'w500'),
                 'overview' => $movieData['overview'] ?? null,
                 'backdrop_path' => $this->getUrl($movieData['backdrop_path'], 'original'),
@@ -134,17 +134,6 @@ class TMDbService
             if ($member['job'] === 'Director') return $member['name'];
         }
         return 'unknown director';
-    }
-
-    /**
-     * Get genres for the given genre IDs.
-     *
-     * @param array $genreIds
-     * @return string
-     */
-    private function getGenres(array $genreIds): string
-    {
-        return implode(', ', array_map(fn($id) => $this->genreMapping[$id] ?? '', $genreIds));
     }
 
     /**

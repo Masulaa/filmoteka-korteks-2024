@@ -22,7 +22,7 @@
                     {{ $movie->averageRating() }} ({{ $movie->countRatings() }} ratings)
                 </p>
                 <ul class="flex flex-row items-center sm:gap-[14px] xs:gap-3 gap-[6px] flex-wrap ml-3 ">
-                    @foreach (explode(',', $movie->genre) as $genre)
+                    @foreach (explode(',', $movie->genres) as $genre)
                         <li class="px-3 py-1 text-sm text-white bg-gray-800 rounded-full">{{ trim($genre) }}</li>
                     @endforeach
                 </ul>

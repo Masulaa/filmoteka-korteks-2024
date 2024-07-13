@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $title
  * @property string|null $director
  * @property string|null $release_date
- * @property string|null $genre
+ * @property string|null $genres
  * @property float|null $rating
  * @property string|null $image
  * @property string|null $overview
@@ -59,7 +59,7 @@ class Movie extends Model
         'title',
         'director',
         'release_date',
-        'genre',
+        'genres',
         'rating',
         'image',
         'overview',
