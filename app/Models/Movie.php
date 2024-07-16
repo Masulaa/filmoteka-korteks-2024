@@ -66,7 +66,7 @@ class Movie extends Model
         'backdrop_path',
         'trailer_link',
         'video_id',
-        'cast'
+        //'cast'
     ];
 
     /**
@@ -88,15 +88,6 @@ class Movie extends Model
     {
         return $this->hasMany(Review::class);
     }
-
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'cast' => 'array',
-    ];
 
     /**
      * Calculate the average rating for the movie.
@@ -128,5 +119,9 @@ class Movie extends Model
     public function genres()
     {
         return $this->belongsToMany(Genre::class, 'movie_genre', 'movie_id', 'genre_id');
+    }
+    public function cast()
+    {
+        return $this->hasMany(Cast::class);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\{ Movie, Genre };
+use App\Models\{ Movie, Genre, Cast };
 use GuzzleHttp\{ Client, Exception\GuzzleException};
 
 class TMDbService
@@ -88,7 +88,6 @@ class TMDbService
     private function createOrUpdateMovie(array $movieData): void
     {
         $videoId = $this->getYouTubeTrailerId($movieData['id']);
-    
         $existingGenres = Genre::whereIn('id', $movieData['genre_ids'])->pluck('id')->toArray();
     
         $movie = Movie::updateOrCreate(
@@ -99,15 +98,26 @@ class TMDbService
                 'image' => $this->getUrl($movieData['poster_path'], 'w500'),
                 'overview' => $movieData['overview'] ?? null,
                 'backdrop_path' => $this->getUrl($movieData['backdrop_path'], 'original'),
-                'cast' => $this->getCast($movieData['id']),
                 'trailer_link' => $videoId,
                 'video_id' => $movieData['id'],
-                //'genre_ids' => json_encode($movieData['genre_ids']),
             ]
         );
     
+        $castData = $this->getCast($movieData['id']);
+        foreach ($castData as $actorData) {
+            $cast = Cast::updateOrCreate(
+                ['movie_id' => $movie->id, 'actor_id' => $actorData['id']],
+                [
+                    'name' => $actorData['name'],
+                    'character' => $actorData['character'],
+                    'profile_path' => $actorData['profile_path'],
+                ]
+            );
+        }
+    
         $movie->genres()->sync($existingGenres);
     }
+    
     
     
 

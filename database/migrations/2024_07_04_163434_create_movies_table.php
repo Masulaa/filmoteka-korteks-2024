@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->string('trailer_link')->nullable();
             $table->string('video_id')->nullable();
             $table->string('backdrop_path')->nullable();
-            $table->json('cast')->nullable();
+            //$table->json('cast')->nullable();
             $table->timestamps();
         });
     }
