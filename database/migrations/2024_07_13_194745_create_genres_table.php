@@ -4,6 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
+use GuzzleHttp\Client;
 
 class CreateGenresTable extends Migration
 {
@@ -19,15 +20,20 @@ class CreateGenresTable extends Migration
             $table->string('name');
         });
 
-        // ПРИВРЕМЕНО 
-        $genreMapping = [ 28 => 'Action', 12 => 'Adventure', 16 => 'Animation', 35 => 'Comedy', 80 => 'Crime', 18 => 'Drama', 14 => 'Fantasy', 27 => 'Horror', 9648 => 'Mystery', 878 => 'Science Fiction', 10751 => 'Family' ];
+        $client = new Client();
+        $apiKey = config('services.tmdb.api_key'); 
+        $response = $client->get("https://api.themoviedb.org/3/genre/movie/list", [
+            'query' => ['api_key' => $apiKey, 'language' => 'en-US']
+        ]);
 
-        $genres = [];
-        foreach ($genreMapping as $id => $name) {
-            $genres[] = ['id' => $id, 'name' => $name];
+        $genres = json_decode($response->getBody()->getContents(), true)['genres'];
+
+        $genresData = [];
+        foreach ($genres as $genre) {
+            $genresData[] = ['id' => $genre['id'], 'name' => $genre['name']];
         }
 
-        DB::table('genres')->insert($genres);
+        DB::table('genres')->insert($genresData);
     }
 
     /**
