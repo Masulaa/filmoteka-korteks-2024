@@ -15,7 +15,7 @@ class ContactController extends Controller
      */
     public function show(): \Illuminate\View\View
     {
-        return view('contact_form');
+        return view('contact.contact_form');
     }
 
     /**

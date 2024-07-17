@@ -18,7 +18,7 @@ class MovieController extends Controller
     public function index()
     {
         $movies = Movie::paginate(20);
-        return view('home', compact('movies'));
+        return view('movie.home', compact('movies'));
     }
     /**
      * Handle AJAX request for action movies search.
@@ -37,7 +37,7 @@ class MovieController extends Controller
                 ->take(5)
                 ->get();
 
-            $html = view('movie_list', compact('movies'))->render();
+            $html = view('movie.movie_list', compact('movies'))->render();
 
             $data = [
                 'html' => $html,
@@ -86,10 +86,10 @@ class MovieController extends Controller
             $movies = $query->paginate(20)->appends($request->except('page'));
 
             if ($request->ajax()) {
-                return view('movieslist', compact('movies'))->render();
+                return view('movie.movieslist', compact('movies'))->render();
             }
 
-            return view('home', compact('movies'));
+            return view('movie.home', compact('movies'));
         } catch (\Exception $e) {
             Log::error('Movie filter error: ' . $e->getMessage(), [
                 'file' => $e->getFile(),
@@ -175,7 +175,7 @@ class MovieController extends Controller
         $userRating = $rating ? $rating->rating : 0;
         $averageRating = $movie->averageRating();
         $countRatings = $movie->countRatings();
-        return view('movie', compact('movie', 'userRating', 'averageRating', 'countRatings'));
+        return view('movie.movie', compact('movie', 'userRating', 'averageRating', 'countRatings'));
     }
     /**
      * Show the form for editing the specified movie.
@@ -255,6 +255,6 @@ class MovieController extends Controller
     {
         $movie = Movie::findOrFail($id);
 
-        return view('watch', compact('movie'));
+        return view('movie.watch', compact('movie'));
     }
 }

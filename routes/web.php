@@ -7,8 +7,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', fn() => redirect('login'));
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::view('/dashboard', 'dashboard')->name('dashboard');
-    Route::view('/about', 'about')->name('about');
+    Route::view('/dashboard', 'dashboard.dashboard')->name('dashboard');
+    Route::view('/about', 'about.about')->name('about');
 
     Route::get('/movies', [MovieController::class, 'index'])->name('home');
     Route::get('/movies/{id}', [MovieController::class, 'show'])->name('movie');
