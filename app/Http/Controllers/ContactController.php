@@ -4,20 +4,30 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ContactRequest;
 use App\Mail\ContactMail;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
 class ContactController extends Controller
 {
-    public function show()
+    /**
+     * Show the contact form.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function show(): \Illuminate\View\View
     {
         return view('contact_form');
     }
 
-    public function submit(ContactRequest $request)
+    /**
+     * Submit the contact form.
+     *
+     * @param ContactRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function submit(ContactRequest $request): \Illuminate\Http\RedirectResponse
     {
         Mail::to('my@mail.com')->send(new ContactMail($request->name, $request->email, $request->content));
 
-        return to_route('home');
+        return redirect()->route('home');
     }
 }

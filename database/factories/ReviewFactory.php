@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\{ User, Movie };
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,9 +18,10 @@ class ReviewFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => 1,
-            'movie_id' => rand(1, 20),
-            'rating' => $this->faker->name,
+            'user_id' => User::factory()->create()->id,
+            'movie_id' => Movie::factory()->create()->id,
+            'content' => $this->faker->paragraph(),
+            'rating' => $this->faker->numberBetween(1, 10),
         ];
     }
 }

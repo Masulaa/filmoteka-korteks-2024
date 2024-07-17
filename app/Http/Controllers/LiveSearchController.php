@@ -3,16 +3,28 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use DB;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 
 class LiveSearchController extends Controller
 {
-    public function index()
+    /**
+     * Display the live search view.
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function index(): \Illuminate\Contracts\View\View
     {
-        return view('livesearch'); // Replace 'livesearch' with your actual view name
+        return view('livesearch');
     }
 
-    public function action(Request $request)
+    /**
+     * Handle AJAX request for live search.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function action(Request $request): JsonResponse
     {
         if ($request->ajax()) {
             $output = '';
@@ -60,11 +72,11 @@ class LiveSearchController extends Controller
                 </div>
                 ';
             }
-            $data = array(
+            $data = [
                 'html' => $output,
                 'total' => $total_row
-            );
-            return response()->json($data);
+            ];
         }
+        return response()->json($data);
     }
 }

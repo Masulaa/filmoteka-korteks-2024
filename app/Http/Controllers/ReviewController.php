@@ -2,19 +2,31 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Movie;
-
-use App\Models\Review;
-use Illuminate\Http\Request;
+use App\Models\{ Movie, Review };
+use Illuminate\Http\{ RedirectResponse, Request };
 
 class ReviewController extends Controller
 {
-    public function destroy(Review $review)
+    /**
+     * Delete a review.
+     *
+     * @param Review $review
+     * @return RedirectResponse
+     */
+    public function destroy(Review $review): RedirectResponse
     {
         $review->delete();
         return redirect()->back()->with('success', 'Review deleted successfully.');
     }
-    public function store(Request $request, Movie $movie)
+
+    /**
+     * Store a new review for a movie.
+     *
+     * @param Request $request
+     * @param Movie $movie
+     * @return RedirectResponse
+     */
+    public function store(Request $request, Movie $movie): RedirectResponse
     {
         $request->validate([
             'content' => 'required',

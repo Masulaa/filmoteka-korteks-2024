@@ -19,6 +19,7 @@ class UserFactory extends Factory
             'remember_token' => Str::random(10),
         ];
     }
+
     public function specificUser()
     {
         return $this->state(function (array $attributes) {
@@ -27,5 +28,6 @@ class UserFactory extends Factory
                 'email' => 'test@test.com',
                 'password' => bcrypt('password'),
             ];
-        });}
+        });
+    }
 }
