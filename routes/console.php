@@ -10,5 +10,5 @@ use App\Services\{ TMDbService, MoviesService };
  */
  
  Artisan::command('movies:sync {count?}', function ( TMDbService $tmdbService, MoviesService $moviesService,$count = null) {
-     $tmdbService->fetchPopularMovies($count ?: $moviesService->getNumberOfAllMovies());
+     $moviesService->fetchPopularMovies($count ?: $moviesService->getNumberOfAllMovies(), true);
  })->purpose('Synchronize movies from TheMovieDB')->dailyAt("03:00");
