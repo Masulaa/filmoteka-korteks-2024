@@ -3,8 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Services\TMDbService;
-use App\Services\MoviesService;
+use App\Services\{ TMDbService, MoviesService };
 
 class MoviesSync extends Command
 {
