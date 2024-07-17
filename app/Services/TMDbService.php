@@ -2,15 +2,17 @@
 
 namespace App\Services;
 
-use App\Models\{ Movie, Genre, Cast };
-use GuzzleHttp\{ Client, Exception\GuzzleException};
+use App\Models\{Movie, Genre, Cast};
+use GuzzleHttp\{Client, Exception\GuzzleException};
 
 class TMDbService
 {
     protected Client $client;
-    protected array $genreMapping = [ 28 => 'Action', 12 => 'Adventure', 16 => 'Animation', 35 => 'Comedy', 80 => 'Crime', 18 => 'Drama', 14 => 'Fantasy', 27 => 'Horror', 9648 => 'Mystery', 878 => 'Science Fiction', 10751 => 'Family' ];
+    protected array $genreMapping = [28 => 'Action', 12 => 'Adventure', 16 => 'Animation', 35 => 'Comedy', 80 => 'Crime', 18 => 'Drama', 14 => 'Fantasy', 27 => 'Horror', 9648 => 'Mystery', 878 => 'Science Fiction', 10751 => 'Family'];
     public function __construct()
-    { $this->client = new Client(); }
+    {
+        $this->client = new Client();
+    }
 
     /**
      * Get the number of all movies.
@@ -19,7 +21,9 @@ class TMDbService
      * @throws GuzzleException
      */
     public function getNumberOfAllMovies(): int
-    { return $this->fetchData('https://api.themoviedb.org/3/movie/popular', ['page' => 1])['total_results']; }
+    {
+        return $this->fetchData('https://api.themoviedb.org/3/movie/popular', ['page' => 1])['total_results'];
+    }
 
     /**
      * Fetch popular movies from TMDb.
@@ -35,12 +39,20 @@ class TMDbService
 
         while ($page++ < $totalPages) {
             $moviesData = $this->fetchData('https://api.themoviedb.org/3/movie/popular', ['page' => $page])['results'] ?? [];
-            if (empty($moviesData) && ++$nullResponseCount >= 5) break;
+
+            if (empty($moviesData)) {
+                $nullResponseCount++;
+                if ($nullResponseCount >= 5) {
+                    break;
+                }
+                continue;
+            }
 
             foreach ($moviesData as $movieData) {
                 if ($syncCount >= $numberOfMoviesToDownload) {
                     break 2;
                 }
+
                 $syncCount++;
                 $progress = floor(($syncCount / $numberOfMoviesToDownload) * 100);
                 $bar = str_repeat('#', floor($progress / 2)) . str_repeat('-', 50 - floor($progress / 2));
@@ -48,14 +60,17 @@ class TMDbService
                 if (Movie::where('title', $movieData['title'])->exists()) {
                     echo "\033[K($syncCount/$numberOfMoviesToDownload) Movie '{$movieData['title']}' already exists.\033[35m Skip\033[0m.\n";
                     $skipCount++;
-                } else {
-                    $this->createOrUpdateMovie($movieData);
-                    $newCount++;
-                    echo "\033[K($syncCount/$numberOfMoviesToDownload) \033[33mNew\033[0m movie '{$movieData['title']}' added to the database.\n";
+                    echo "[$bar] $progress%\r";
+                    continue;
                 }
+
+                $this->createOrUpdateMovie($movieData);
+                $newCount++;
+                echo "\033[K($syncCount/$numberOfMoviesToDownload) \033[33mNew\033[0m movie '{$movieData['title']}' added to the database.\n";
                 echo "[$bar] $progress%\r";
             }
         }
+
         echo "\033[KSuccessfully synchronized {$syncCount} movies.\nSkip: {$skipCount}\nNew: {$newCount}\n";
     }
 
@@ -89,7 +104,7 @@ class TMDbService
     {
         $videoId = $this->getYouTubeTrailerId($movieData['id']);
         $existingGenres = Genre::whereIn('id', $movieData['genre_ids'])->pluck('id')->toArray();
-    
+
         $movie = Movie::updateOrCreate(
             ['title' => $movieData['title']],
             [
@@ -102,7 +117,7 @@ class TMDbService
                 'video_id' => $movieData['id'],
             ]
         );
-    
+
         $castData = $this->getCast($movieData['id']);
         foreach ($castData as $actorData) {
             $cast = Cast::updateOrCreate(
@@ -114,12 +129,12 @@ class TMDbService
                 ]
             );
         }
-    
+
         $movie->genres()->sync($existingGenres);
     }
-    
-    
-    
+
+
+
 
     /**
      * Get YouTube trailer ID for the given movie.
@@ -132,7 +147,8 @@ class TMDbService
     {
         $videos = $this->fetchData("https://api.themoviedb.org/3/movie/{$movieId}/videos", [])['results'] ?? [];
         foreach ($videos as $video) {
-            if ($video['site'] === 'YouTube' && $video['type'] === 'Trailer') return $video['key'];
+            if ($video['site'] === 'YouTube' && $video['type'] === 'Trailer')
+                return $video['key'];
         }
         return null;
     }
@@ -148,7 +164,8 @@ class TMDbService
     {
         $crew = $this->fetchData("https://api.themoviedb.org/3/movie/{$movieId}/credits", [])['crew'] ?? [];
         foreach ($crew as $member) {
-            if ($member['job'] === 'Director') return $member['name'];
+            if ($member['job'] === 'Director')
+                return $member['name'];
         }
         return 'unknown director';
     }
@@ -161,7 +178,9 @@ class TMDbService
      * @return string|null
      */
     private function getUrl(?string $path, string $size): ?string
-    { return $path ? "https://image.tmdb.org/t/p/{$size}{$path}" : null; }
+    {
+        return $path ? "https://image.tmdb.org/t/p/{$size}{$path}" : null;
+    }
 
     /**
      * Get the cast of the given movie.
