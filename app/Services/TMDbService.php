@@ -94,6 +94,21 @@ class TMDbService
     }
 
     /**
+     * Search movies by query string.
+     *
+     * @param string $query
+     * @return array
+     * @throws GuzzleException
+     */
+    public function searchMovies(string $query): array
+    {
+        $url = 'https://api.themoviedb.org/3/search/movie';
+        $response = $this->fetchData($url, ['query' => $query]);
+
+        return $response['results'] ?? [];
+    }
+
+    /**
      * Create or update a movie in the database.
      *
      * @param array $movieData

@@ -20,7 +20,8 @@
         @include('layouts.header')
         @if (isset($movies) && $movies->count() > 0)
             @include('layouts.filter')
-            @include('layouts.search')
+            <!-- @include('layouts.search') -->
+            <livewire:movie-search />
         @endif
 
         <!-- Page Content -->
