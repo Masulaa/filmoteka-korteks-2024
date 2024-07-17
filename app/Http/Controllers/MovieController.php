@@ -6,8 +6,8 @@ use App\Models\Movie;
 use App\Models\Rating;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class MovieController extends Controller
 {
@@ -70,22 +70,22 @@ class MovieController extends Controller
     {
         try {
             $query = Movie::query();
-    
+
             if ($request->filled('genre')) {
                 $query->where('genre', 'like', '%' . $request->genre . '%');
             }
-    
+
             if ($request->filled('min_year') && $request->filled('max_year')) {
                 $query->whereYear('release_date', '>=', $request->min_year)
-                      ->whereYear('release_date', '<=', $request->max_year);
+                    ->whereYear('release_date', '<=', $request->max_year);
             }
-    
+
             $movies = $query->paginate(20)->appends($request->except('page'));
-    
+
             if ($request->ajax()) {
                 return view('movieslist', compact('movies'))->render();
             }
-    
+
             return view('home', compact('movies'));
         } catch (\Exception $e) {
             Log::error('Movie filter error: ' . $e->getMessage(), [
@@ -142,9 +142,18 @@ class MovieController extends Controller
     }
 
 
-    public function show(Movie $movie)
+    public function show(Movie $movie, $id)
     {
-        return view('movie', compact('movie'));
+        $movie = Movie::find($id);
+        $user = Auth::user();
+        $rating = Rating::where('movie_id', $movie->id)
+            ->where('user_id', $user->id)
+            ->first();
+
+        $userRating = $rating ? $rating->rating : 0;
+        $averageRating = $movie->averageRating();
+        $countRatings = $movie->countRatings();
+        return view('movie', compact('movie', 'userRating', 'averageRating', 'countRatings'));
     }
 
     public function edit(Movie $movie)
@@ -199,7 +208,7 @@ class MovieController extends Controller
         $movie = Movie::find($id);
 
         if (!$movie) {
-            abort(404); 
+            abort(404);
         }
 
         return view('watch', compact('movie'));
