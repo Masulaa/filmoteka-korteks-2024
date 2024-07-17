@@ -29,7 +29,7 @@
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -49,28 +49,28 @@
                     query: query
                 },
                 dataType: 'json',
-                success: function(data) {
+                success: function (data) {
                     $('#movie_data').html(data.html);
                     $('#movie_results').show();
                 },
-                error: function(xhr, status, error) {
+                error: function (xhr, status, error) {
                     console.error(xhr.responseText);
                 }
             });
         }
 
-        $(document).on('keyup', '#search', function() {
+        $(document).on('keyup', '#search', function () {
             var query = $(this).val().trim();
             fetch_movie_data(query);
         });
 
-        $(document).on('click', function(event) {
+        $(document).on('click', function (event) {
             if (!$(event.target).closest('#movie_results, #search').length) {
                 $('#movie_results').hide();
             }
         });
 
-        $('#search').on('focus', function() {
+        $('#search').on('focus', function () {
             if ($('#movie_data').html().trim() !== '') {
                 $('#movie_results').show();
             }

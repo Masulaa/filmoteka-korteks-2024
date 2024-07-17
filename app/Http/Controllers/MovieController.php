@@ -29,7 +29,6 @@ class MovieController extends Controller
     public function action(Request $request): JsonResponse
     {
         if ($request->ajax()) {
-            $output = '';
             $query = $request->get('query');
 
             $movies = Movie::where('title', 'like', '%' . $query . '%')
@@ -38,32 +37,11 @@ class MovieController extends Controller
                 ->take(5)
                 ->get();
 
-            $total_row = $movies->count();
-
-            if ($total_row > 0) {
-                foreach ($movies as $movie) {
-                    $output .= '
-                    <li>
-                        <a href="' . route('movie', $movie->id) . '" class="flex gap-2">
-                            <img width="56px" src="' . $movie->image . '">
-                            <div class="flex flex-col">
-                                <h1 class="text-lg font-bold">' . $movie->title . '</h1>
-                                <span>' . $movie->director . ' | ' . $movie->release_date . '</span>
-                                <span></span>
-                            </div>
-                        </a>
-                    </li>';
-                }
-            } else {
-                $output = '
-                <tr>
-                    <td colspan="3">No movies found</td>
-                </tr>';
-            }
+            $html = view('movie_list', compact('movies'))->render();
 
             $data = [
-                'html' => $output,
-                'total' => $total_row
+                'html' => $html,
+                'total' => $movies->count()
             ];
 
             return response()->json($data);
@@ -71,6 +49,7 @@ class MovieController extends Controller
 
         return response()->json(['error' => 'Invalid request'], 400);
     }
+
 
     /**
      * Show the form for creating a new movie.
