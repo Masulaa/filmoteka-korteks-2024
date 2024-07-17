@@ -1,14 +1,16 @@
 <?php
 
-use Illuminate\Support\Facades\Artisan;
-use App\Services\{ TMDbService, MoviesService };
-
+//use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Schedule;
 /**
  * Command to synchronize movies from TheMovieDB.
  * @param int|null $count
  * @return void
  */
- 
- Artisan::command('movies:sync {count?}', function ( TMDbService $tmdbService, MoviesService $moviesService,$count = null) {
-     $moviesService->fetchPopularMovies($count ?: $moviesService->getNumberOfAllMovies(), true);
- })->purpose('Synchronize movies from TheMovieDB')->dailyAt("03:00");
+ /*
+Artisan::command('synchronize:movies', function () {
+    Artisan::call('movies:sync',['consoleOutput'=> 0]);
+})->purpose('Synchronize movies from TheMovieDB')->dailyAt("03:00");
+*/
+
+Schedule::command('movies:sync 0')->dailyAt("03:00"); 
