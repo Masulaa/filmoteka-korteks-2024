@@ -8,7 +8,7 @@ use GuzzleHttp\{Client, Exception\GuzzleException};
 class TMDbService
 {
     protected Client $client;
-    protected array $genreMapping = [28 => 'Action', 12 => 'Adventure', 16 => 'Animation', 35 => 'Comedy', 80 => 'Crime', 18 => 'Drama', 14 => 'Fantasy', 27 => 'Horror', 9648 => 'Mystery', 878 => 'Science Fiction', 10751 => 'Family'];
+
     public function __construct()
     {
         $this->client = new Client();
