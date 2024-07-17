@@ -17,7 +17,7 @@ class MoviesService
      */
     public function getNumberOfAllMovies(): int
     {
-        $tmdbService = app(TMDbService::class); // Resolve TMDbService instance from container
+        $tmdbService = app(TMDbService::class); // ПРИВРЕМЕНО
         $response = $tmdbService->fetchData('https://api.themoviedb.org/3/movie/popular', ['page' => 1]);
         return $response['total_results'] ?? 0;
     }
@@ -31,8 +31,13 @@ class MoviesService
      */
     public function getYouTubeTrailerId(int $movieId): ?string
     {
-        $tmdbService = app(TMDbService::class); // Resolve TMDbService instance from container
-        return $tmdbService->getYouTubeTrailerId($movieId);
+        $tmdbService = app(TMDbService::class); // ПРИВРЕМЕНО
+        $videos = $tmdbService->fetchData("https://api.themoviedb.org/3/movie/{$movieId}/videos", [])['results'] ?? [];
+        foreach ($videos as $video) {
+            if ($video['site'] === 'YouTube' && $video['type'] === 'Trailer')
+                return $video['key'];
+        }
+        return null;
     }
 
     /**
@@ -44,8 +49,13 @@ class MoviesService
      */
     public function getDirector(int $movieId): string
     {
-        $tmdbService = app(TMDbService::class); // Resolve TMDbService instance from container
-        return $tmdbService->getDirector($movieId);
+        $tmdbService = app(TMDbService::class); // ПРИВРЕМЕНО
+        $crew = $tmdbService->fetchData("https://api.themoviedb.org/3/movie/{$movieId}/credits", [])['crew'] ?? [];
+        foreach ($crew as $member) {
+            if ($member['job'] === 'Director')
+                return $member['name'];
+        }
+        return 'unknown director';
     }
 
     /**
@@ -57,7 +67,7 @@ class MoviesService
      */
     public function getImageUrl(?string $path, string $size = 'w500'): ?string
     {
-        $tmdbService = app(TMDbService::class); // Resolve TMDbService instance from container
+        $tmdbService = app(TMDbService::class); // ПРИВРЕМЕНО
         return $tmdbService->getImageUrl($path, $size);
     }
 
@@ -70,9 +80,27 @@ class MoviesService
      */
     public function getCast(int $movieId): array
     {
-        $tmdbService = app(TMDbService::class); // Resolve TMDbService instance from container
-        return $tmdbService->getCast($movieId);
+        $tmdbService = app(TMDbService::class); // ПРИВРЕМЕНО
+        $cast = array_slice($tmdbService->fetchData("https://api.themoviedb.org/3/movie/{$movieId}/credits", [])['cast'] ?? [], 0, 10);
+        return array_map(fn($actor) => [
+            'name' => $actor['name'],
+            'character' => $actor['character'],
+            'profile_path' => $this->getUrl($actor['profile_path'], 'w185'),
+            'id' => $actor['id']
+        ], $cast);
+    }
+    
 
+    /**
+     * Get the URL for the given path and size.
+     *
+     * @param string|null $path
+     * @param string $size
+     * @return string|null
+     */
+    private function getUrl(?string $path, string $size): ?string
+    {
+        return $path ? "https://image.tmdb.org/t/p/{$size}{$path}" : null;
     }
 
     /**
@@ -81,9 +109,8 @@ class MoviesService
      * @param array $movieData
      * @return void
      */
-    private function createOrUpdateMovie(array $movieData): void
+    public function createOrUpdateMovie(array $movieData): void
     {
-        $tmdbService = app(TMDbService::class); // Resolve TMDbService instance from container
         $videoId = $this->getYouTubeTrailerId($movieData['id']);
         $existingGenres = Genre::whereIn('id', $movieData['genre_ids'])->pluck('id')->toArray();
 
@@ -92,9 +119,9 @@ class MoviesService
             [
                 'director' => $this->getDirector($movieData['id']),
                 'release_date' => isset($movieData['release_date']) ? date('Y-m-d', strtotime($movieData['release_date'])) : null,
-                'image' => $tmdbService->getUrl($movieData['poster_path'], 'w500'),
+                'image' => $this->getUrl($movieData['poster_path'], 'w500'),
                 'overview' => $movieData['overview'] ?? null,
-                'backdrop_path' => $tmdbService->getUrl($movieData['backdrop_path'], 'original'),
+                'backdrop_path' => $this->getUrl($movieData['backdrop_path'], 'original'),
                 'trailer_link' => $videoId,
                 'video_id' => $movieData['id'],
             ]
