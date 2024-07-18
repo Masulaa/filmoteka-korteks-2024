@@ -54,7 +54,7 @@
                         <x-dropdown-link :href="route('profile.edit', ['id' => Auth::user()->id])">
                             {{ __('Profile') }}
                         </x-dropdown-link>
-                        <x-dropdown-link :href="route('profile.reviews-ratings')">
+                        <x-dropdown-link :href="route('profile.reviews-ratings',['id' => Auth::user()->id])">
                             {{ __('Reviews & Ratings') }}
                         </x-dropdown-link>
                         <!-- Authentication -->
