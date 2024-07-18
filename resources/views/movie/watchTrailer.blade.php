@@ -1,13 +1,16 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <h1 class="text-3xl font-bold tracking-tight ml-10 mt-4 text-white">{{ $movie->title }}</h1>
+<div class="container mx-auto">
+    <h1 class="text-3xl font-bold tracking-tight ml-10 mt-4 text-white text-center">{{ $movie->title }}</h1>
     @if ($movie->video_id)
-        <div class="embed-responsive embed-responsive-16by9 mt-4 mb-4 flex justify-center">
+        <div class="relative pt-[56.25%] mt-4 mb-4 w-[80%] mx-auto" style="position: relative; padding-top: 56.25%;">
           <iframe 
             width="1920" height="1024" src="https://www.youtube.com/embed/{{ $movie -> trailer_link }}"
-            frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+             referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+             class="absolute top-0 left-0 w-full h-full mx-auto">
+            </iframe>
         </div>
         <div class="text-white ml-10 mb-4">
             <div class="flex items-center mt-3">
