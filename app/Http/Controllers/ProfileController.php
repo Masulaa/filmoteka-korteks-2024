@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
-use App\Models\{ Rating, Review };
-use Illuminate\Http\{ RedirectResponse, Request };
-use Illuminate\Support\Facades\{ Auth, Redirect };
+use App\Models\{Rating, Review};
+use Illuminate\Http\{RedirectResponse, Request};
+use Illuminate\Support\Facades\{Auth, Redirect};
 use Illuminate\View\View;
 
 class ProfileController extends Controller
