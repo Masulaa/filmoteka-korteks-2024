@@ -107,18 +107,23 @@ class MoviesService
         );
 
         $castData = $this->getCast($movieData['id']);
+        $castEntries = [];
         foreach ($castData as $actorData) {
-            Cast::updateOrCreate(
-                ['movie_id' => $movie->id, 'actor_id' => $actorData['id']],
-                [
-                    'name' => $actorData['name'],
-                    'character' => $actorData['character'],
-                    'profile_path' => $actorData['profile_path'],
-                ]
-            );
+            $castEntries[] = [
+                'movie_id' => $movie->id,
+                'actor_id' => $actorData['id'],
+                'name' => $actorData['name'],
+                'character' => $actorData['character'],
+                'profile_path' => $actorData['profile_path'],
+                'updated_at' => now(),
+                'created_at' => now(),
+            ];
         }
+        Cast::upsert($castEntries, ['movie_id', 'actor_id'], ['name', 'character', 'profile_path']);
+
         $movie->genres()->sync($existingGenres);
     }
+
 
     /**
      * Process and synchronize a single movie's data.

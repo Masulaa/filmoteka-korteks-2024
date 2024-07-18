@@ -13,4 +13,4 @@ Artisan::command('synchronize:movies', function () {
 })->purpose('Synchronize movies from TheMovieDB')->dailyAt("03:00");
 */
 
-Schedule::command('movies:sync 0')->dailyAt("03:00"); 
+Schedule::command('movies:sync 0 0')->dailyAt("03:00"); 

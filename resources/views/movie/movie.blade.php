@@ -45,8 +45,10 @@
                         <div class="flex flex-col justify-start gap-2 transition duration-500 transform hover:scale-110">
                             @if ($actor['profile_path'])
                                 <div class="md:h-[96px] md:w-[64px] h-[54px] w-[40px]">
+                                    <a href="https://en.wikipedia.org/wiki/{{$actor['name']}}">
                                     <img src="{{ $actor['profile_path'] }}" alt="{{ $actor['name'] }}"
                                         class="object-cover rounded-md shadow-md">
+                                    </a>
                                 </div>
                             @endif
                             <h4
