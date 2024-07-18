@@ -2,7 +2,6 @@
 
 namespace App\Livewire;
 
-use App\Services\TMDbService;
 use Livewire\Component;
 use App\Models\Movie;
 

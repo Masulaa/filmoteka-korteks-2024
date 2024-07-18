@@ -5,9 +5,10 @@
     <h1 class="text-3xl font-bold tracking-tight ml-10 mt-4 text-white">{{ $movie->title }}</h1>
     @if ($movie->video_id)
         <div class="embed-responsive embed-responsive-16by9 mt-4 mb-4 flex justify-center">
-          <iframe 
-            width="1920" height="1024" src="https://www.youtube.com/embed/{{ $movie -> trailer_link }}"
-            frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            <iframe width="1920" height="1024" src="https://www.youtube.com/embed/{{ $movie->trailer_link }}"
+                frameborder="0" style="width: 70rem; height: 33rem; overflow: hidden;"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
         </div>
         <div class="text-white ml-10 mb-4">
             <div class="flex items-center mt-3">
@@ -20,7 +21,8 @@
                 </p>
                 <ul class="flex flex-row items-center sm:gap-[14px] xs:gap-3 gap-[6px] flex-wrap ml-3 ">
                     @foreach ($movie->genres as $genre)
-                        <li class="px-3 py-1 text-sm text-white transition-all duration-300 bg-gray-800 rounded-full dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-600">
+                        <li
+                            class="px-3 py-1 text-sm text-white transition-all duration-300 bg-gray-800 rounded-full dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-600">
                             <a href="{{ route('movies.filter', ['genre' => $genre->name]) }}">{{ $genre->name }}</a>
                         </li>
                     @endforeach
