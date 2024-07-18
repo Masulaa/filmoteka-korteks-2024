@@ -112,7 +112,7 @@
                     const userId = this.dataset.userId;
                     const movieId = this.dataset.movieId;
 
-                    fetch('{{ route('favorites.store') }}', {
+                    fetch('{{ route('favorites.destroy') }}', {
                         method: 'DELETE',
                         headers: {
                             'Content-Type': 'application/json',
@@ -127,7 +127,6 @@
                     .then(data => {
                         alert(data.message);
                         if (data.success) {
-                            // Remove the movie card from the DOM
                             this.closest('.group').remove();
                         }
                     })

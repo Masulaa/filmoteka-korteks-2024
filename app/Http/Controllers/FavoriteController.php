@@ -23,7 +23,7 @@ class FavoriteController extends Controller
             $user->favorites()->attach($movieId);
             return response()->json(['message' => 'Movie added to favorites'], 200);
         } else {
-            return response()->json(['message' => 'Movie already in favorites'], 200);
+            return response()->json(['message' => 'Movie is already in favorites'], 200);
         }
     }
     public function index()
