@@ -77,13 +77,13 @@
                     @foreach ($movies as $movie)
                         <div class="overflow-hidden transition duration-300 transform bg-white rounded-lg shadow-md group dark:bg-gray-800 hover:scale-105 hover:shadow-xl animate-fade-in-up"
                             style="animation-delay: {{ $loop->index * 100 }}ms">
-                            <a href="{{ route('movie', $movie->id) }}" class="block">
+                            <a href="{{ route('movies.show', $movie->id) }}" class="block">
                                 <div class="relative aspect-w-2 aspect-h-3">
                                     <img src="{{ $movie->image }}" alt="{{ $movie->title }}"
                                         class="object-cover w-full h-full transition-transform duration-300 group-hover:scale-110">
                                     <div
                                         class="absolute inset-0 flex items-center justify-center transition-all duration-300 bg-black bg-opacity-50 opacity-0 group-hover:scale-110 group-hover:opacity-100">
-                                        <button 
+                                        <button
                                             onclick="event.stopPropagation(); event.preventDefault();"
                                             class="px-4 py-2 text-white transition-colors duration-300 bg-indigo-600 rounded-md hover:bg-indigo-700 animate-pulse add-to-favorites-button"
                                             data-user-id="{{ auth()->id() }}" data-movie-id="{{ $movie->id }}">

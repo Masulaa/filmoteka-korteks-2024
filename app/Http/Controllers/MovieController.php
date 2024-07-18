@@ -164,19 +164,20 @@ class MovieController extends Controller
      * @param \App\Models\Movie $movie
      * @return \Illuminate\View\View
      */
-    public function show(Movie $movie, $id)
+    public function show(Movie $movie)
     {
-        $movie = Movie::find($id);
         $user = Auth::user();
         $rating = Rating::where('movie_id', $movie->id)
             ->where('user_id', $user->id)
             ->first();
-
+    
         $userRating = $rating ? $rating->rating : 0;
         $averageRating = $movie->averageRating();
         $countRatings = $movie->countRatings();
+        
         return view('movie.movie', compact('movie', 'userRating', 'averageRating', 'countRatings'));
     }
+    
     /**
      * Show the form for editing the specified movie.
      *
