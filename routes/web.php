@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\{ProfileController, MovieController, RatingController, ReviewController, ContactController};
+use App\Http\Controllers\{ProfileController, MovieController, RatingController, ReviewController, ContactController, FavoriteController};
 use App\Livewire\MovieSearch;
 use Illuminate\Support\Facades\Route;
 
@@ -29,6 +29,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])->name('reviews.destroy');
     Route::delete('/ratings/{rating}', [RatingController::class, 'destroy'])->name('ratings.destroy');
-});
+
+    Route::post('/favorites', [FavoriteController::class, 'store'])->name('favorites.store');});
 
 require __DIR__ . '/auth.php';

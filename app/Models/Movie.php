@@ -124,4 +124,8 @@ class Movie extends Model
     {
         return $this->hasMany(Cast::class);
     }
+    public function favoritedBy()
+    {
+        return $this->belongsToMany(User::class, 'favorites')->withTimestamps();
+    }
 }

@@ -1,6 +1,40 @@
 @extends('layouts.app')
 
+
 @section('content')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.add-to-favorites-button').forEach(button => {
+                button.addEventListener('click', function (event) {
+                    event.stopPropagation();
+                    event.preventDefault();
+
+                    const userId = this.dataset.userId;
+                    const movieId = this.dataset.movieId;
+
+                    fetch('{{ route('favorites.store') }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
+                        body: JSON.stringify({
+                            user_id: userId,
+                            movie_id: movieId
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert(data.message);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+                });
+            });
+        });
+    </script>
     <div class="min-h-screen py-12 transition-colors duration-300 bg-gray-100 dark:bg-gray-900">
         <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
             <h1 class="mb-8 text-3xl font-extrabold text-gray-900 dark:text-white animate-fade-in">Discover Movies</h1>
@@ -21,8 +55,10 @@
                                         class="object-cover w-full h-full transition-transform duration-300 group-hover:scale-110">
                                     <div
                                         class="absolute inset-0 flex items-center justify-center transition-all duration-300 bg-black bg-opacity-50 opacity-0 group-hover:scale-110 group-hover:opacity-100">
-                                        <button disabled
-                                            class="px-4 py-2 text-white transition-colors duration-300 bg-indigo-600 rounded-md hover:bg-indigo-700 animate-pulse">
+                                        <button 
+                                            onclick="event.stopPropagation(); event.preventDefault();"
+                                            class="px-4 py-2 text-white transition-colors duration-300 bg-indigo-600 rounded-md hover:bg-indigo-700 animate-pulse add-to-favorites-button"
+                                            data-user-id="{{ auth()->id() }}" data-movie-id="{{ $movie->id }}">
                                             Add to Favorites
                                         </button>
                                     </div>

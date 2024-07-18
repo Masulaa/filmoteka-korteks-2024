@@ -80,4 +80,13 @@ class User extends Authenticatable
     {
         return $this->hasMany(Review::class);
     }
+    /**
+     * Get favorite movies by this user.
+     *
+     ** @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function favorites()
+    {
+        return $this->belongsToMany(Movie::class, 'favorites')->withTimestamps();
+    }
 }
