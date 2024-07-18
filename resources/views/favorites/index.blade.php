@@ -1,33 +1,49 @@
 @extends('layouts.app')
 
 @section('content')
-<script>
-function removeFromFavorites(movieId) {
-    const userId = {{ auth()->id() }};
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function removeFromFavorites(movieId) {
+            const userId = {{ auth()->id() }};
 
-    fetch(`/favorites/${movieId}`, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        },
-        body: JSON.stringify({
-            user_id: userId,
-            movie_id: movieId
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        alert(data.message);
-        if (data.success) {
-            document.getElementById(`movie-card-${movieId}`).remove();
+            fetch(`/favorites/${movieId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({
+                    user_id: userId,
+                    movie_id: movieId
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: data.message,
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+
+                document.getElementById(`movie-card-${movieId}`).remove();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!',
+                });
+            });
         }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-}
-</script>
+    </script>
     <div class="min-h-screen py-12 transition-colors duration-300 bg-gray-100 dark:bg-gray-900">
         <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
             <h1 class="mb-8 text-3xl font-extrabold text-gray-900 dark:text-white animate-fade-in">My Favorite Movies</h1>

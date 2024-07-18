@@ -3,6 +3,8 @@
 
 @section('content')
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             document.querySelectorAll('.add-to-favorites-button').forEach(button => {
@@ -24,12 +26,38 @@
                             movie_id: movieId
                         })
                     })
-                    .then(response => response.json())
-                    .then(data => {
-                        alert(data.message);
+                    .then(response => {
+                        if (response.status === 201) {
+                            return response.json().then(data => {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success!',
+                                    text: data.message,
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                            });
+                        } else if (response.status === 200) {
+                            return response.json().then(data => {
+                                Swal.fire({
+                                    icon: 'info',
+                                    title: 'Info',
+                                    text: data.message,
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                            });
+                        } else {
+                            throw new Error('Unexpected response');
+                        }
                     })
                     .catch(error => {
                         console.error('Error:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Something went wrong!',
+                        });
                     });
                 });
             });
