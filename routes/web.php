@@ -16,6 +16,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/filter', [MovieController::class, 'filter'])->name('movies.filter');
     Route::get('/movie-search', [MovieSearch::class, 'render'])->name('movie.search');
     Route::get('/movies/{id}/watch', [MovieController::class, 'watch'])->name('movies.watch');
+    Route::get('/movies/{id}/watchTrailer', [MovieController::class, 'watchTrailer'])->name('movies.watchTrailer');
     Route::post('/movies/{movie}/rate', [RatingController::class, 'store'])->name('movies.rate');
     Route::post('/movies/{movie}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
 

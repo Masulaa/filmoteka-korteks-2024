@@ -257,4 +257,18 @@ class MovieController extends Controller
 
         return view('movie.watch', compact('movie'));
     }
+
+    /**
+     * Watch trailer of a movie.
+     *
+     * @param int $id
+     * @return \Illuminate\View\View
+     */
+    public function watchTrailer(int $id): View
+    {
+        $movie = Movie::findOrFail($id);
+
+        return view('movie.watchTrailer', compact('movie'));
+    }
 }
+

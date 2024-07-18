@@ -85,7 +85,7 @@
                         <a href="{{ route('movies.watch', ['id' => $movie->id]) }}"
                             class="inline-block px-6 py-3 text-xl font-bold text-white transition-colors duration-300 transform bg-indigo-700 rounded-lg hover:bg-indigo-900 hover:scale-105">Watch
                             Movie</a>
-                        <a href="https://www.youtube.com/watch?v={{ $movie->trailer_link }}"
+                        <a href="{{ route('movies.watchTrailer', ['id' => $movie->id]) }}"
                             class="inline-block px-6 py-3 text-xl font-bold text-white transition-colors duration-300 transform bg-indigo-700 rounded-lg hover:bg-indigo-900 hover:scale-105">
                             Watch Trailer</a>
                     </div>
