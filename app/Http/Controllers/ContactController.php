@@ -13,7 +13,7 @@ class ContactController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function show(): \Illuminate\View\View
+    public function index(): \Illuminate\View\View
     {
         return view('contact.contact_form');
     }
@@ -24,7 +24,7 @@ class ContactController extends Controller
      * @param ContactRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function submit(ContactRequest $request): \Illuminate\Http\RedirectResponse
+    public function store(ContactRequest $request): \Illuminate\Http\RedirectResponse
     {
         Mail::to('my@mail.com')->send(new ContactMail($request->name, $request->email, $request->content));
 

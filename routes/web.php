@@ -20,20 +20,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/movies/{movie}/rate', [RatingController::class, 'store'])->name('movies.rate');
     Route::post('/movies/{movie}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
 
-    Route::get('/contact', [ContactController::class, 'show'])->name('contact');
-    Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
-
     Route::get('/profile/{id}', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile/{id}', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile/{id}', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/profile/reviews-ratings/{id}', [ProfileController::class, 'reviewsAndRatings'])->name('profile.reviews-ratings');
 
-    Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])->name('reviews.destroy');
-    Route::delete('/ratings/{rating}', [RatingController::class, 'destroy'])->name('ratings.destroy');
+    Route::resource('reviews', ReviewController::class)->only(['destroy']);
+    Route::resource('ratings', RatingController::class)->only(['destroy']);
 
-    Route::post('/favorites', [FavoriteController::class, 'store'])->name('favorites.store');
-    Route::delete('/favorites/{id}', [FavoriteController::class, 'destroy'])->name('favorites.destroy');
-    Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');
+    Route::resource('contact', ContactController::class)->only(['index', 'store']);
+    Route::resource('favorites', FavoriteController::class)->only(['index', 'store', 'destroy']);
 });
 
 require __DIR__ . '/auth.php';

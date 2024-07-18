@@ -5,7 +5,7 @@
 
     <div class="max-w-md p-8 mx-auto bg-white rounded-lg shadow-md dark:bg-gray-800">
         <h2 class="mb-8 text-2xl font-bold text-center text-gray-900 dark:text-white">Contact Us</h2>
-        <form method="POST" action="{{ route('contact.submit') }}" class="space-y-6">
+        <form method="POST" action="{{ route('contact.store') }}" class="space-y-6">
             @csrf
             <div class="grid grid-cols-2 gap-4">
                 <div>

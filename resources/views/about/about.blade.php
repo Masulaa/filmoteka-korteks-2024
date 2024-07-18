@@ -21,7 +21,7 @@
                 <div class="flex items-center space-x-4">
                     <a href="{{ route('home') }}"
                         class="text-indigo-600 transition-colors duration-300 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-200">Explore</a>
-                    <a href="{{ route('contact') }}"
+                    <a href="{{ route('contact.index') }}"
                         class="text-indigo-600 transition-colors duration-300 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-200">Contact
                         Us</a>
                 </div>
