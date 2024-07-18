@@ -10,7 +10,7 @@
             <ul class="flex flex-wrap items-center mb-4 text-sm font-medium text-gray-500 sm:mb-0 dark:text-gray-400">
 
                 <li>
-                    <a href="/home" class="hover:underline me-4 md:me-6">Home</a>
+                    <a href="/movies" class="hover:underline me-4 md:me-6">Movies</a>
                 </li>
                 <li>
                     <a href="/dashboard" class="hover:underline me-4 md:me-6">Dashboard</a>
