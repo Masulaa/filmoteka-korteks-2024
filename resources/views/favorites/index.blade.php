@@ -1,6 +1,33 @@
 @extends('layouts.app')
 
 @section('content')
+<script>
+function removeFromFavorites(movieId) {
+    const userId = {{ auth()->id() }};
+
+    fetch(`/favorites/${movieId}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({
+            user_id: userId,
+            movie_id: movieId
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert(data.message);
+        if (data.success) {
+            document.getElementById(`movie-card-${movieId}`).remove();
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+</script>
     <div class="min-h-screen py-12 transition-colors duration-300 bg-gray-100 dark:bg-gray-900">
         <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
             <h1 class="mb-8 text-3xl font-extrabold text-gray-900 dark:text-white animate-fade-in">My Favorite Movies</h1>
@@ -8,17 +35,16 @@
             @if ($favoriteMovies->count() > 0)
                 <div class="grid grid-cols-1 gap-y-10 sm:grid-cols-2 gap-x-6 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
                     @foreach ($favoriteMovies as $movie)
-                        <div class="overflow-hidden transition duration-300 transform bg-white rounded-lg shadow-md group dark:bg-gray-800 hover:scale-105 hover:shadow-xl animate-fade-in-up"
-                            style="animation-delay: {{ $loop->index * 100 }}ms">
+                    <div id="movie-card-{{ $movie->id }}" class="overflow-hidden transition duration-300 transform bg-white rounded-lg shadow-md group dark:bg-gray-800 hover:scale-105 hover:shadow-xl animate-fade-in-up" style="animation-delay: {{ $loop->index * 100 }}ms">
                             <a href="{{ route('movie', $movie->id) }}" class="block">
                                 <div class="relative aspect-w-2 aspect-h-3">
                                     <img src="{{ $movie->image }}" alt="{{ $movie->title }}"
                                         class="object-cover w-full h-full transition-transform duration-300 group-hover:scale-110">
                                     <div class="absolute inset-0 flex items-center justify-center transition-all duration-300 bg-black bg-opacity-50 opacity-0 group-hover:scale-110 group-hover:opacity-100">
                                         <button 
-                                            onclick="event.stopPropagation(); event.preventDefault(); alert('remove from favorites')"
+                                            onclick="event.stopPropagation(); event.preventDefault(); removeFromFavorites({{ $movie->id }});"
                                             class="px-4 py-2 text-white transition-colors duration-300 bg-red-600 rounded-md hover:bg-red-700 animate-pulse remove-from-favorites-button"
-                                            data-user-id="{{ auth()->id() }}" data-movie-id="{{ $movie->id }}">
+                                            data-movie-id="{{ $movie->id }}">
                                             Remove from Favorites
                                         </button>
                                     </div>
@@ -55,86 +81,8 @@
             @endif
         </div>
     </div>
+    <form id="removeFromFavoritesForm" action="#" method="POST" style="display: none;">
+        @csrf
+        @method('DELETE')
+    </form>
 @endsection
-
-@push('styles')
-    <style>
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        .animate-fade-in {
-            animation: fadeIn 0.5s ease-out;
-        }
-        .animate-fade-in-up {
-            animation: fadeInUp 0.5s ease-out;
-        }
-        .aspect-w-2 {
-            position: relative;
-            padding-bottom: 150%;
-        }
-        .aspect-w-2>img {
-            position: absolute;
-            height: 100%;
-            width: 100%;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            object-fit: cover;
-            object-position: center;
-        }
-    </style>
-@endpush
-
-@push('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            document.querySelectorAll('.remove-from-favorites-button').forEach(button => {
-                button.addEventListener('click', function (event) {
-                    event.stopPropagation();
-                    event.preventDefault();
-
-                    const userId = this.dataset.userId;
-                    const movieId = this.dataset.movieId;
-
-                    fetch('{{ route('favorites.destroy') }}', {
-                        method: 'DELETE',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                        },
-                        body: JSON.stringify({
-                            user_id: userId,
-                            movie_id: movieId
-                        })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        alert(data.message);
-                        if (data.success) {
-                            this.closest('.group').remove();
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
-                });
-            });
-        });
-    </script>
-@endpush

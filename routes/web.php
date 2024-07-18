@@ -32,8 +32,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/ratings/{rating}', [RatingController::class, 'destroy'])->name('ratings.destroy');
 
     Route::post('/favorites', [FavoriteController::class, 'store'])->name('favorites.store');
+    Route::delete('/favorites/{id}', [FavoriteController::class, 'destroy'])->name('favorites.destroy');
+    Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');
 });
-Route::delete('/favorites', [FavoriteController::class, 'destroy'])->name('favorites.destroy');
-Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');
 
 require __DIR__ . '/auth.php';

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\User;
+use App\Models\{ User,Favorite };
 use Illuminate\Support\Facades\Auth;
 //use App\Models\Movie;
 
@@ -32,5 +32,25 @@ class FavoriteController extends Controller
         $favoriteMovies = $user->favorites()->get();
 
         return view('favorites.index', compact('favoriteMovies'));
+    }
+    public function destroy($id)
+    {
+        $favorite = Favorite::where('movie_id', $id)
+            ->where('user_id', auth()->id())
+            ->first();
+    
+        if (!$favorite) {
+            return response()->json([
+                'message' => 'Favorite movie not found.',
+                'success' => false
+            ], 404);
+        }
+    
+        $favorite->delete();
+    
+        return response()->json([
+            'message' => 'Movie removed from favorites.',
+            'success' => true
+        ], 200);
     }
 }
