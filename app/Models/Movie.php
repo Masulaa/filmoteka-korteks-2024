@@ -66,7 +66,7 @@ class Movie extends Model
         'backdrop_path',
         'trailer_link',
         'video_id',
-        //'cast'
+        'views',
     ];
 
     /**

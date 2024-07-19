@@ -110,6 +110,12 @@
                                         <p class="ml-1 text-sm text-gray-600 dark:text-gray-400">
                                             {{ $movie->averageRating() }} ({{ $movie->countRatings() }} ratings)</p>
                                     </div>
+                                    <div class="flex items-center mt-3">
+                                    <svg class="flex-shrink-0 w-5 h-5 text-white" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M12 5c-7.633 0-12 7-12 7s4.367 7 12 7 12-7 12-7-4.367-7-12-7zm0 12c-2.761 0-5-2.239-5-5s2.239-5 5-5 5 2.239 5 5-2.239 5-5 5zm0-8c-1.654 0-3 1.346-3 3s1.346 3 3 3 3-1.346 3-3-1.346-3-3-3z"/>
+                                    </svg>
+                                        <p class="ml-1 text-sm text-gray-600 dark:text-gray-400">Views: {{ $movie->views }}</p>
+                                    </div>
                                     <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Released:
                                         {{ $movie->release_date }}</p>
                                 </div>

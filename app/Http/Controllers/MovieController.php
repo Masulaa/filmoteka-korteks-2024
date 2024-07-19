@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{Movie, Rating, Genre};
+use App\Models\{Movie, Rating};
 use Illuminate\Http\{Request, JsonResponse, RedirectResponse};
 use Illuminate\Support\Facades\{Storage, Log};
 use Illuminate\View\View;
@@ -114,9 +114,9 @@ class MovieController extends Controller
             'title' => 'required',
             'director' => 'required',
             'release_date' => 'required|date',
-            'genre' => 'required',
             'rating' => 'required|integer|min:1|max:10',
             'image' => 'nullable|image|max:2048',
+            'views' => 'nullable|integer|min:0', 
         ]);
 
         $path = $request->file('image') ? $request->file('image')->store('images') : null;
@@ -125,9 +125,9 @@ class MovieController extends Controller
             'title' => $request->title,
             'director' => $request->director,
             'release_date' => $request->release_date,
-            'genre' => $request->genre,
             'rating' => $request->rating,
             'image' => $path,
+            'views' => $request->views ?? 0,
         ]);
 
         return redirect()->route('home')->with('success', 'Movie created successfully.');
@@ -206,6 +206,7 @@ class MovieController extends Controller
             'genre' => 'required',
             'rating' => 'required|integer|min:1|max:10',
             'image' => 'nullable|image|max:2048',
+            'views' => 'nullable|integer|min:0',
         ]);
 
         if ($request->file('image')) {
@@ -224,6 +225,7 @@ class MovieController extends Controller
             'genre' => $request->genre,
             'rating' => $request->rating,
             'image' => $path,
+            'views' => $request->views ?? 0,
         ]);
 
         return redirect()->route('home')->with('success', 'Movie updated successfully.');
@@ -255,7 +257,7 @@ class MovieController extends Controller
     public function watch(int $id): View
     {
         $movie = Movie::findOrFail($id);
-
+        $movie->increment('views');
         return view('movie.watch', compact('movie'));
     }
 
@@ -268,7 +270,6 @@ class MovieController extends Controller
     public function watchTrailer(int $id): View
     {
         $movie = Movie::findOrFail($id);
-
         return view('movie.watchTrailer', compact('movie'));
     }
 }
