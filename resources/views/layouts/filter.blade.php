@@ -71,6 +71,21 @@
                 </select>
             </div>
 
+            <div class="mb-6">
+    <label for="most_viewed" class="flex items-center text-sm font-medium text-white/90">
+        <input type="checkbox" id="most_viewed" name="most_viewed" class="mr-2 rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" {{ request('most_viewed') ? 'checked' : '' }}>
+        <h2 class="text-black">Most Viewed</h2>
+    </label>
+</div>
+
+<div class="mb-6">
+    <label for="highest_rated" class="flex items-center text-sm font-medium text-white/90">
+        <input type="checkbox" id="highest_rated" name="highest_rated" class="mr-2 rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" {{ request('highest_rated') ? 'checked' : '' }}>
+        <h2 class="text-black">Highest Rated</h2>
+    </label>
+</div>
+
+
             <button type="submit"
                 class="w-full px-4 py-2 text-white transition-colors duration-300 bg-indigo-600 rounded-lg hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600">
                 Filter Movies
