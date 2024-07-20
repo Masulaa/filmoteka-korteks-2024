@@ -126,7 +126,7 @@ class MovieController extends Controller
             'release_date' => 'required|date',
             'rating' => 'required|integer|min:1|max:10',
             'image' => 'nullable|image|max:2048',
-            'views' => 'nullable|integer|min:0', 
+            'views' => 'nullable|integer|min:0',
         ]);
 
         $path = $request->file('image') ? $request->file('image')->store('images') : null;
@@ -180,14 +180,14 @@ class MovieController extends Controller
         $rating = Rating::where('movie_id', $movie->id)
             ->where('user_id', $user->id)
             ->first();
-    
+
         $userRating = $rating ? $rating->rating : 0;
         $averageRating = $movie->averageRating();
         $countRatings = $movie->countRatings();
-        
+
         return view('movie.movie', compact('movie', 'userRating', 'averageRating', 'countRatings'));
     }
-    
+
     /**
      * Show the form for editing the specified movie.
      *
