@@ -4,9 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Genre;
+use App\Services\TMDbService;
 
 class GenreController extends Controller
 {
+    protected $tmdbService;
+
+    public function __construct(TMDbService $tmdbService)
+    {
+        $this->tmdbService = $tmdbService;
+    }
+
     /**
      * Display a listing of the genres.
      *
@@ -91,5 +99,10 @@ class GenreController extends Controller
         $movies = $genre->movies;
 
         return response()->json($movies);
+    }
+    public function fetchGenres()
+    {
+        $genres = $this->tmdbService->fetchGenres();
+        return response()->json($genres);
     }
 }
