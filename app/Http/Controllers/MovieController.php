@@ -20,35 +20,6 @@ class MovieController extends Controller
         $movies = Movie::paginate(20);
         return view('movie.home', compact('movies'));
     }
-    /**
-     * Handle AJAX request for action movies search.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function action(Request $request): JsonResponse
-    {
-        if ($request->ajax()) {
-            $query = $request->get('query');
-
-            $movies = Movie::where('title', 'like', '%' . $query . '%')
-                ->orWhere('director', 'like', '%' . $query . '%')
-                ->orderBy('id', 'desc')
-                ->take(5)
-                ->get();
-
-            $html = view('movie.movie_list', compact('movies'))->render();
-
-            $data = [
-                'html' => $html,
-                'total' => $movies->count()
-            ];
-
-            return response()->json($data);
-        }
-
-        return response()->json(['error' => 'Invalid request'], 400);
-    }
 
 
     /**
@@ -68,45 +39,45 @@ class MovieController extends Controller
      * @return \Illuminate\Http\Response|\Illuminate\View\View
      */
     public function filter(Request $request)
-{
-    try {
-        $query = Movie::query();
+    {
+        try {
+            $query = Movie::query();
 
-        if ($request->filled('genre')) {
-            $query->whereHas('genres', function ($q) use ($request) {
-                $q->where('name', $request->genre);
-            });
+            if ($request->filled('genre')) {
+                $query->whereHas('genres', function ($q) use ($request) {
+                    $q->where('name', $request->genre);
+                });
+            }
+
+            if ($request->filled('min_year') && $request->filled('max_year')) {
+                $query->whereYear('release_date', '>=', $request->min_year)
+                    ->whereYear('release_date', '<=', $request->max_year);
+            }
+
+            if ($request->filled('most_viewed')) {
+                $query->orderBy('views', 'desc');
+            }
+
+            if ($request->filled('highest_rated')) {
+                $query->withAvg('ratings', 'rating')->orderBy('ratings_avg_rating', 'desc');
+            }
+
+            $movies = $query->paginate(20)->appends($request->except('page'));
+
+            if ($request->ajax()) {
+                return view('movie.movieslist', compact('movies'))->render();
+            }
+
+            return view('movie.home', compact('movies'));
+        } catch (\Exception $e) {
+            Log::error('Movie filter error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return response()->json(['error' => 'An error occurred while filtering movies: ' . $e->getMessage()], 500);
         }
-
-        if ($request->filled('min_year') && $request->filled('max_year')) {
-            $query->whereYear('release_date', '>=', $request->min_year)
-                  ->whereYear('release_date', '<=', $request->max_year);
-        }
-
-        if ($request->filled('most_viewed')) {
-            $query->orderBy('views', 'desc');
-        }
-
-        if ($request->filled('highest_rated')) {
-            $query->withAvg('ratings', 'rating')->orderBy('ratings_avg_rating', 'desc');
-        }
-
-        $movies = $query->paginate(20)->appends($request->except('page'));
-
-        if ($request->ajax()) {
-            return view('movie.movieslist', compact('movies'))->render();
-        }
-
-        return view('movie.home', compact('movies'));
-    } catch (\Exception $e) {
-        Log::error('Movie filter error: ' . $e->getMessage(), [
-            'file' => $e->getFile(),
-            'line' => $e->getLine(),
-            'trace' => $e->getTraceAsString()
-        ]);
-        return response()->json(['error' => 'An error occurred while filtering movies: ' . $e->getMessage()], 500);
     }
-}
 
 
 
