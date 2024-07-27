@@ -28,7 +28,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Rating whereUserId($value)
  * @mixin \Eloquent
  */
-class Rating extends Model
+class MovieRating extends Model
 {
     use HasFactory;
 

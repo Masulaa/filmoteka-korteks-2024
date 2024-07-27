@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Favorite extends Model
+class SerieFavorite extends Model
 {
     use HasFactory;
 
@@ -16,7 +16,7 @@ class Favorite extends Model
      */
     protected $fillable = [
         'user_id',
-        'movie_id',
+        'serie_id',
     ];
 
     /**
@@ -28,10 +28,10 @@ class Favorite extends Model
     }
 
     /**
-     * Get the movie that is favorited.
+     * Get the serie that is favorited.
      */
-    public function movie()
+    public function serie()
     {
-        return $this->belongsTo(Movie::class);
+        return $this->belongsTo(Serie::class);
     }
 }

@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use GuzzleHttp\Exception\GuzzleException;
-use App\Models\{Movie, Genre, Cast};
+use App\Models\{Movie, Genre, MovieCast};
 
 class MoviesService
 {
@@ -71,7 +71,7 @@ class MoviesService
             'id' => $actor['id']
         ], $cast);
     }
-    
+
     /**
      * Get the URL for the given path and size.
      *
@@ -119,7 +119,7 @@ class MoviesService
                 'created_at' => now(),
             ];
         }
-        Cast::upsert($castEntries, ['movie_id', 'actor_id'], ['name', 'character', 'profile_path']);
+        MovieCast::upsert($castEntries, ['movie_id', 'actor_id'], ['name', 'character', 'profile_path']);
 
         $movie->genres()->sync($existingGenres);
     }
@@ -170,7 +170,7 @@ class MoviesService
                 $syncCount++;
                 $progress = floor(($syncCount / $numberOfMoviesToDownload) * 100);
                 //$bar = (str_repeat('#', floor($progress / 2)) . str_repeat('-', 50 - floor($progress / 2))); // default style
-                $bar = (str_repeat(' ', floor($progress / 2)) . ($progresstmp = $progresstmp == 'c' ? 'C' : 'c') . str_repeat('•', 50 - floor($progress / 2))); // pacman style     
+                $bar = (str_repeat(' ', floor($progress / 2)) . ($progresstmp = $progresstmp == 'c' ? 'C' : 'c') . str_repeat('•', 50 - floor($progress / 2))); // pacman style
                 $this->processMovieData($movieData, $syncCount, $numberOfMoviesToDownload, $skipCount, $newCount, $consoleOutput);
                 $consoleOutput && printf("\033[K[$bar] $progress%%\r");
             }

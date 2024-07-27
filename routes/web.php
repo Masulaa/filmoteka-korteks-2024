@@ -1,6 +1,8 @@
 <?php
 
-use App\Http\Controllers\{ProfileController, MovieController, RatingController, ReviewController, ContactController, FavoriteController};
+use App\Http\Controllers\{
+    ProfileController, MovieController, MovieRatingController,
+     MovieReviewController, ContactController, MovieFavoriteController};
 use App\Livewire\MovieSearch;
 use Illuminate\Support\Facades\Route;
 
@@ -17,19 +19,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/movies/{id}/watch', [MovieController::class, 'watch'])->name('movies.watch');
     Route::get('/movies/{id}/watchTrailer', [MovieController::class, 'watchTrailer'])->name('movies.watchTrailer');
     
-    Route::post('/movies/{movie}/rate', [RatingController::class, 'store'])->name('movies.rate');
-    Route::post('/movies/{movie}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+    Route::post('/movies/{movie}/rate', [MovieRatingController::class, 'store'])->name('movies.rate');
+    Route::post('/movies/{movie}/reviews', [MovieReviewController::class, 'store'])->name('reviews.store');
 
     Route::get('/profile/reviews-ratings/{id}', [ProfileController::class, 'reviewsAndRatings'])->name('profile.reviews-ratings');
     Route::resource('profile', ProfileController::class)->only(['edit', 'update', 'destroy'])
     ->parameters(['profile' => 'id'])
     ->names(['edit' => 'profile.edit','update' => 'profile.update','destroy' => 'profile.destroy']);
 
-    Route::resource('reviews', ReviewController::class)->only(['destroy']);
-    Route::resource('ratings', RatingController::class)->only(['destroy']);
+    Route::resource('reviews', MovieReviewController::class)->only(['destroy']);
+    Route::resource('ratings', MovieRatingController::class)->only(['destroy']);
 
     Route::resource('contact', ContactController::class)->only(['index', 'store']);
-    Route::resource('favorites', FavoriteController::class)->only(['index', 'store', 'destroy']);
+    Route::resource('favorites', MovieFavoriteController::class)->only(['index', 'store', 'destroy']);
 });
 
 require __DIR__ . '/auth.php';

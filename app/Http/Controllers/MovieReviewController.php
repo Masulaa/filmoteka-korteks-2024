@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{ Movie, Review };
+use App\Models\{ Movie, MovieReview };
 use Illuminate\Http\{ RedirectResponse, Request };
 
-class ReviewController extends Controller
+class MovieReviewController extends Controller
 {
     /**
      * Delete a review.
      *
-     * @param Review $review
+     * @param MovieReview $review
      * @return RedirectResponse
      */
-    public function destroy(Review $review): RedirectResponse
+    public function destroy(MovieReview $review): RedirectResponse
     {
         $review->delete();
         return redirect()->back()->with('success', 'Review deleted successfully.');

@@ -87,6 +87,6 @@ class User extends Authenticatable
      */
     public function favorites()
     {
-        return $this->belongsToMany(Movie::class, 'favorites')->withTimestamps();
+        return $this->belongsToMany(Movie::class, 'movie_favorites')->withTimestamps();
     }
 }

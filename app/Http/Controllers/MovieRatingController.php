@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{ Movie, Rating };
+use App\Models\{ Movie, MovieRating };
 use Illuminate\Http\{ Request, JsonResponse, RedirectResponse };
 use Illuminate\Support\Facades\{ Auth, Log };
 
-class RatingController extends Controller
+class MovieRatingController extends Controller
 {
     /**
      * Remove the specified rating from storage.
      *
-     * @param Rating $rating
+     * @param MovieRating $rating
      * @return RedirectResponse
      */
-    public function destroy(Rating $rating): RedirectResponse
+    public function destroy(MovieRating $rating): RedirectResponse
     {
         $rating->delete();
         return redirect()->back()->with('success', 'Rating deleted successfully.');
@@ -38,7 +38,7 @@ class RatingController extends Controller
 
             Log::info('Validation passed', $validated);
 
-            $rating = Rating::updateOrCreate(
+            $rating = MovieRating::updateOrCreate(
                 [
                     'user_id' => Auth::id(),
                     'movie_id' => $movie->id,

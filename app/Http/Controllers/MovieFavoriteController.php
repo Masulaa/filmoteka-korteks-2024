@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{ User,Favorite };
+use App\Models\{ User, MovieFavorite };
 use Illuminate\Support\Facades\Auth;
 //use App\Models\Movie;
 
-class FavoriteController extends Controller
+class MovieFavoriteController extends Controller
 {
     public function store(Request $request)
     {
@@ -35,7 +35,7 @@ class FavoriteController extends Controller
     }
     public function destroy($id)
     {
-        $favorite = Favorite::where('movie_id', $id)
+        $favorite = MovieFavorite::where('movie_id', $id)
             ->where('user_id', auth()->id())
             ->first();
     

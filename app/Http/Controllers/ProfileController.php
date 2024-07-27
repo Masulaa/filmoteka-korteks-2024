@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
-use App\Models\{Rating, Review};
+use App\Models\{MovieRating, MovieReview};
 use Illuminate\Http\{RedirectResponse, Request};
 use Illuminate\Support\Facades\{Auth, Redirect};
 use Illuminate\View\View;
@@ -75,8 +75,8 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
 
-        $reviews = Review::where('user_id', $user->id)->with('movie')->get();
-        $ratings = Rating::where('user_id', $user->id)->with('movie')->get();
+        $reviews = MovieReview::where('user_id', $user->id)->with('movie')->get();
+        $ratings = MovieRating::where('user_id', $user->id)->with('movie')->get();
 
         return view('profile.reviews-ratings', compact('reviews', 'ratings'));
     }

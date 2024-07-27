@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Cast;
+use App\Models\MovieCast;
 use Illuminate\Http\Request;
 
-class CastController extends Controller
+class MovieCastController extends Controller
 {
     public function index()
     {
-        $castMembers = Cast::all();
+        $castMembers = MovieCast::all();
         return response()->json($castMembers);
     }
 
@@ -23,27 +23,27 @@ class CastController extends Controller
             'actor_id' => 'nullable|exists:actors,id',
         ]);
     
-        $castMember = Cast::create($validatedData);
+        $castMember = MovieCast::create($validatedData);
         return response()->json($castMember, 201);
     }
     
 
     public function show($id)
     {
-        $castMember = Cast::findOrFail($id);
+        $castMember = MovieCast::findOrFail($id);
         return response()->json($castMember);
     }
 
     public function update(Request $request, $id)
     {
-        $castMember = Cast::findOrFail($id);
+        $castMember = MovieCast::findOrFail($id);
         $castMember->update($request->all());
         return response()->json($castMember, 200);
     }
 
     public function destroy($id)
     {
-        Cast::findOrFail($id)->delete();
+        MovieCast::findOrFail($id)->delete();
         return response()->json(null, 204);
     }
 }

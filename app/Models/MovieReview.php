@@ -30,7 +30,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Review whereUserId($value)
  * @mixin \Eloquent
  */
-class Review extends Model
+class MovieReview extends Model
 {
     use HasFactory;
 
