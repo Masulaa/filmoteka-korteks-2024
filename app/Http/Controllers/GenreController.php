@@ -100,9 +100,4 @@ class GenreController extends Controller
 
         return response()->json($movies);
     }
-    public function fetchGenres()
-    {
-        $genres = $this->tmdbService->fetchGenres();
-        return response()->json($genres);
-    }
 }

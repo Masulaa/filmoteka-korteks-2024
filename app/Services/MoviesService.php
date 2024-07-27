@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use GuzzleHttp\Exception\GuzzleException;
-use App\Models\{Movie, Genre, MovieCast};
+use App\Models\{Movie, MovieCast};
 
 class MoviesService
 {
@@ -91,11 +91,12 @@ class MoviesService
     public function createOrUpdateMovie(array $movieData): void
     {
         $videoId = $this->getYouTubeTrailerId($movieData['id']);
-        $existingGenres = Genre::whereIn('id', $movieData['genre_ids'])->pluck('id')->toArray();
-
+        $existingGenres = $movieData['genre_ids'] ?? [];
+    
         $movie = Movie::updateOrCreate(
-            ['title' => $movieData['title']],
+            ['video_id' => $movieData['id']],
             [
+                'title' => $movieData['title'],
                 'director' => $this->getDirector($movieData['id']),
                 'release_date' => isset($movieData['release_date']) ? date('Y-m-d', strtotime($movieData['release_date'])) : null,
                 'image' => $this->getUrl($movieData['poster_path'], 'w500'),
@@ -105,7 +106,9 @@ class MoviesService
                 'video_id' => $movieData['id'],
             ]
         );
-
+    
+        $movie->genres()->sync($existingGenres);
+    
         $castData = $this->getCast($movieData['id']);
         $castEntries = [];
         foreach ($castData as $actorData) {
@@ -120,8 +123,6 @@ class MoviesService
             ];
         }
         MovieCast::upsert($castEntries, ['movie_id', 'actor_id'], ['name', 'character', 'profile_path']);
-
-        $movie->genres()->sync($existingGenres);
     }
 
 
