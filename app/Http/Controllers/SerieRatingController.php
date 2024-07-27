@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{Movie, MovieRating};
+use App\Models\{Serie, SerieRating};
 use Illuminate\Http\{Request, JsonResponse, RedirectResponse};
 use Illuminate\Support\Facades\{Auth, Log};
 
@@ -11,10 +11,10 @@ class SerieRatingController extends Controller
     /**
      * Remove the specified rating from storage.
      *
-     * @param MovieRating $rating
+     * @param SerieRating $rating
      * @return RedirectResponse
      */
-    public function destroy(MovieRating $rating): RedirectResponse
+    public function destroy(SerieRating $rating): RedirectResponse
     {
         $rating->delete();
         return redirect()
@@ -26,14 +26,14 @@ class SerieRatingController extends Controller
      * Store a newly created rating in storage.
      *
      * @param Request $request
-     * @param Movie $movie
+     * @param Serie $serie
      * @return JsonResponse
      */
-    public function store(Request $request, Movie $movie): JsonResponse
+    public function store(Request $request, Serie $serie): JsonResponse
     {
         Log::info("Rating store method called", [
             "user_id" => Auth::id(),
-            "movie_id" => $movie->id,
+            "serie_id" => $serie->id,
         ]);
 
         try {
@@ -43,10 +43,10 @@ class SerieRatingController extends Controller
 
             Log::info("Validation passed", $validated);
 
-            $rating = MovieRating::updateOrCreate(
+            $rating = SerieRating::updateOrCreate(
                 [
                     "user_id" => Auth::id(),
-                    "movie_id" => $movie->id,
+                    "serie_id" => $serie->id,
                 ],
                 ["rating" => $validated["rating"]]
             );
@@ -55,14 +55,14 @@ class SerieRatingController extends Controller
 
             return response()->json([
                 "success" => true,
-                "average_rating" => $movie->averageRating(),
+                "average_rating" => $serie->averageRating(),
                 "message" => "Rating saved successfully",
             ]);
         } catch (\Exception $e) {
             Log::error("Error in rating store method", [
                 "error" => $e->getMessage(),
                 "user_id" => Auth::id(),
-                "movie_id" => $movie->id,
+                "serie_id" => $serie->id,
             ]);
 
             return response()->json(

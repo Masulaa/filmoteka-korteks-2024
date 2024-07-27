@@ -1,6 +1,6 @@
 @foreach ($series as $serie)
     <li>
-        <a href="{{ route('series.index') }}/{{ $serie->id }}" class="flex gap-2">
+        <a href="{{ route('series.index') }} {{ ['serie' => $serie->id] }}" class="flex gap-2">
             <img width="56px" src="{{ $serie->image }}">
             <div class="flex flex-col">
                 <h1 class="text-lg font-bold">{{ $serie->title }}</h1>

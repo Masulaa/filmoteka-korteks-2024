@@ -37,6 +37,6 @@ class MovieReviewController extends Controller
             'content' => $request->input('content'),
         ]);
 
-        return redirect()->route('movie', $movie->id)->with('success', 'Review added successfully');
+        return redirect()->route('movies.show', $movie->id)->with('success', 'Review added successfully');
     }
 }

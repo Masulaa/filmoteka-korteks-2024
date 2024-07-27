@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{User, MovieFavorite};
+use App\Models\{User, SerieFavorite};
 use Illuminate\Support\Facades\Auth;
-//use App\Models\Movie;
+//use App\Models\Serie;
 
 class SerieFavoriteController extends Controller
 {
@@ -13,21 +13,21 @@ class SerieFavoriteController extends Controller
     {
         $request->validate([
             "user_id" => "required|exists:users,id",
-            "movie_id" => "required|exists:movies,id",
+            "serie_id" => "required|exists:series,id",
         ]);
 
         $user = User::find($request->user_id);
-        $movieId = $request->movie_id;
+        $serieId = $request->serie_id;
 
-        if (!$user->favorites()->where("movie_id", $movieId)->exists()) {
-            $user->favorites()->attach($movieId);
+        if (!$user->favorites()->where("serie_id", $serieId)->exists()) {
+            $user->favorites()->attach($serieId);
             return response()->json(
-                ["message" => "Movie added to favorites"],
+                ["message" => "Serie added to favorites"],
                 201
             );
         } else {
             return response()->json(
-                ["message" => "Movie is already in favorites"],
+                ["message" => "Serie is already in favorites"],
                 200
             );
         }
@@ -35,20 +35,20 @@ class SerieFavoriteController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $favoriteMovies = $user->favorites()->get();
+        $favoriteSeries = $user->favorites()->get();
 
-        return view("favorites.index", compact("favoriteMovies"));
+        return view("favorites.index", compact("favoriteSeries"));
     }
     public function destroy($id)
     {
-        $favorite = MovieFavorite::where("movie_id", $id)
+        $favorite = SerieFavorite::where("serie_id", $id)
             ->where("user_id", auth()->id())
             ->first();
 
         if (!$favorite) {
             return response()->json(
                 [
-                    "message" => "Favorite movie not found.",
+                    "message" => "Favorite serie not found.",
                     "success" => false,
                 ],
                 404
@@ -59,7 +59,7 @@ class SerieFavoriteController extends Controller
 
         return response()->json(
             [
-                "message" => "Movie removed from favorites.",
+                "message" => "Serie removed from favorites.",
                 "success" => true,
             ],
             200

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\{Movie, MovieRating};
-use Illuminate\Http\{Request, JsonResponse, RedirectResponse};
+use Illuminate\Http\{Request, RedirectResponse};
 use Illuminate\Support\Facades\{Storage, Log};
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
@@ -152,7 +152,8 @@ class MovieController extends Controller
         $averageRating = $movie->averageRating();
         $countRatings = $movie->countRatings();
 
-        return view('movie.movie', compact('movie', 'userRating', 'averageRating', 'countRatings'));
+        return view('movie.movie', 
+        compact('movie', 'userRating', 'averageRating', 'countRatings'));
     }
 
     /**

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{Serie, MovieRating};
-use Illuminate\Http\{Request, /*JsonResponse,*/ RedirectResponse};
+use App\Models\{Serie, SerieRating};
+use Illuminate\Http\{Request, RedirectResponse};
 use Illuminate\Support\Facades\{Storage, Log};
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
@@ -146,7 +146,7 @@ class SerieController extends Controller
         $serie->ratings()->save($rating);
 
         return redirect()
-            ->back()
+            ->back()    
             ->with("success", "Rating submitted successfully!");
     }
 

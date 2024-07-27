@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{Movie, MovieReview};
+use App\Models\{Serie, SerieReview};
 use Illuminate\Http\{RedirectResponse, Request};
 
 class SerieReviewController extends Controller
@@ -10,10 +10,10 @@ class SerieReviewController extends Controller
     /**
      * Delete a review.
      *
-     * @param MovieReview $review
+     * @param SerieReview $review
      * @return RedirectResponse
      */
-    public function destroy(MovieReview $review): RedirectResponse
+    public function destroy(SerieReview $review): RedirectResponse
     {
         $review->delete();
         return redirect()
@@ -22,25 +22,25 @@ class SerieReviewController extends Controller
     }
 
     /**
-     * Store a new review for a movie.
+     * Store a new review for a serie.
      *
      * @param Request $request
-     * @param Movie $movie
+     * @param Serie $serie
      * @return RedirectResponse
      */
-    public function store(Request $request, Movie $movie): RedirectResponse
+    public function store(Request $request, Serie $serie): RedirectResponse
     {
         $request->validate([
             "content" => "required",
         ]);
 
-        $movie->reviews()->create([
+        $serie->reviews()->create([
             "user_id" => auth()->id(),
             "content" => $request->input("content"),
         ]);
 
         return redirect()
-            ->route("movie", $movie->id)
+            ->route("serie", $serie->id)
             ->with("success", "Review added successfully");
     }
 }
