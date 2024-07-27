@@ -33,27 +33,29 @@ class SeriesService
     {
         $videos = $this->tmdbService->fetchData("https://api.themoviedb.org/3/tv/{$seriesId}/videos", [])['results'] ?? [];
         foreach ($videos as $video) {
-            if ($video['site'] === 'YouTube' && $video['type'] === 'Trailer')
+            if ($video['site'] === 'YouTube' && $video['type'] === 'Trailer') {
                 return $video['key'];
+            }
         }
         return null;
     }
 
     /**
-     * Get the creator of the given series.
+     * Get the director of the given series.
      *
      * @param int $seriesId
      * @return string
      * @throws GuzzleException
      */
-    public function getCreator(int $seriesId): string
+    public function getDirector(int $seriesId): string
     {
         $crew = $this->tmdbService->fetchData("https://api.themoviedb.org/3/tv/{$seriesId}/credits", [])['crew'] ?? [];
         foreach ($crew as $member) {
-            if ($member['job'] === 'Creator' || $member['job'] === 'Executive Producer')
+            if ($member['job'] === 'Director') {
                 return $member['name'];
+            }
         }
-        return 'unknown creator';
+        return 'unknown director';
     }
 
     /**
@@ -97,10 +99,11 @@ class SeriesService
         $videoId = $this->getYouTubeTrailerId($seriesData['id']);
 
         $series = Serie::updateOrCreate(
-            ['title' => $seriesData['name']],
+            ['video_id' => $seriesData['id']],
             [
-                'creator' => $this->getCreator($seriesData['id']),
-                'first_air_date' => isset($seriesData['first_air_date']) ? date('Y-m-d', strtotime($seriesData['first_air_date'])) : null,
+                'title' => $seriesData['name'],
+                'director' => $this->getDirector($seriesData['id']),
+                'release_date' => isset($seriesData['first_air_date']) ? date('Y-m-d', strtotime($seriesData['first_air_date'])) : null,
                 'image' => $this->getUrl($seriesData['poster_path'], 'w500'),
                 'overview' => $seriesData['overview'] ?? null,
                 'backdrop_path' => $this->getUrl($seriesData['backdrop_path'], 'original'),
@@ -113,7 +116,7 @@ class SeriesService
         $castEntries = [];
         foreach ($castData as $actorData) {
             $castEntries[] = [
-                'series_id' => $series->id,
+                'serie_id' => $series->id,
                 'actor_id' => $actorData['id'],
                 'name' => $actorData['name'],
                 'character' => $actorData['character'],
@@ -122,7 +125,7 @@ class SeriesService
                 'created_at' => now(),
             ];
         }
-        SerieCast::upsert($castEntries, ['series_id', 'actor_id'], ['name', 'character', 'profile_path']);
+        SerieCast::upsert($castEntries, ['serie_id', 'actor_id'], ['name', 'character', 'profile_path']);
     }
 
     /**
@@ -156,6 +159,7 @@ class SeriesService
      * @return void
      * @throws GuzzleException
      */
+
     public function fetchPopularSeries(int $numberOfSeriesToDownload, bool $consoleOutput=false): void
     {
         $consoleOutput && printf("\033[34m::\033[0m Synchronizing series from TMDb...\n");
@@ -164,12 +168,13 @@ class SeriesService
 
         while ($page++ < $totalPages) {
             $seriesData = $this->tmdbService->fetchSeriesData($page);
-            foreach ($seriesData as $data) {
+            foreach ($seriesData as $serieData) {
                 if ($syncCount >= $numberOfSeriesToDownload) { break 2; }
                 $syncCount++;
                 $progress = floor(($syncCount / $numberOfSeriesToDownload) * 100);
+                //$bar = (str_repeat('#', floor($progress / 2)) . str_repeat('-', 50 - floor($progress / 2))); // default style
                 $bar = (str_repeat(' ', floor($progress / 2)) . ($progresstmp = $progresstmp == 'c' ? 'C' : 'c') . str_repeat('•', 50 - floor($progress / 2))); // pacman style
-                $this->processSeriesData($data, $syncCount, $numberOfSeriesToDownload, $skipCount, $newCount, $consoleOutput);
+                $this->processSeriesData($serieData, $syncCount, $numberOfSeriesToDownload, $skipCount, $newCount, $consoleOutput);
                 $consoleOutput && printf("\033[K[$bar] $progress%%\r");
             }
         }
