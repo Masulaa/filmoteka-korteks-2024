@@ -11,11 +11,13 @@ use App\Http\Controllers\{
     SerieController,
     SerieReviewController,
     SerieRatingController,
-    SerieFavoriteController
+    SerieFavoriteController,
+    MovieFilterController,
+    MovieWatchController,
+    ProfileReviewsAndRatingsController,
+    SerieFilterController
 };
-use App\Http\Controllers\FilterController;
-use App\Http\Controllers\MovieWatchController;
-use App\Http\Controllers\ProfileReviewsAndRatingsController;
+
 use App\Livewire\{MovieSearch, SerieSearch};
 use Illuminate\Support\Facades\Route;
 
@@ -30,7 +32,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     //Route::get('/movies/action', [MovieController::class, 'action'])->name('movies.action');
     //Route::get('/movies/filter', [MovieController::class, 'filter'])->name('movies.filter');
     Route::get('/action', [MovieController::class, 'action'])->name('movies.action');
-    Route::get('/filter', [FilterController::class, 'filter'])->name('movies.filter');
+    Route::get('/filter', [MovieFilterController::class, 'filter'])->name('movies.filter');
     Route::get('/movie-search', [MovieSearch::class, 'render'])->name('movie.search');
     Route::get('/movies/{id}/watch', [MovieWatchController::class, 'watch'])->name('movies.watch');
     Route::get('/movies/{id}/watchTrailer', [MovieWatchController::class, 'watchTrailer'])->name('movies.watchTrailer');
@@ -41,7 +43,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     /* SERIES */
     Route::resource('series', SerieController::class)->only(['index', 'show']);
     Route::get('/series/action', [SerieController::class, 'action'])->name('series.action');
-    Route::get('/series/filter', [SerieController::class, 'filter'])->name('series.filter');
+    Route::get('/series/filter', [SerieFilterController::class, 'filter'])->name('series.filter');
     Route::get('/series-search', [SerieSearch::class, 'render'])->name('series.search');
     Route::get('/series/{serie}/watch', [SerieController::class, 'watch'])->name('series.watch');
     Route::get('/series/{serie}/watchTrailer', [SerieController::class, 'watchTrailer'])->name('series.watchTrailer');
@@ -49,13 +51,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/series/{serie}/rate', [SerieRatingController::class, 'store'])->name('series.rate');
     Route::post('/series/{serie}/reviews', [SerieReviewController::class, 'store'])->name('reviews.store');
 
-    /* Profile */
+    /* PROFILE */
     Route::get('/profile/reviews-ratings/{id}', [ProfileReviewsAndRatingsController::class, 'reviewsAndRatings'])->name('profile.reviews-ratings');
     Route::resource('profile', ProfileController::class)->only(['edit', 'update', 'destroy'])
         ->parameters(['profile' => 'id'])
         ->names(['edit' => 'profile.edit', 'update' => 'profile.update', 'destroy' => 'profile.destroy']);
 
-    /* Admin Panel */
+    /* ADMIN PANEL */
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
 
     Route::resource('reviews', MovieReviewController::class)->only(['destroy']);

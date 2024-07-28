@@ -30,64 +30,6 @@ class SerieController extends Controller
     {
         return view("series.create");
     }
-
-    /**
-     * Filter series based on criteria.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response|\Illuminate\View\View
-     */
-    public function filter(Request $request)
-    {
-        try {
-            $query = Serie::query();
-
-            if ($request->filled("genre")) {
-                $query->whereHas("genres", function ($q) use ($request) {
-                    $q->where("name", $request->genre);
-                });
-            }
-
-            if ($request->filled("min_year") && $request->filled("max_year")) {
-                $query
-                    ->whereYear("release_date", ">=", $request->min_year)
-                    ->whereYear("release_date", "<=", $request->max_year);
-            }
-
-            if ($request->filled("most_viewed")) {
-                $query->orderBy("views", "desc");
-            }
-
-            if ($request->filled("highest_rated")) {
-                $query
-                    ->withAvg("ratings", "rating")
-                    ->orderBy("ratings_avg_rating", "desc");
-            }
-
-            $series = $query->paginate(20)->appends($request->except("page"));
-
-            if ($request->ajax()) {
-                return view("serie.serieslist", compact("series"))->render();
-            }
-
-            return view("serie.home", compact("series"));
-        } catch (\Exception $e) {
-            Log::error("Serie filter error: " . $e->getMessage(), [
-                "file" => $e->getFile(),
-                "line" => $e->getLine(),
-                "trace" => $e->getTraceAsString(),
-            ]);
-            return response()->json(
-                [
-                    "error" =>
-                        "An error occurred while filtering series: " .
-                        $e->getMessage(),
-                ],
-                500
-            );
-        }
-    }
-
     /**
      * Store a newly created serie in storage.
      *
@@ -124,33 +66,6 @@ class SerieController extends Controller
     }
 
     /**
-     * Store a new rating for a serie.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function rate(Request $request, int $id): RedirectResponse
-    {
-        $request->validate([
-            "rating" => "required|integer|min:1|max:7",
-        ]);
-
-        $serie = Serie::findOrFail($id);
-
-        $rating = new SerieRating([
-            "rating" => $request->input("rating"),
-            "user_id" => auth()->id(),
-        ]);
-
-        $serie->ratings()->save($rating);
-
-        return redirect()
-            ->back()    
-            ->with("success", "Rating submitted successfully!");
-    }
-
-    /**
      * Display the specified serie.
      *
      * @param \App\Models\Serie $serie
@@ -165,7 +80,7 @@ class SerieController extends Controller
         $rating = SerieRating::where("serie_id", $serie->id)
             ->where("user_id", $user->id)
             ->first();
-            
+
         $userRating = $rating ? $rating->rating : 0;
         $averageRating = $serie->averageRating();
         $countRatings = $serie->countRatings();

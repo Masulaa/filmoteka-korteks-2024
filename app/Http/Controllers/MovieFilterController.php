@@ -8,7 +8,7 @@ use App\Models\{Movie};
 
 use Illuminate\Support\Facades\{Log};
 
-class FilterController extends Controller
+class MovieFilterController extends Controller
 {
     /**
      * Filter movies based on criteria.
