@@ -15,6 +15,7 @@ use App\Http\Controllers\{
 };
 use App\Http\Controllers\FilterController;
 use App\Http\Controllers\MovieWatchController;
+use App\Http\Controllers\ProfileReviewsAndRatingsController;
 use App\Livewire\{MovieSearch, SerieSearch};
 use Illuminate\Support\Facades\Route;
 
@@ -49,7 +50,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/series/{serie}/reviews', [SerieReviewController::class, 'store'])->name('reviews.store');
 
     /* Profile */
-    Route::get('/profile/reviews-ratings/{id}', [ProfileController::class, 'reviewsAndRatings'])->name('profile.reviews-ratings');
+    Route::get('/profile/reviews-ratings/{id}', [ProfileReviewsAndRatingsController::class, 'reviewsAndRatings'])->name('profile.reviews-ratings');
     Route::resource('profile', ProfileController::class)->only(['edit', 'update', 'destroy'])
         ->parameters(['profile' => 'id'])
         ->names(['edit' => 'profile.edit', 'update' => 'profile.update', 'destroy' => 'profile.destroy']);
