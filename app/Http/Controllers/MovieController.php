@@ -33,53 +33,6 @@ class MovieController extends Controller
     }
 
     /**
-     * Filter movies based on criteria.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response|\Illuminate\View\View
-     */
-    public function filter(Request $request)
-    {
-        try {
-            $query = Movie::query();
-
-            if ($request->filled('genre')) {
-                $query->whereHas('genres', function ($q) use ($request) {
-                    $q->where('name', $request->genre);
-                });
-            }
-
-            if ($request->filled('min_year') && $request->filled('max_year')) {
-                $query->whereYear('release_date', '>=', $request->min_year)
-                    ->whereYear('release_date', '<=', $request->max_year);
-            }
-
-            if ($request->filled('most_viewed')) {
-                $query->orderBy('views', 'desc');
-            }
-
-            if ($request->filled('highest_rated')) {
-                $query->withAvg('ratings', 'rating')->orderBy('ratings_avg_rating', 'desc');
-            }
-
-            $movies = $query->paginate(20)->appends($request->except('page'));
-
-            if ($request->ajax()) {
-                return view('movie.movieslist', compact('movies'))->render();
-            }
-
-            return view('movie.home', compact('movies'));
-        } catch (\Exception $e) {
-            Log::error('Movie filter error: ' . $e->getMessage(), [
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString()
-            ]);
-            return response()->json(['error' => 'An error occurred while filtering movies: ' . $e->getMessage()], 500);
-        }
-    }
-
-    /**
      * Store a newly created movie in storage.
      *
      * @param \Illuminate\Http\Request $request
@@ -111,31 +64,6 @@ class MovieController extends Controller
     }
 
     /**
-     * Store a new rating for a movie.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function rate(Request $request, int $id): RedirectResponse
-    {
-        $request->validate([
-            'rating' => 'required|integer|min:1|max:7',
-        ]);
-
-        $movie = Movie::findOrFail($id);
-
-        $rating = new MovieRating([
-            'rating' => $request->input('rating'),
-            'user_id' => auth()->id(),
-        ]);
-
-        $movie->ratings()->save($rating);
-
-        return redirect()->back()->with('success', 'Rating submitted successfully!');
-    }
-
-    /**
      * Display the specified movie.
      *
      * @param \App\Models\Movie $movie
@@ -152,8 +80,10 @@ class MovieController extends Controller
         $averageRating = $movie->averageRating();
         $countRatings = $movie->countRatings();
 
-        return view('movie.movie', 
-        compact('movie', 'userRating', 'averageRating', 'countRatings'));
+        return view(
+            'movie.movie',
+            compact('movie', 'userRating', 'averageRating', 'countRatings')
+        );
     }
 
     /**
@@ -226,29 +156,6 @@ class MovieController extends Controller
         return redirect()->route('home')->with('success', 'Movie deleted successfully.');
     }
 
-    /**
-     * Watch the specified movie.
-     *
-     * @param int $id
-     * @return \Illuminate\View\View
-     */
-    public function watch(int $id): View
-    {
-        $movie = Movie::findOrFail($id);
-        $movie->increment('views');
-        return view('movie.watch', compact('movie'));
-    }
 
-    /**
-     * Watch trailer of a movie.
-     *
-     * @param int $id
-     * @return \Illuminate\View\View
-     */
-    public function watchTrailer(int $id): View
-    {
-        $movie = Movie::findOrFail($id);
-        return view('movie.watchTrailer', compact('movie'));
-    }
 }
 
