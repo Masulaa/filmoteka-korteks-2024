@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\{
+<<<<<<< HEAD
     ProfileController,
     ContactController,
     AdminController,
@@ -16,6 +17,13 @@ use App\Http\Controllers\{
     MovieWatchController,
     ProfileReviewsAndRatingsController,
     SerieFilterController
+=======
+    ProfileController,       ContactController,     AdminController,
+    MovieController,         MovieReviewController, MovieRatingController,
+    MovieFavoriteController, MovieWatchController,
+    SerieController,         SerieReviewController, SerieRatingController,
+    SerieFavoriteController, FilterController,      ProfileReviewsAndRatingsController
+>>>>>>> 0e7466cc55cd626ae3470c03de8f61e41e35ad11
 };
 
 use App\Livewire\{MovieSearch, SerieSearch};
