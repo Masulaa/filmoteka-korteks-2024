@@ -120,7 +120,7 @@ class MovieController extends Controller
     public function rate(Request $request, int $id): RedirectResponse
     {
         $request->validate([
-            'rating' => 'required|integer|min:1|max:5',
+            'rating' => 'required|integer|min:1|max:7',
         ]);
 
         $movie = Movie::findOrFail($id);
