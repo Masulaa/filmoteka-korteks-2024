@@ -21,7 +21,11 @@
         <!-- Привремено, док series не добије свој систем за search/filter -->
         @if ((isset($movies) && $movies->count() > 0) || (isset($series) && $series->count() > 0))
             @include('layouts.filter')
-            <livewire:movie-search />
+            @if (Request::is('movies*'))
+                <livewire:movie-search />
+            @elseif (Request::is('series*'))
+                <livewire:serie-search />
+            @endif
         @endif 
 
         <!-- Page Content -->

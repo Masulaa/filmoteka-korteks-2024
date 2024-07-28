@@ -13,7 +13,7 @@ class SerieSearch extends Component
     {
         $series = Serie::where('title', 'like', '%' . $this->search . '%')->take(10)->get();
 
-        return view('livewire.series-search', [
+        return view('livewire.serie-search', [
             'series' => $series,
         ]);
     }

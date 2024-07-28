@@ -9,7 +9,7 @@
         </div>
         <input wire:model.live="search" type="text"
             class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-l-lg bg-gray-50 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-indigo-500 dark:focus:border-indigo-500"
-            placeholder="Search serieses..." required />
+            placeholder="Search series..." required />
         <div id="serie_results"
             class="absolute left-0 right-0 z-10 mt-1 overflow-hidden bg-white rounded-lg shadow-lg dark:bg-gray-700">
             @if(!empty($search))
