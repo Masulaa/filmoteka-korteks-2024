@@ -1,21 +1,13 @@
 <?php
 
 use App\Http\Controllers\{
-    ProfileController,
-    ContactController,
-    AdminController,
-    MovieController,
-    MovieReviewController,
-    MovieRatingController,
-    MovieFavoriteController,
-    SerieController,
-    SerieReviewController,
-    SerieRatingController,
-    SerieFavoriteController
+    ProfileController,       ContactController,     AdminController,
+    MovieController,         MovieReviewController, MovieRatingController,
+    MovieFavoriteController, MovieWatchController,
+    SerieController,         SerieReviewController, SerieRatingController,
+    SerieFavoriteController, FilterController,      ProfileReviewsAndRatingsController
 };
-use App\Http\Controllers\FilterController;
-use App\Http\Controllers\MovieWatchController;
-use App\Http\Controllers\ProfileReviewsAndRatingsController;
+
 use App\Livewire\{MovieSearch, SerieSearch};
 use Illuminate\Support\Facades\Route;
 
