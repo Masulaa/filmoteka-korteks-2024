@@ -15,17 +15,17 @@ class Serie extends Model
      * @var array
      */
     protected $fillable = [
-        'title',
-        'director',
-        'release_date',
-        'genre_ids',
-        'rating',
-        'image',
-        'overview',
-        'backdrop_path',
-        'trailer_link',
-        'video_id',
-        'views',
+        "title",
+        "director",
+        "release_date",
+        "genre_ids",
+        "rating",
+        "image",
+        "overview",
+        "backdrop_path",
+        "trailer_link",
+        "video_id",
+        "views",
     ];
 
     /**
@@ -55,7 +55,7 @@ class Serie extends Model
      */
     public function averageRating()
     {
-        $totalRating = $this->ratings()->sum('rating');
+        $totalRating = $this->ratings()->sum("rating");
         $countRatings = $this->ratings()->count();
 
         if ($countRatings > 0) {
@@ -77,7 +77,12 @@ class Serie extends Model
 
     public function genres()
     {
-        return $this->belongsToMany(Genre::class, 'serie_genre', 'serie_id', 'genre_id');
+        return $this->belongsToMany(
+            Genre::class,
+            "serie_genre",
+            "serie_id",
+            "genre_id"
+        );
     }
     public function cast()
     {
@@ -85,6 +90,10 @@ class Serie extends Model
     }
     public function favoritedBy()
     {
-        return $this->belongsToMany(User::class, 'favorites')->withTimestamps();
+        return $this->belongsToMany(User::class, "favorites")->withTimestamps();
+    }
+    public function episodes()
+    {
+        return $this->hasMany(SerieEpisode::class);
     }
 }
