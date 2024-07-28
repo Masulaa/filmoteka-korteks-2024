@@ -122,10 +122,8 @@ class SeriesService
      */
     public function createOrUpdateSeries(array $seriesData): void
     {
-        // Retrieve genres
         $genreIds = $seriesData["genre_ids"] ?? [];
 
-        // Create or update series
         $series = Serie::updateOrCreate(
             ["video_id" => $seriesData["id"]],
             [
@@ -145,10 +143,7 @@ class SeriesService
             ]
         );
 
-        // Sync genres
         $this->syncGenres($series, $genreIds);
-
-        // Sync cast
         $this->syncCast($series, $this->getCast($seriesData["id"]));
     }
 
@@ -240,6 +235,7 @@ class SeriesService
      * @return void
      * @throws GuzzleException
      */
+
     public function fetchPopularSeries(
         int $numberOfSeriesToDownload,
         bool $consoleOutput = false
@@ -262,7 +258,16 @@ class SeriesService
                 $bar =
                     str_repeat(" ", floor($progress / 2)) .
                     ($progresstmp = $progresstmp == "c" ? "C" : "c") .
-                    str_repeat("•", 50 - floor($progress / 2)); // pacman style
+                    str_repeat("•", 50 - floor($progress / 2));
+
+                $seasons = $this->tmdbService->fetchSeasons($serieData["id"]);
+                foreach ($seasons as $season) {
+                    $episodes = $this->tmdbService->fetchEpisodes(
+                        $serieData["id"],
+                        $season["season_number"]
+                    );
+                }
+
                 $this->processSeriesData(
                     $serieData,
                     $syncCount,
@@ -271,7 +276,7 @@ class SeriesService
                     $newCount,
                     $consoleOutput
                 );
-                $consoleOutput && printf("\033[K[$bar] $progress%%\r");
+                $consoleOutput && printf("[$bar] $progress%%\r");
             }
         }
 
