@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{Movie, Rating};
-use Illuminate\Http\{Request, JsonResponse, RedirectResponse};
+use App\Models\{Movie, MovieRating};
+use Illuminate\Http\{Request, RedirectResponse};
 use Illuminate\Support\Facades\{Storage, Log};
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
@@ -79,10 +79,6 @@ class MovieController extends Controller
         }
     }
 
-
-
-
-
     /**
      * Store a newly created movie in storage.
      *
@@ -124,12 +120,12 @@ class MovieController extends Controller
     public function rate(Request $request, int $id): RedirectResponse
     {
         $request->validate([
-            'rating' => 'required|integer|min:1|max:5',
+            'rating' => 'required|integer|min:1|max:7',
         ]);
 
         $movie = Movie::findOrFail($id);
 
-        $rating = new Rating([
+        $rating = new MovieRating([
             'rating' => $request->input('rating'),
             'user_id' => auth()->id(),
         ]);
@@ -148,7 +144,7 @@ class MovieController extends Controller
     public function show(Movie $movie)
     {
         $user = Auth::user();
-        $rating = Rating::where('movie_id', $movie->id)
+        $rating = MovieRating::where('movie_id', $movie->id)
             ->where('user_id', $user->id)
             ->first();
 
@@ -156,7 +152,8 @@ class MovieController extends Controller
         $averageRating = $movie->averageRating();
         $countRatings = $movie->countRatings();
 
-        return view('movie.movie', compact('movie', 'userRating', 'averageRating', 'countRatings'));
+        return view('movie.movie', 
+        compact('movie', 'userRating', 'averageRating', 'countRatings'));
     }
 
     /**

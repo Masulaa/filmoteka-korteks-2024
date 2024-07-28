@@ -15,6 +15,9 @@
                     <x-nav-link :href="route('movies.index')" :active="request()->routeIs('movies.index')">
                         {{ __('Movies') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('series.index')" :active="request()->routeIs('series.index')">
+                        {{ __('Series') }}
+                    </x-nav-link>
                     <x-nav-link :href="route('favorites.index')" :active="request()->routeIs('favorites.index')">
                         {{ __('Favorites') }}
                     </x-nav-link>
@@ -92,6 +95,9 @@
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('movies.index')" :active="request()->routeIs('movies.index')">
                 {{ __('Movies') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('series.index')" :active="request()->routeIs('series.index')">
+                {{ __('Series') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('favorites.index')" :active="request()->routeIs('favorites.index')">
                 {{ __('Favorites') }}

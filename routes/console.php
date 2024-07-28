@@ -9,3 +9,5 @@ use Illuminate\Support\Facades\Schedule;
  * @return void
  */
 Schedule::command('movies:sync 0 0')->dailyAt("03:00"); 
+Schedule::command('movies:sync 0 0')->dailyAt("03:00"); 
+Schedule::command('movies:sync 0 0')->dailyAt("03:00"); 

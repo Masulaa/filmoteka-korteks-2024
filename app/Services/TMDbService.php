@@ -42,6 +42,16 @@ class TMDbService
     /**
      * Fetch movie from TMDb.
      *
+     * @param int $numberOfMoviesToDownload
+     * @return array
+     */
+    public function fetchSeriesData(int $page): array
+    { return $this->fetchData('https://api.themoviedb.org/3/tv/popular', ['page' => $page])['results'] ?? []; }
+
+
+    /**
+     * Fetch movie from TMDb.
+     *
      * @return array
      */
     public function fetchGenres(): array

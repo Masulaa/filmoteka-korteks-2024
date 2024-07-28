@@ -52,7 +52,7 @@
                 <div class="grid grid-cols-1 gap-y-10 sm:grid-cols-2 gap-x-6 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
                     @foreach ($favoriteMovies as $movie)
                     <div id="movie-card-{{ $movie->id }}" class="overflow-hidden transition duration-300 transform bg-white rounded-lg shadow-md group dark:bg-gray-800 hover:scale-105 hover:shadow-xl animate-fade-in-up" style="animation-delay: {{ $loop->index * 100 }}ms">
-                            <a href="{{ route('movies.index', $movie->id) }}" class="block">
+                            <a href="{{ route('movies.index') }}/ {{ $movie->id }}" class="block">
                                 <div class="relative aspect-w-2 aspect-h-3">
                                     <img src="{{ $movie->image }}" alt="{{ $movie->title }}"
                                         class="object-cover w-full h-full transition-transform duration-300 group-hover:scale-110">

@@ -10,7 +10,7 @@
 
                     @foreach ($reviews as $review)
                         <li class="p-2 bg-gray-800 rounded-lg shadow-md">
-                            <a href="{{ route('movies.index', $review->movie->id) }}" class="flex items-center justify-between">
+                            <a href="{{ route('movies.index') }}/{{ $review->movie->id }}" class="flex items-center justify-between">
                                 <div class="flex items-center space-x-4">
                                     <img src="{{ $review->movie->image }}" alt="{{ $review->movie->title }}"
                                         class="object-cover w-20 rounded-lg shadow-md">
@@ -24,7 +24,7 @@
                                         <p class="mt-4 text-white">Your Review: {{ $review->content }}</p>
                                     </div>
                                 </div>
-                                <form action="{{ route('reviews.destroy', $review->id) }}" method="POST">
+                                <form action="{{ route('reviews.destroy',$review->id) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit"
@@ -49,7 +49,7 @@
 
                     @foreach ($ratings as $rating)
                         <li class="p-2 bg-gray-800 rounded-lg shadow-md">
-                            <a href="{{ route('movies.index', $rating->movie->id) }}" class="flex items-center justify-between">
+                            <a href="{{ route('movies.index') }}/{{ $rating->movie->id }}" class="flex items-center justify-between">
                                 <div class="flex items-center space-x-4">
                                     <img src="{{ $rating->movie->image }}" alt="{{ $rating->movie->title }}"
                                         class="object-cover w-20 rounded-lg shadow-md">

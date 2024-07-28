@@ -48,6 +48,10 @@ class User extends Authenticatable
         'password',
     ];
 
+    protected $casts = [
+        'is_admin' => 'boolean',
+    ];
+
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -87,6 +91,6 @@ class User extends Authenticatable
      */
     public function favorites()
     {
-        return $this->belongsToMany(Movie::class, 'favorites')->withTimestamps();
+        return $this->belongsToMany(Movie::class, 'movie_favorites')->withTimestamps();
     }
 }

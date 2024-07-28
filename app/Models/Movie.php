@@ -23,9 +23,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property array|null $cast
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Rating[] $ratings
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\MovieRating[] $ratings
  * @property-read int|null $ratings_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Review[] $reviews
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\MovieReview[] $reviews
  * @property-read int|null $reviews_count
  * @method static \Illuminate\Database\Eloquent\Builder|Movie newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Movie newQuery()
@@ -76,7 +76,7 @@ class Movie extends Model
      */
     public function ratings()
     {
-        return $this->hasMany(Rating::class);
+        return $this->hasMany(MovieRating::class);
     }
 
     /**
@@ -86,7 +86,7 @@ class Movie extends Model
      */
     public function reviews()
     {
-        return $this->hasMany(Review::class);
+        return $this->hasMany(MovieReview::class);
     }
 
     /**
@@ -122,7 +122,7 @@ class Movie extends Model
     }
     public function cast()
     {
-        return $this->hasMany(Cast::class);
+        return $this->hasMany(MovieCast::class);
     }
     public function favoritedBy()
     {
