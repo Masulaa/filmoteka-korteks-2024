@@ -65,19 +65,4 @@ class ProfileController extends Controller
 
         return Redirect::to('/');
     }
-
-    /**
-     * Display the user's reviews and ratings.
-     *
-     * @return View
-     */
-    public function reviewsAndRatings(): View
-    {
-        $user = Auth::user();
-
-        $reviews = MovieReview::where('user_id', $user->id)->with('movie')->get();
-        $ratings = MovieRating::where('user_id', $user->id)->with('movie')->get();
-
-        return view('profile.reviews-ratings', compact('reviews', 'ratings'));
-    }
 }
