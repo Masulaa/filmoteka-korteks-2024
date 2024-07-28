@@ -14,7 +14,7 @@
             class="absolute left-0 right-0 z-10 mt-1 overflow-hidden bg-white rounded-lg shadow-lg dark:bg-gray-700">
             @if(!empty($search))
                 <ul>
-                    @include('serie.serie_list', ['series' => $series])
+                    @include('movie.movie_list', ['movies' => $movies])
                 </ul>
             @endif
         </div>
