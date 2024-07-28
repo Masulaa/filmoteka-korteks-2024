@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\{
-    ProfileController, ContactController,
+    ProfileController, ContactController,     AdminController,
     MovieController,   MovieReviewController, MovieRatingController,  MovieFavoriteController,
     SerieController,   SerieReviewController, SerieRatingController,  SerieFavoriteController
 };
@@ -38,10 +38,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/series/{serie}/rate', [SerieRatingController::class, 'store'])->name('series.rate');
     Route::post('/series/{serie}/reviews', [SerieReviewController::class, 'store'])->name('reviews.store');
 
+    /* Profile */
     Route::get('/profile/reviews-ratings/{id}', [ProfileController::class, 'reviewsAndRatings'])->name('profile.reviews-ratings');
     Route::resource('profile', ProfileController::class)->only(['edit', 'update', 'destroy'])
     ->parameters(['profile' => 'id'])
     ->names(['edit' => 'profile.edit','update' => 'profile.update','destroy' => 'profile.destroy']);
+
+    /* Admin Panel */
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
 
     Route::resource('reviews', MovieReviewController::class)->only(['destroy']);
     Route::resource('ratings', MovieRatingController::class)->only(['destroy']);
