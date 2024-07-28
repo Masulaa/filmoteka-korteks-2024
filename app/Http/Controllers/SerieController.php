@@ -156,13 +156,16 @@ class SerieController extends Controller
      * @param \App\Models\Serie $serie
      * @return \Illuminate\View\View
      */
-    public function show(Serie $serie)
+    public function show(int $id)
     {
+        // If it works, don't touch it
+        $serie = Serie::findOrFail($id);
+
         $user = Auth::user();
         $rating = SerieRating::where("serie_id", $serie->id)
             ->where("user_id", $user->id)
             ->first();
-
+            
         $userRating = $rating ? $rating->rating : 0;
         $averageRating = $serie->averageRating();
         $countRatings = $serie->countRatings();

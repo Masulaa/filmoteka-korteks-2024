@@ -1,13 +1,5 @@
 @extends('layouts.app')
 
-
-<!--
-TODO:
-Поправити bug због којег се подаци не просљеђују у овај blade.
-Боље речено $serie је null, а dd($serie) у controller исписује да нема конекцију са базом
-док сви остали blade-ови имају приступ подацима. 
--->
-
 @section('content')
     <section class="w-full transition-colors duration-300 dark:bg-gray-900"
         style="background-image: linear-gradient(to top, rgba(0,0,0), rgba(0,0,0,0.98),rgba(0,0,0,0.8) ,rgba(0,0,0,0.4)),url('https://image.tmdb.org/t/p/original/{{ $serie->backdrop_path }}'); background-position: top; background-size: cover;">
@@ -89,10 +81,10 @@ TODO:
                     <p class="mt-2">Average Rating: <span id="average-rating">{{ $serie->averageRating() }}</span>
                         ({{ $serie->countRatings() }} ratings)</p>
                     <div class="flex gap-4 my-4">
-                        <a href="{{ route('series.watch', 0, ['serie' => $serie->id]) }}"
+                        <a href="{{ route('series.watch', ['serie' => $serie->id]) }}"
                             class="inline-block px-6 py-3 text-xl font-bold text-white transition-colors duration-300 transform bg-indigo-700 rounded-lg hover:bg-indigo-900 hover:scale-105">Watch
                             serie</a>
-                        <a href="{{ route('series.watchTrailer', 0, ['serie' => $serie->id]) }}"
+                        <a href="{{ route('series.watchTrailer', ['serie' => $serie->id]) }}"
                             class="inline-block px-6 py-3 text-xl font-bold text-white transition-colors duration-300 transform bg-indigo-700 rounded-lg hover:bg-indigo-900 hover:scale-105">
                             Watch Trailer</a>
                     </div>
@@ -105,7 +97,7 @@ TODO:
             <h3 class="mb-4 text-2xl font-bold text-white dark:text-gray-200 animate-fade-in">Reviews</h3>
             <div class="mb-6">
                 <h4 class="mb-2 text-xl font-semibold text-white dark:text-gray-200">Add a Review</h4>
-                <form action="{{ route('reviews.store',0, $serie->id) }}" method="POST">
+                <form action="{{ route('reviews.store', $serie->id) }}" method="POST">
                     @csrf
                     <textarea name="content" rows="3"
                         class="w-full p-2 text-gray-800 transition-colors duration-300 bg-gray-200 border rounded dark:text-white dark:bg-gray-800"
