@@ -4,6 +4,7 @@ use App\Http\Controllers\{
     ProfileController,
     ContactController,
     AdminController,
+    AdminMoviesController,
     MovieController,
     MovieReviewController,
     MovieRatingController,
@@ -49,6 +50,7 @@ Route::middleware(["auth", "verified"])->group(function () {
         "watchTrailer",
     ])->name("movies.watchTrailer");
 
+
     Route::post("/movies/{movie}/rate", [
         MovieRatingController::class,
         "store",
@@ -57,6 +59,7 @@ Route::middleware(["auth", "verified"])->group(function () {
         MovieReviewController::class,
         "store",
     ])->name("reviews.store");
+
 
     /* SERIES */
     Route::resource("series", SerieController::class)->only(["index", "show"]);
@@ -103,9 +106,18 @@ Route::middleware(["auth", "verified"])->group(function () {
         ]);
 
     /* ADMIN PANEL */
-    Route::get("/admin", [AdminController::class, "index"])->name(
-        "admin.dashboard"
-    );
+
+
+
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::get('/admin/movies', [AdminMoviesController::class, 'index'])->name('admin.movies.index');
+    Route::get('/admin/movies/create', [AdminMoviesController::class, 'create'])->name('admin.movies.create');
+    Route::post('/admin/movies/store', [AdminMoviesController::class, 'store'])->name('admin.movies.store');
+    Route::get('/admin/movies/{id}', [AdminMoviesController::class, 'show'])->name('admin.movies.show');
+    Route::get('/admin/movies/{id}/edit', [AdminMoviesController::class, 'edit'])->name('admin.movies.edit');
+    Route::put('/admin/movies/{id}', [AdminMoviesController::class, 'update'])->name('admin.movies.update');
+    Route::delete('/admin/movies/{id}', [AdminMoviesController::class, 'destroy'])->name('admin.movies.destroy');
+
 
     Route::resource("reviews", MovieReviewController::class)->only(["destroy"]);
     Route::resource("ratings", MovieRatingController::class)->only(["destroy"]);
