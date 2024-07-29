@@ -19,7 +19,7 @@
     <div class="flex flex-col min-h-screen bg-gray-100 dark:bg-gray-900">
         @include('layouts.header')
         <!-- Привремено, док series не добије свој систем за search/filter -->
-        @if ((isset($movies) && $movies->count() > 0) || (isset($series) && $series->count() > 0))
+        @if ((isset($movies) && $movies->count() > 0) || (isset($serie) && $serie->count() > 0))
             @include('layouts.filter')
             @if (Request::is('movies*'))
                 <livewire:movie-search />
