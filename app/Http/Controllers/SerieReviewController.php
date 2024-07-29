@@ -40,7 +40,7 @@ class SerieReviewController extends Controller
         ]);
 
         return redirect()
-            ->route("serie", $serie->id)
+            ->route("series.show", $serie->id)
             ->with("success", "Review added successfully");
     }
 }
