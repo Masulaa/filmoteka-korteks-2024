@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Serie;
+
+use App\Http\Controllers\Controller;
 
 use App\Models\{Serie, SerieRating};
 use Illuminate\Http\{Request, RedirectResponse};
@@ -72,22 +74,21 @@ class SerieController extends Controller
      * @return \Illuminate\View\View
      */
 
-    public function show($id)
+    public function show(Serie $series)
     {
-        $serie = Serie::with("episodes")->findOrFail($id);
 
         $user = Auth::user();
-        $rating = SerieRating::where("serie_id", $serie->id)
+        $rating = SerieRating::where("serie_id", $series->id)
             ->where("user_id", $user->id)
             ->first();
 
         $userRating = $rating ? $rating->rating : 0;
-        $averageRating = $serie->averageRating();
-        $countRatings = $serie->countRatings();
+        $averageRating = $series->averageRating();
+        $countRatings = $series->countRatings();
 
         return view(
             "serie.serie",
-            compact("serie", "userRating", "averageRating", "countRatings")
+            compact("series", "userRating", "averageRating", "countRatings")
         );
     }
 

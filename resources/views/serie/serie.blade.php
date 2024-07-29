@@ -2,18 +2,18 @@
 
 @section('content')
     <section class="w-full transition-colors duration-300 dark:bg-gray-900"
-        style="background-image: linear-gradient(to top, rgba(0,0,0), rgba(0,0,0,0.98),rgba(0,0,0,0.8) ,rgba(0,0,0,0.4)),url('https://image.tmdb.org/t/p/original/{{ $serie->backdrop_path }}'); background-position: top; background-size: cover;">
+        style="background-image: linear-gradient(to top, rgba(0,0,0), rgba(0,0,0,0.98),rgba(0,0,0,0.8) ,rgba(0,0,0,0.4)),url('https://image.tmdb.org/t/p/original/{{ $series->backdrop_path }}'); background-position: top; background-size: cover;">
         <div
             class="max-w-7xl mx-auto lg:py-36 sm:py-[136px] sm:pb-28 xs:py-28 xs:pb-12 pt-24 pb-8 flex flex-row lg:gap-12 md:gap-10 gap-8 justify-center">
             <div class="transition duration-500 transform poster hover:scale-105">
-                <img src="https://image.tmdb.org/t/p/w500/{{ $serie->image }}" alt="{{ $serie->title }}"
+                <img src="https://image.tmdb.org/t/p/w500/{{ $series->image }}" alt="{{ $series->title }}"
                     class="rounded-lg shadow-lg w-80 animate-fade-in">
             </div>
             <div
                 class="text-gray-300 animate-fade-in dark:text-gray-200 sm:max-w-[80vw] max-w-[90vw] md:max-w-[520px] font-nunito flex flex-col lg:gap-5 sm:gap-4 xs:gap-[14px] gap-3 mb-8 flex-1">
-                <h2 class="text-4xl font-bold md:max-w-[420px] animate-fade-in">{{ $serie->title }}</h2>
+                <h2 class="text-4xl font-bold md:max-w-[420px] animate-fade-in">{{ $series->title }}</h2>
                 <ul class="flex flex-row items-center sm:gap-[14px] xs:gap-3 gap-[6px] flex-wrap">
-                    @foreach ($serie->genres as $genre)
+                    @foreach ($series->genres as $genre)
                         <li class="px-3 py-1 text-sm text-white transition-all duration-300 bg-gray-800 rounded-full dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-600">
                             <a href="{{ route('series.filter', ['genre' => $genre->name]) }}">{{ $genre->name }}</a>
                         </li>
@@ -21,11 +21,11 @@
                 </ul>
                 <p class="border-b-[1px] pb-6 transition-all duration-300">
                     <span id="overview" class="block">
-                        {{ Str::limit($serie->overview, 200, '') }}
+                        {{ Str::limit($series->overview, 200, '') }}
                     </span>
-                    @if (strlen($serie->overview) > 200)
+                    @if (strlen($series->overview) > 200)
                         <span id="overview-full" class="hidden">
-                            {{ $serie->overview }}
+                            {{ $series->overview }}
                         </span>
                         <button type="button" id="toggle-overview"
                             class="ml-1 font-bold transition-all duration-300 hover:underline">
@@ -34,13 +34,13 @@
                     @endif
                 </p>
                 <div class="mt-1 text-gray-300 dark:text-gray-200">
-                    <p><span class="font-semibold">Director:</span> {{ $serie->director }}</p>
-                    <p><span class="font-semibold">Release Date:</span> {{ $serie->release_date }}</p>
+                    <p><span class="font-semibold">Director:</span> {{ $series->director }}</p>
+                    <p><span class="font-semibold">Release Date:</span> {{ $series->release_date }}</p>
                 </div>
 
                 <h3 class="">Cast:</h3>
                 <div class="flex w-96 flex-wrap md:gap-4 sm:gap-[14px] gap-2 sm:-mt-2 xs:-mt-[6px] -mt-1">
-                    @foreach ($serie->cast as $actor)
+                    @foreach ($series->cast as $actor)
                         <div class="flex flex-col justify-start gap-2 transition duration-500 transform hover:scale-110">
                             @if ($actor['profile_path'])
                                 <div class="md:h-[96px] md:w-[64px] h-[54px] w-[40px]">
@@ -59,7 +59,7 @@
 
                 <div class="mt-4 rating">
                     <h3 class="mb-2 text-xl font-semibold animate-fade-in">Rate this serie</h3>
-                    <div id="rating-section" class="flex items-center space-x-1" data-serie-id="{{ $serie->id }}"
+                    <div id="rating-section" class="flex items-center space-x-1" data-serie-id="{{ $series->id }}"
                         data-user-rating="{{ $userRating }}">
                         @for ($i = 1; $i <= 10; $i++)
                             <svg class="w-8 h-8 text-gray-300 transition-colors duration-200 ease-in-out cursor-pointer star {{ $i <= $userRating ? 'text-yellow-300' : '' }}"
@@ -78,13 +78,13 @@
                         Submit Rating
                     </button>
                     <p id="rating-message" class="mt-2"></p>
-                    <p class="mt-2">Average Rating: <span id="average-rating">{{ $serie->averageRating() }}</span>
-                        ({{ $serie->countRatings() }} ratings)</p>
+                    <p class="mt-2">Average Rating: <span id="average-rating">{{ $series->averageRating() }}</span>
+                        ({{ $series->countRatings() }} ratings)</p>
                     <div class="flex gap-4 my-4">
-                        <a href="{{ route('series.watch', ['serie' => $serie->id]) }}"
+                        <a href="{{ route('series.watch', ['serie' => $series->id]) }}"
                             class="inline-block px-6 py-3 text-xl font-bold text-white transition-colors duration-300 transform bg-indigo-700 rounded-lg hover:bg-indigo-900 hover:scale-105">Watch
                             serie</a>
-                        <a href="{{ route('series.watchTrailer', ['serie' => $serie->id]) }}"
+                        <a href="{{ route('series.watchTrailer', ['serie' => $series->id]) }}"
                             class="inline-block px-6 py-3 text-xl font-bold text-white transition-colors duration-300 transform bg-indigo-700 rounded-lg hover:bg-indigo-900 hover:scale-105">
                             Watch Trailer</a>
                     </div>
@@ -97,7 +97,7 @@
             <h3 class="mb-4 text-2xl font-bold text-white dark:text-gray-200 animate-fade-in">Reviews</h3>
             <div class="mb-6">
                 <h4 class="mb-2 text-xl font-semibold text-white dark:text-gray-200">Add a Review</h4>
-                <form action="{{ route('reviews.store', $serie->id) }}" method="POST">
+                <form action="{{ route('reviews.store', $series->id) }}" method="POST">
                     @csrf
                     <textarea name="content" rows="3"
                         class="w-full p-2 text-gray-800 transition-colors duration-300 bg-gray-200 border rounded dark:text-white dark:bg-gray-800"
@@ -109,7 +109,7 @@
                 </form>
             </div>
             <div class="space-y-4 review-list">
-                @forelse ($serie->reviews as $review)
+                @forelse ($series->reviews as $review)
                     <div
                         class="p-4 transition-all duration-300 bg-gray-800 rounded-lg shadow dark:bg-gray-700 hover:shadow-lg">
                         <p class="mb-2 text-gray-300 dark:text-gray-200">{{ $review->content }}</p>

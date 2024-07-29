@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Movie;
 
-use App\Models\{ Movie, MovieRating };
-use Illuminate\Http\{ Request, JsonResponse, RedirectResponse };
-use Illuminate\Support\Facades\{ Auth, Log };
+use App\Http\Controllers\Controller;
+
+use App\Models\{Movie, MovieRating};
+use Illuminate\Http\{Request, JsonResponse, RedirectResponse};
+use Illuminate\Support\Facades\{Auth, Log};
 
 class MovieRatingController extends Controller
 {

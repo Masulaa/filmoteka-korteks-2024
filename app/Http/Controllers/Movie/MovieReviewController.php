@@ -1,9 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Movie;
 
-use App\Models\{ Movie, MovieReview };
-use Illuminate\Http\{ RedirectResponse, Request };
+use App\Http\Controllers\Controller;
+
+use App\Models\{Movie, MovieReview};
+use Illuminate\Http\{RedirectResponse, Request};
 
 class MovieReviewController extends Controller
 {

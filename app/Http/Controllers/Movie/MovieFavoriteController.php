@@ -1,10 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Movie;
+
+use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 use App\Models\{User, MovieFavorite};
 use Illuminate\Support\Facades\Auth;
+
 //use App\Models\Movie;
 
 class MovieFavoriteController extends Controller

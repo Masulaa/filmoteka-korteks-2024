@@ -1,9 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Serie;
 
+use App\Http\Controllers\Controller;
 use App\Models\SerieCast;
 use Illuminate\Http\Request;
+
 
 class SerieCastController extends Controller
 {

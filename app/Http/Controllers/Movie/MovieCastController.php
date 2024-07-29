@@ -1,6 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+
+namespace App\Http\Controllers\Movie;
+
+use App\Http\Controllers\Controller;
 
 use App\Models\MovieCast;
 use Illuminate\Http\Request;
@@ -22,11 +25,11 @@ class MovieCastController extends Controller
             'profile_path' => 'nullable|string',
             'actor_id' => 'nullable|exists:actors,id',
         ]);
-    
+
         $castMember = MovieCast::create($validatedData);
         return response()->json($castMember, 201);
     }
-    
+
 
     public function show($id)
     {

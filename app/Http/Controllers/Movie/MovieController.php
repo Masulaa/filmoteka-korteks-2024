@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Movie;
+
+use App\Http\Controllers\Controller;
 
 use App\Models\{Movie, MovieRating};
 use Illuminate\Http\{Request, RedirectResponse};

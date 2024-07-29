@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Serie;
+
+use App\Http\Controllers\Controller;
 
 use App\Models\{Serie, SerieReview};
 use Illuminate\Http\{RedirectResponse, Request};

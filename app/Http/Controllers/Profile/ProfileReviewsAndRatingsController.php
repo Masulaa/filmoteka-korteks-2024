@@ -1,8 +1,8 @@
 <?php
 
+namespace App\Http\Controllers\Profile;
 
-
-namespace App\Http\Controllers;
+use App\Http\Controllers\Controller;
 
 use App\Models\{MovieRating, MovieReview};
 use Illuminate\Support\Facades\Auth;

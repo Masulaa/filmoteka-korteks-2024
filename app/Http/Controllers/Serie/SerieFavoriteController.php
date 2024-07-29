@@ -1,10 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Serie;
+
+use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 use App\Models\{User, SerieFavorite};
 use Illuminate\Support\Facades\Auth;
+
 //use App\Models\Serie;
 
 class SerieFavoriteController extends Controller

@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\{ MoviesController, SeriesController, GenresController };
-                                                                   
+use App\Http\Controllers\Api\{MoviesController, SeriesController, GenresController};
+
 Route::get('/movies/popular', [MoviesController::class, 'popularMovies']);
 Route::get('/series/popular', [SeriesController::class, 'popularSeries']);
 Route::get('/genres/fetch', [GenresController::class, 'fetchGenres']);
