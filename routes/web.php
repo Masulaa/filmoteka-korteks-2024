@@ -5,6 +5,7 @@ use App\Http\Controllers\{
     ContactController,
     AdminController,
     AdminMoviesController,
+    AdminUsersController,
     MovieController,
     MovieReviewController,
     MovieRatingController,
@@ -117,6 +118,15 @@ Route::middleware(["auth", "verified"])->group(function () {
     Route::get('/admin/movies/{id}/edit', [AdminMoviesController::class, 'edit'])->name('admin.movies.edit');
     Route::put('/admin/movies/{id}', [AdminMoviesController::class, 'update'])->name('admin.movies.update');
     Route::delete('/admin/movies/{id}', [AdminMoviesController::class, 'destroy'])->name('admin.movies.destroy');
+
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::get('/admin/users', [AdminUsersController::class, 'index'])->name('admin.users.index');
+    Route::get('/admin/users/create', [AdminUsersController::class, 'create'])->name('admin.users.create');
+    Route::post('/admin/users/store', [AdminUsersController::class, 'store'])->name('admin.users.store');
+    Route::get('/admin/users/{id}', [AdminUsersController::class, 'show'])->name('admin.users.show');
+    Route::get('/admin/users/{id}/users', [AdminUsersController::class, 'edit'])->name('admin.users.edit');
+    Route::put('/admin/users/{id}', [AdminUsersController::class, 'update'])->name('admin.users.update');
+    Route::delete('/admin/users/{id}', [AdminUsersController::class, 'destroy'])->name('admin.users.destroy');
 
 
     Route::resource("reviews", MovieReviewController::class)->only(["destroy"]);

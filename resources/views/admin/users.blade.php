@@ -25,6 +25,8 @@
                         <th>Email</th>
                         <th>Admin?</th>
                         <th>Created At</th>
+                        <th>Favourite Movies</th>
+                        <th>Favourite Series</th>
                         <th>Actions</th>
                     </tr>
                 </thead>

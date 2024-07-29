@@ -61,48 +61,55 @@ class AdminMoviesController extends Controller
         return view('admin.movies-show', compact('movie'));
     }
 
-    public function edit(Request $request, $id)
-    {
-        $this->checkAdmin($request);
+    public function edit($id)
+{
+    $movie = Movie::findOrFail($id);
+    return view('admin.movies_edit', compact('movie'));
+}
 
-        $movie = Movie::findOrFail($id);
-        return view('admin.movies-edit', compact('movie'));
-    }
 
-    public function update(Request $request, $id)
-    {
-        $this->checkAdmin($request);
+public function update(Request $request, $id)
+{
+    $this->checkAdmin($request);
 
-        $movie = Movie::findOrFail($id);
+    // Pronađi film po ID-u
+    $movie = Movie::findOrFail($id);
 
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'director' => 'required|string|max:255',
-            'release_date' => 'required|date',
-            // 'genre_ids' => 'required|string',
-            // 'rating' => 'required|numeric|min:0|max:10',
-            'image' => 'nullable|image|max:2048',
-            // 'overview' => 'required|string',
-            // 'backdrop_path' => 'nullable|string|max:255',
-            'trailer_link' => 'nullable|url',
-            'video_id' => 'nullable|integer',
-            'views' => 'nullable|integer|min:0',
-        ]);
+    // Validacija podataka
+    $validatedData = $request->validate([
+        'title' => 'required|string|max:255',
+        'director' => 'required|string|max:255',
+        'release_date' => 'required|date',
+        'genre' => 'required|string|max:255',
+        'rating' => 'nullable|numeric|min:0|max:10',
+        'trailer_link' => 'nullable|url',
+        'video_id' => 'nullable|integer',
+        'views' => 'nullable|integer|min:0',
+        'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+    ]);
 
-        $movie->update($request->all());
+    // Ažuriraj film sa validiranim podacima
+    $movie->fill($validatedData);
 
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('images'), $imageName);
-            $imageURL = url('images/' . $imageName);
-            $movie->image = $imageURL;
+    // Ako je nova slika poslata, obradi je
+    if ($request->hasFile('image')) {
+        // Obradi staru sliku (ako postoji)
+        if ($movie->image && file_exists(public_path('storage/' . $movie->image))) {
+            unlink(public_path('storage/' . $movie->image));
         }
 
-        $movie->save();
-
-        return redirect()->route('admin.movies.index')->with('success', 'Movie updated successfully');
+        // Sačuvaj novu sliku
+        $path = $request->file('image')->store('public/movies');
+        $movie->image = basename($path);
     }
+
+    // Sačuvaj promene u bazi
+    $movie->save();
+
+    // Redirektuj korisnika sa porukom o uspehu
+    return redirect()->route('admin.movies.index')->with('success', 'Movie updated successfully');
+}
+
 
     public function destroy(Request $request, $id)
     {
