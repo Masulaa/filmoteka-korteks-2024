@@ -1,3 +1,4 @@
+
 @extends('layouts.app')
 
 @section('content')
@@ -7,7 +8,7 @@
         <div class="relative pt-[56.25%] mt-4 mb-4 w-[80%] mx-auto" style="position: relative; padding-top: 56.25%;">
             <iframe
                 id="videoPlayer"
-                src="https://vidsrc.pro/embed/tv/{{ $serie->video_id }}/1/{{ $serie->episodes->first()->episode_number }}"
+                src="https://vidsrc.pro/embed/tv/{{ $serie->video_id }}/1/1"
                 allowfullscreen
                 allow="autoplay; fullscreen"
                 frameborder="no"
@@ -26,31 +27,22 @@
             </button>
         </div>
 
-        <!-- Navigation Buttons for Seasons -->
+        <!-- Select Boxes for Seasons and Episodes -->
         <div class="text-white ml-10 mb-4 flex justify-between items-center">
-            <button id="prevSeason" class="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg">
-                &lt; Previous Season
-            </button>
-            <button id="nextSeason" class="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg">
-                Next Season &gt;
-            </button>
-        </div>
-
-        <!-- Display Episodes of the Current Season -->
-        <div class="mt-8" id="episodeList">
-            <h2 class="text-2xl font-bold tracking-tight text-white ml-10">Episodes</h2>
-            @foreach ($serie->episodes->groupBy('season_number') as $seasonNumber => $episodes)
-                <div class="season-episodes" data-season="{{ $seasonNumber }}" style="display: none;">
-                    <h3 class="text-xl font-bold tracking-tight text-white ml-10">Season {{ $seasonNumber }}</h3>
-                    <ul class="list-disc list-inside ml-10">
-                        @foreach ($episodes as $episode)
-                            <li class="text-white">
-                                Episode {{ $episode->episode_number }}: {{ $episode->title }}
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endforeach
+            <div>
+                <label for="seasonSelect" class="block mb-2 text-sm font-medium text-white">Select Season</label>
+                <select id="seasonSelect" class="px-4 py-2 bg-gray-800 text-white rounded-lg">
+                    @foreach ($serie->episodes->groupBy('season_number') as $seasonNumber => $episodes)
+                        <option value="{{ $seasonNumber }}">Season {{ $seasonNumber }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
+                <label for="episodeSelect" class="block mb-2 text-sm font-medium text-white">Select Episode</label>
+                <select id="episodeSelect" class="px-4 py-2 bg-gray-800 text-white rounded-lg">
+                    <!-- Options will be populated by JavaScript -->
+                </select>
+            </div>
         </div>
 
         <div class="text-white ml-10 mb-4">
@@ -82,39 +74,44 @@ document.addEventListener('DOMContentLoaded', function () {
     const iframe = document.getElementById('videoPlayer');
     const prevEpisodeButton = document.getElementById('prevEpisode');
     const nextEpisodeButton = document.getElementById('nextEpisode');
-    const prevSeasonButton = document.getElementById('prevSeason');
-    const nextSeasonButton = document.getElementById('nextSeason');
-    const episodeList = document.getElementById('episodeList');
+    const seasonSelect = document.getElementById('seasonSelect');
+    const episodeSelect = document.getElementById('episodeSelect');
 
-    let episodeNumber = {{ $serie->episodes->first()->episode_number }};
-    let seasonNumber = {{ $serie->episodes->first()->season_number }};
+    let seasonNumber = 1;
+    let episodeNumber = 1;
     const seasons = @json($serie->episodes->groupBy('season_number'));
 
     function updateIframe() {
         const videoId = '{{ $serie->video_id }}';
-        iframe.src = `https://vidsrc.pro/embed/tv/${videoId}/1/${episodeNumber}`;
+        iframe.src = `https://vidsrc.pro/embed/tv/${videoId}/${seasonNumber}/${episodeNumber}`;
     }
 
-    function updateSeason(newSeason) {
-        if (seasons[newSeason]) {
-            seasonNumber = newSeason;
-            episodeNumber = seasons[newSeason][0].episode_number;
-            updateIframe();
-
-            // Hide all seasons and show the current one
-            document.querySelectorAll('.season-episodes').forEach(seasonDiv => {
-                if (parseInt(seasonDiv.getAttribute('data-season')) === seasonNumber) {
-                    seasonDiv.style.display = 'block';
-                } else {
-                    seasonDiv.style.display = 'none';
-                }
-            });
-        }
+    function populateEpisodes() {
+        episodeSelect.innerHTML = '';
+        seasons[seasonNumber].forEach(episode => {
+            const option = document.createElement('option');
+            option.value = episode.episode_number;
+            option.textContent = `Episode ${episode.episode_number}: ${episode.title}`;
+            episodeSelect.appendChild(option);
+        });
     }
+
+    seasonSelect.addEventListener('change', function () {
+        seasonNumber = parseInt(this.value);
+        episodeNumber = 1;
+        populateEpisodes();
+        updateIframe();
+    });
+
+    episodeSelect.addEventListener('change', function () {
+        episodeNumber = parseInt(this.value);
+        updateIframe();
+    });
 
     prevEpisodeButton.addEventListener('click', function () {
         if (episodeNumber > 1) {
             episodeNumber--;
+            episodeSelect.value = episodeNumber;
             updateIframe();
         }
     });
@@ -122,24 +119,14 @@ document.addEventListener('DOMContentLoaded', function () {
     nextEpisodeButton.addEventListener('click', function () {
         if (episodeNumber < seasons[seasonNumber].length) {
             episodeNumber++;
+            episodeSelect.value = episodeNumber;
             updateIframe();
         }
     });
 
-    prevSeasonButton.addEventListener('click', function () {
-        if (seasonNumber > 1) {
-            updateSeason(seasonNumber - 1);
-        }
-    });
-
-    nextSeasonButton.addEventListener('click', function () {
-        if (seasons[seasonNumber + 1]) {
-            updateSeason(seasonNumber + 1);
-        }
-    });
-
     // Initialize the correct season and episode display
-    updateSeason(seasonNumber);
+    populateEpisodes();
+    updateIframe();
 });
 </script>
 @endsection
