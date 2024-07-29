@@ -18,8 +18,11 @@
                     <x-nav-link :href="route('series.index')" :active="request()->routeIs('series.index')">
                         {{ __('Series') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('favorites.index')" :active="request()->routeIs('favorites.index')">
-                        {{ __('Favorites') }}
+                    <x-nav-link :href="route('movie-favorites.index')" :active="request()->routeIs('movie-favorites.index')">
+                        {{ __('Favorites Movies') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('serie-favorites.index')" :active="request()->routeIs('serie-favorites.index')">
+                        {{ __('Favorites Series') }}
                     </x-nav-link>
                     <x-nav-link :href="route('about')" :active="request()->routeIs('about')">
                         {{ __('About Us') }}
@@ -99,8 +102,11 @@
             <x-responsive-nav-link :href="route('series.index')" :active="request()->routeIs('series.index')">
                 {{ __('Series') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('favorites.index')" :active="request()->routeIs('favorites.index')">
-                {{ __('Favorites') }}
+            <x-responsive-nav-link :href="route('movie-favorites.index')" :active="request()->routeIs('movie-favorites.index')">
+                {{ __('Favorites M') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('serie-favorites.index')" :active="request()->routeIs('serie-favorites.index')">
+                {{ __('Favorites S') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('about')" :active="request()->routeIs('about')">
                 {{ __('About Us') }}

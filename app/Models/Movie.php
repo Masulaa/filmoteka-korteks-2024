@@ -56,17 +56,17 @@ class Movie extends Model
      * @var array
      */
     protected $fillable = [
-        'title',
-        'director',
-        'release_date',
-        'genre_ids',
-        'rating',
-        'image',
-        'overview',
-        'backdrop_path',
-        'trailer_link',
-        'video_id',
-        'views',
+        "title",
+        "director",
+        "release_date",
+        "genre_ids",
+        "rating",
+        "image",
+        "overview",
+        "backdrop_path",
+        "trailer_link",
+        "video_id",
+        "views",
     ];
 
     /**
@@ -96,7 +96,7 @@ class Movie extends Model
      */
     public function averageRating()
     {
-        $totalRating = $this->ratings()->sum('rating');
+        $totalRating = $this->ratings()->sum("rating");
         $countRatings = $this->ratings()->count();
 
         if ($countRatings > 0) {
@@ -118,7 +118,12 @@ class Movie extends Model
 
     public function genres()
     {
-        return $this->belongsToMany(Genre::class, 'movie_genre', 'movie_id', 'genre_id');
+        return $this->belongsToMany(
+            Genre::class,
+            "movie_genre",
+            "movie_id",
+            "genre_id"
+        );
     }
     public function cast()
     {
@@ -126,6 +131,9 @@ class Movie extends Model
     }
     public function favoritedBy()
     {
-        return $this->belongsToMany(User::class, 'favorites')->withTimestamps();
+        return $this->belongsToMany(
+            User::class,
+            "favoriteMovies"
+        )->withTimestamps();
     }
 }

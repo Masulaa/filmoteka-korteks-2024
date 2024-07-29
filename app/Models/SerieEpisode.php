@@ -14,7 +14,6 @@ class SerieEpisode extends Model
         "video_id",
     ];
 
-    // Definišite relaciju sa serijom
     public function serie()
     {
         return $this->belongsTo(Serie::class);

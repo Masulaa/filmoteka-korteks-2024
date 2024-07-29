@@ -42,14 +42,10 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
+    protected $fillable = ["name", "email", "password"];
 
     protected $casts = [
-        'is_admin' => 'boolean',
+        "is_admin" => "boolean",
     ];
 
     /**
@@ -57,10 +53,7 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+    protected $hidden = ["password", "remember_token"];
 
     /**
      * The attributes that should be cast.
@@ -70,8 +63,8 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            "email_verified_at" => "datetime",
+            "password" => "hashed",
         ];
     }
 
@@ -89,8 +82,23 @@ class User extends Authenticatable
      *
      ** @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function favorites()
+    public function favoriteMovies()
     {
-        return $this->belongsToMany(Movie::class, 'movie_favorites')->withTimestamps();
+        return $this->belongsToMany(
+            Movie::class,
+            "movie_favorites"
+        )->withTimestamps();
+    }
+    /**
+     * Get favorite movies by this user.
+     *
+     ** @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function favoriteSeries()
+    {
+        return $this->belongsToMany(
+            Serie::class,
+            "serie_favorites"
+        )->withTimestamps();
     }
 }

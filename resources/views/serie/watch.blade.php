@@ -1,12 +1,13 @@
+
 @extends('layouts.app')
 
 @section('content')
 <div class="container mx-auto">
     <h1 class="text-3xl font-bold tracking-tight ml-10 mt-4 text-white text-center">{{ $serie->title }}</h1>
-    @if ($serie->video_id)
+    @if ($serie->video_id && $serie->episodes->isNotEmpty())
         <div class="relative pt-[56.25%] mt-4 mb-4 w-[80%] mx-auto" style="position: relative; padding-top: 56.25%;">
             <iframe
-                src="https://vidsrc.pro/embed/serie/{{ $serie->video_id }}"
+                src="https://vidsrc.pro/embed/tv/{{ $serie->video_id }}/1/{{ $serie->episodes->first()->episode_number }}"
                 allowfullscreen
                 allow="autoplay; fullscreen"
                 frameborder="no"
@@ -36,5 +37,21 @@
     @else
         <p class="text-red-500">This video is not available at the moment...</p>
     @endif
+
+    <div class="mt-8">
+        <h2 class="text-2xl font-bold tracking-tight text-white ml-10">Episodes</h2>
+        @foreach ($serie->episodes->groupBy('season_number') as $seasonNumber => $episodes)
+            <div class="mt-4">
+                <h3 class="text-xl font-bold tracking-tight text-white ml-10">Season {{ $seasonNumber }}</h3>
+                <ul class="list-disc list-inside ml-10">
+                    @foreach ($episodes as $episode)
+                        <li class="text-white">
+                            Episode {{ $episode->episode_number }}: {{ $episode->title }}
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+        @endforeach
+    </div>
 </div>
 @endsection

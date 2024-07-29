@@ -15,7 +15,7 @@
                     const userId = this.dataset.userId;
                     const serieId = this.dataset.serieId;
 
-                    fetch('{{ route('favorites.store') }}', {
+                    fetch('{{ route('serie-favorites.store') }}', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',

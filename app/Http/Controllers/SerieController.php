@@ -71,10 +71,10 @@ class SerieController extends Controller
      * @param \App\Models\Serie $serie
      * @return \Illuminate\View\View
      */
-    public function show(int $id)
+
+    public function show($id)
     {
-        // If it works, don't touch it
-        $serie = Serie::findOrFail($id);
+        $serie = Serie::with("episodes")->findOrFail($id);
 
         $user = Auth::user();
         $rating = SerieRating::where("serie_id", $serie->id)

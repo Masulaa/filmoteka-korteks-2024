@@ -19,8 +19,8 @@ class SerieFavoriteController extends Controller
         $user = User::find($request->user_id);
         $serieId = $request->serie_id;
 
-        if (!$user->favorites()->where("serie_id", $serieId)->exists()) {
-            $user->favorites()->attach($serieId);
+        if (!$user->favoriteSeries()->where("serie_id", $serieId)->exists()) {
+            $user->favoriteSeries()->attach($serieId);
             return response()->json(
                 ["message" => "Serie added to favorites"],
                 201
@@ -35,9 +35,9 @@ class SerieFavoriteController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $favoriteSeries = $user->favorites()->get();
+        $favoriteSeries = $user->favoriteSeries()->get();
 
-        return view("favorites.index", compact("favoriteSeries"));
+        return view("favorites.series", compact("favoriteSeries"));
     }
     public function destroy($id)
     {

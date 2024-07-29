@@ -90,7 +90,10 @@ class Serie extends Model
     }
     public function favoritedBy()
     {
-        return $this->belongsToMany(User::class, "favorites")->withTimestamps();
+        return $this->belongsToMany(
+            User::class,
+            "favoriteSeries"
+        )->withTimestamps();
     }
     public function episodes()
     {
