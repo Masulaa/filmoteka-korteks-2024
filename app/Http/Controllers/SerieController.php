@@ -17,8 +17,8 @@ class SerieController extends Controller
      */
     public function index()
     {
-        $series = Serie::paginate(20);
-        return view("serie.home", compact("series"));
+        $serie = Serie::paginate(20);
+        return view("serie.home", compact("serie"));
     }
 
     /**
