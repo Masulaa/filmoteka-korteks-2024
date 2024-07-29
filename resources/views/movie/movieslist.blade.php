@@ -63,6 +63,9 @@
             });
         });
     </script>
+        @if ((isset($movies) && $movies->count() > 0) || (isset($serie) && $serie->count() > 0))
+        @include('layouts.filter')<livewire:movie-search />
+    @endif 
     <div class="min-h-screen py-12 transition-colors duration-300 bg-gray-100 dark:bg-gray-900">
         <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
             <h1 class="mb-8 text-3xl font-extrabold text-gray-900 dark:text-white animate-fade-in">Discover Movies</h1>

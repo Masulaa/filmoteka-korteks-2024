@@ -97,7 +97,7 @@
             <h3 class="mb-4 text-2xl font-bold text-white dark:text-gray-200 animate-fade-in">Reviews</h3>
             <div class="mb-6">
                 <h4 class="mb-2 text-xl font-semibold text-white dark:text-gray-200">Add a Review</h4>
-                <form action="{{ route('reviews.store', $series->id) }}" method="POST">
+                <form action="{{ route('series.reviews.store', $series->id) }}" method="POST">
                     @csrf
                     <textarea name="content" rows="3"
                         class="w-full p-2 text-gray-800 transition-colors duration-300 bg-gray-200 border rounded dark:text-white dark:bg-gray-800"

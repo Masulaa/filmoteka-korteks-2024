@@ -68,7 +68,7 @@ Route::middleware(["auth", "verified"])->group(function () {
     Route::post("/movies/{movie}/reviews", [
         MovieReviewController::class,
         "store",
-    ])->name("reviews.store");
+    ])->name("movies.reviews.store");
 
 
     /* SERIES */
@@ -99,7 +99,7 @@ Route::middleware(["auth", "verified"])->group(function () {
     Route::post("/series/{serie}/reviews", [
         SerieReviewController::class,
         "store",
-    ])->name("reviews.store");
+    ])->name("series.reviews.store");
 
     /* PROFILE */
     Route::get("/profile/reviews-ratings/{id}", [
