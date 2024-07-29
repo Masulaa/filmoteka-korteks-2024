@@ -2,6 +2,6 @@
 
 @section('content')
 <div id="series-container">
-    @include('serie.serieslist', ['series' => $series])
+    @include('serie.serieslist', ['serie' => $serie])
 </div>
 @endsection
