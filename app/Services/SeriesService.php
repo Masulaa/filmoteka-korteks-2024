@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use GuzzleHttp\Exception\GuzzleException;
-use App\Models\{Serie, SerieCast, Genre};
+use App\Models\{Serie, SerieCast, Genre, SerieEpisode};
 
 class SeriesService
 {
@@ -145,6 +145,7 @@ class SeriesService
 
         $this->syncGenres($series, $genreIds);
         $this->syncCast($series, $this->getCast($seriesData["id"]));
+        $this->syncSeasonsAndEpisodes($series, $seriesData["seasons"] ?? []);
     }
 
     /**
@@ -189,6 +190,43 @@ class SeriesService
             ["serie_id", "actor_id"],
             ["name", "character", "profile_path"]
         );
+    }
+
+    /**
+     * Sync seasons and episodes with the series.
+     *
+     * @param Serie $series
+     * @param array $seasonsData
+     * @return void
+     */
+    private function syncSeasonsAndEpisodes(
+        Serie $series,
+        array $seasonsData
+    ): void {
+        foreach ($seasonsData as $seasonData) {
+            foreach ($seasonData["episodes"] as $episodeData) {
+                SerieEpisode::updateOrCreate(
+                    [
+                        "serie_id" => $series->id,
+                        "season_number" => $seasonData["season_number"],
+                        "episode_number" => $episodeData["episode_number"],
+                    ],
+                    [
+                        "title" => $episodeData["name"],
+                        "overview" => $episodeData["overview"],
+                        "air_date" => isset($episodeData["air_date"])
+                            ? date("Y-m-d", strtotime($episodeData["air_date"]))
+                            : null,
+                        "still_path" => $this->getUrl(
+                            $episodeData["still_path"],
+                            "original"
+                        ),
+                        "updated_at" => now(),
+                        "created_at" => now(),
+                    ]
+                );
+            }
+        }
     }
 
     /**
@@ -247,7 +285,7 @@ class SeriesService
 
         while ($page++ < $totalPages) {
             $seriesData = $this->tmdbService->fetchSeriesData($page);
-            foreach ($seriesData as $serieData) {
+            foreach ($seriesData as &$serieData) {
                 if ($syncCount >= $numberOfSeriesToDownload) {
                     break 2;
                 }
@@ -261,12 +299,14 @@ class SeriesService
                     str_repeat("•", 50 - floor($progress / 2));
 
                 $seasons = $this->tmdbService->fetchSeasons($serieData["id"]);
-                foreach ($seasons as $season) {
+                foreach ($seasons as &$season) {
                     $episodes = $this->tmdbService->fetchEpisodes(
                         $serieData["id"],
                         $season["season_number"]
                     );
+                    $season["episodes"] = $episodes;
                 }
+                $serieData["seasons"] = $seasons;
 
                 $this->processSeriesData(
                     $serieData,
@@ -279,7 +319,6 @@ class SeriesService
                 $consoleOutput && printf("[$bar] $progress%%\r");
             }
         }
-
         $consoleOutput &&
             printf(
                 "\033[KSuccessfully synchronized {$syncCount} series.\nSkip: {$skipCount}\nNew: {$newCount}\n"
