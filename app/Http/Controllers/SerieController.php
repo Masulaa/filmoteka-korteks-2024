@@ -71,7 +71,7 @@ class SerieController extends Controller
      * @param \App\Models\Serie $serie
      * @return \Illuminate\View\View
      */
-    public function show(int $id)
+    public function show(string $id)
     {
         // If it works, don't touch it
         $serie = Serie::findOrFail($id);
@@ -170,7 +170,7 @@ class SerieController extends Controller
      * @param int $id
      * @return \Illuminate\View\View
      */
-    public function watch(int $id): View
+    public function watch(string $id): View
     {
         $serie = Serie::findOrFail($id);
         $serie->increment("views");
