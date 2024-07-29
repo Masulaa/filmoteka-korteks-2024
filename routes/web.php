@@ -45,7 +45,7 @@ Route::middleware(["auth", "verified"])->group(function () {
     Route::get("/action", [MovieController::class, "action"])->name(
         "movies.action"
     );
-    Route::get("/filter", [MovieFilterController::class, "filter"])->name(
+    Route::get("/movies-filter", [MovieFilterController::class, "filter"])->name(
         "movies.filter"
     );
     Route::get("/movie-search", [MovieSearch::class, "render"])->name(
@@ -76,7 +76,7 @@ Route::middleware(["auth", "verified"])->group(function () {
     Route::get("/series/action", [SerieController::class, "action"])->name(
         "series.action"
     );
-    Route::get("/series/filter", [
+    Route::get("/series-filter", [
         SerieFilterController::class,
         "filter",
     ])->name("series.filter");

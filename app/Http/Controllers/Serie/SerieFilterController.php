@@ -43,13 +43,13 @@ class SerieFilterController extends Controller
                     ->orderBy("ratings_avg_rating", "desc");
             }
 
-            $series = $query->paginate(20)->appends($request->except("page"));
+            $serie = $query->paginate(20)->appends($request->except("page"));
 
             if ($request->ajax()) {
-                return view("serie.serieslist", compact("series"))->render();
+                return view("serie.serieslist", compact("serie"))->render();
             }
 
-            return view("serie.home", compact("series"));
+            return view("serie.home", compact("serie"));
         } catch (\Exception $e) {
             Log::error("Serie filter error: " . $e->getMessage(), [
                 "file" => $e->getFile(),

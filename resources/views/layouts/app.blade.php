@@ -24,7 +24,7 @@
             @if (Request::is('movies'))
                 @include('layouts.filter')<livewire:movie-search />
             @elseif (Request::is('series'))
-                <livewire:serie-search />
+                @include('layouts.serie-filter')  <livewire:serie-search />
             @endif
         @endif 
 
