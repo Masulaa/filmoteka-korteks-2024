@@ -17,6 +17,7 @@ use App\Http\Controllers\Serie\{
     SerieRatingController,
     SerieFilterController,
     SerieFavoriteController,
+    SerieWatchController,
 };
 
 use App\Http\Controllers\Movie\{
@@ -83,11 +84,11 @@ Route::middleware(["auth", "verified"])->group(function () {
         "series.search"
     );
     Route::get("/series/{serie}/watch", [
-        SerieController::class,
+        SerieWatchController::class,
         "watch",
     ])->name("series.watch");
     Route::get("/series/{serie}/watchTrailer", [
-        SerieController::class,
+        SerieWatchController::class,
         "watchTrailer",
     ])->name("series.watchTrailer");
 

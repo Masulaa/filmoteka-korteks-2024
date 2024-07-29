@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 
 use App\Models\{Movie, MovieRating};
 use Illuminate\Http\{Request, RedirectResponse};
-use Illuminate\Support\Facades\{Storage, Log};
+use Illuminate\Support\Facades\{Storage};
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
 

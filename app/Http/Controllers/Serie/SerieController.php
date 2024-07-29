@@ -164,29 +164,4 @@ class SerieController extends Controller
             ->route("home")
             ->with("success", "Serie deleted successfully.");
     }
-
-    /**
-     * Watch the specified serie.
-     *
-     * @param int $id
-     * @return \Illuminate\View\View
-     */
-    public function watch(int $id): View
-    {
-        $serie = Serie::findOrFail($id);
-        $serie->increment("views");
-        return view("serie.watch", compact("serie"));
-    }
-
-    /**
-     * Watch trailer of a serie.
-     *
-     * @param int $id
-     * @return \Illuminate\View\View
-     */
-    public function watchTrailer(int $id): View
-    {
-        $serie = Serie::findOrFail($id);
-        return view("serie.watchTrailer", compact("serie"));
-    }
 }
