@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Serie;
 use Illuminate\View\View;
 
-use Illuminate\Http\Request;
 
 class SerieWatchController extends Controller
 {
