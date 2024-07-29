@@ -28,7 +28,8 @@
                         <!-- <th>Rating</th> -->
                         <th>Image</th>
                         <!-- <th>Overview</th>
-                        <th>Backdrop Path</th> -->
+                        -->
+                        <th>Backdrop Path</th>
                         <th>Trailer Link</th>
                         <th>Video ID</th>
                         <th>Views</th>
@@ -42,17 +43,29 @@
                             <td>{{ $movie->title }}</td>
                             <td>{{ $movie->director }}</td>
                             <td>{{ $movie->release_date }}</td>
-                            <td>{{ $movie->genre }}</td>
-                            <!-- <td>{{ $movie->rating }}</td> -->
                             <td>
-                                @if($movie->image)
-                                    <img src="{{ asset('storage/' . $movie->image) }}" alt="{{ $movie->title }}" style="width: 50px; height: auto;">
+                                @if ($movie->genres && $movie->genres->isNotEmpty())
+                                    @foreach ($movie->genres as $genre)
+                                        {{ $genre->name }}{{ !$loop->last ? ',' : '' }}
+                                    @endforeach
+                                @else
+                                    <div style="color: #880000;"> No genres :( </div>
                                 @endif
                             </td>
-                            <!-- <td>{{ $movie->overview }}</td>
-                            <td>{{ $movie->backdrop_path }}</td> -->
-                            <td>{{ $movie->trailer_link }}</td>
-                            <td>{{ $movie->video_id }}</td>
+                            <!-- <td>{{ $movie->rating }}</td> -->
+                            <td>
+                                <a href="{{$movie->image }}">{{$movie->image }}</a>
+                            </td>
+                            <!-- <td>{{ $movie->overview }}</td> -->
+                            <td>
+                                <a href="{{ $movie->backdrop_path }}"> {{$movie->backdrop_path}}<a>
+                            </td>
+                            <td>
+                                <a href="https://youtube.com/watch?v={{ $movie->trailer_link }}"> {{$movie->trailer_link}}<a>
+                            </td>
+                            <td>
+                                <a href="https://vidsrc.pro/embed/movie/{{ $movie->video_id }}"> {{$movie->video_id}}<a>
+                            </td>
                             <td>{{ $movie->views }}</td>
                             <td>
                                 <a href="{{ route('admin.movies.edit', $movie->id) }}" class="btn btn-primary btn-sm">Edit</a>
