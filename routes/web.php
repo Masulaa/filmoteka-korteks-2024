@@ -4,7 +4,8 @@ use App\Http\Controllers\{
     ContactController,
     AdminController,
     AdminMoviesController,
-    AdminUsersController
+    AdminUsersController,
+    AdminSeriesController
 };
 
 use App\Http\Controllers\Profile\{
@@ -128,6 +129,15 @@ Route::middleware(["auth", "verified"])->group(function () {
     Route::get('/admin/movies/{id}/edit', [AdminMoviesController::class, 'edit'])->name('admin.movies.edit');
     Route::put('/admin/movies/{id}', [AdminMoviesController::class, 'update'])->name('admin.movies.update');
     Route::delete('/admin/movies/{id}', [AdminMoviesController::class, 'destroy'])->name('admin.movies.destroy');
+
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::get('/admin/series', [AdminSeriesController::class, 'index'])->name('admin.series.index');
+    Route::get('/admin/series/create', [AdminSeriesController::class, 'create'])->name('admin.series.create');
+    Route::post('/admin/series/store', [AdminSeriesController::class, 'store'])->name('admin.series.store');
+    Route::get('series/{series}', [SerieController::class, 'show'])->name('series.show');
+    Route::get('/admin/series/{id}/edit', [AdminSeriesController::class, 'edit'])->name('admin.series.edit');
+    Route::put('/admin/series/{id}', [AdminSeriesController::class, 'update'])->name('admin.series.update');
+    Route::delete('/admin/series/{id}', [AdminSeriesController::class, 'destroy'])->name('admin.series.destroy');
 
     Route::prefix('admin')->middleware('auth')->group(function() {
         Route::get('users', [AdminUsersController::class, 'index'])->name('admin.users');

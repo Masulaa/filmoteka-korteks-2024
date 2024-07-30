@@ -309,12 +309,17 @@ return [
         [
                     'text' => 'Movies',
                     'url'  => '/admin/movies',
-                    'icon' => 'fas fa-film', // Ovde možete promeniti ikonu prema vašim potrebama
+                    'icon' => 'fas fa-film', 
+            ],
+            [
+                'text' => 'Series',
+                'url'  => '/admin/series',
+                'icon' => 'fas fa-tv', 
             ],
         [
                 'text' => 'Users',
                 'url'  => '/admin/users',
-                'icon' => 'fas fa-users', // Ikonica za korisnike
+                'icon' => 'fas fa-users', 
             ],
     ],
 
