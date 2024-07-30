@@ -16,7 +16,6 @@ return new class extends Migration {
             $table->integer("season_number");
             $table->integer("episode_number");
             $table->string("title");
-            $table->string("video_id")->nullable();
             $table->timestamps();
         });
     }
