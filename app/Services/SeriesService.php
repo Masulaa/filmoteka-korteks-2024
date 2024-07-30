@@ -95,23 +95,11 @@ class SeriesService
             fn($actor) => [
                 "name" => $actor["name"],
                 "character" => $actor["character"],
-                "profile_path" => $this->getUrl($actor["profile_path"], "w185"),
+                "profile_path" => basename($actor["profile_path"]),
                 "id" => $actor["id"],
             ],
             $cast
         );
-    }
-
-    /**
-     * Get the URL for the given path and size.
-     *
-     * @param string|null $path
-     * @param string $size
-     * @return string|null
-     */
-    private function getUrl(?string $path, string $size): ?string
-    {
-        return $path ? "https://image.tmdb.org/t/p/{$size}{$path}" : null;
     }
 
     /**
@@ -132,12 +120,9 @@ class SeriesService
                 "release_date" => isset($seriesData["first_air_date"])
                     ? date("Y-m-d", strtotime($seriesData["first_air_date"]))
                     : null,
-                "image" => $this->getUrl($seriesData["poster_path"], "w500"),
-                "overview" => $seriesData["overview"] ?? null,
-                "backdrop_path" => $this->getUrl(
-                    $seriesData["backdrop_path"],
-                    "original"
-                ),
+                "image" => basename($seriesData["poster_path"]),
+                "overview" => basename($seriesData["overview"]) ?? null,
+                "backdrop_path" => basename($seriesData["backdrop_path"]),
                 "trailer_link" => $this->getYouTubeTrailerId($seriesData["id"]),
                 "video_id" => $seriesData["id"],
             ]
@@ -213,14 +198,6 @@ class SeriesService
                     ],
                     [
                         "title" => $episodeData["name"],
-                        "overview" => $episodeData["overview"],
-                        "air_date" => isset($episodeData["air_date"])
-                            ? date("Y-m-d", strtotime($episodeData["air_date"]))
-                            : null,
-                        "still_path" => $this->getUrl(
-                            $episodeData["still_path"],
-                            "original"
-                        ),
                         "updated_at" => now(),
                         "created_at" => now(),
                     ]

@@ -90,23 +90,11 @@ class MoviesService
             fn($actor) => [
                 "name" => $actor["name"],
                 "character" => $actor["character"],
-                "profile_path" => $this->getUrl($actor["profile_path"], "w185"),
+                "profile_path" => basename($actor["profile_path"]),
                 "id" => $actor["id"],
             ],
             $cast
         );
-    }
-
-    /**
-     * Get the URL for the given path and size.
-     *
-     * @param string|null $path
-     * @param string $size
-     * @return string|null
-     */
-    private function getUrl(?string $path, string $size): ?string
-    {
-        return $path ? "https://image.tmdb.org/t/p/{$size}{$path}" : null;
     }
 
     /**
@@ -128,12 +116,9 @@ class MoviesService
                 "release_date" => isset($movieData["release_date"])
                     ? date("Y-m-d", strtotime($movieData["release_date"]))
                     : null,
-                "image" => $this->getUrl($movieData["poster_path"], "w500"),
-                "overview" => $movieData["overview"] ?? null,
-                "backdrop_path" => $this->getUrl(
-                    $movieData["backdrop_path"],
-                    "original"
-                ),
+                "image" => basename($movieData["poster_path"]),
+                "overview" => basename($movieData["overview"]) ?? null,
+                "backdrop_path" => basename($movieData["backdrop_path"]),
                 "trailer_link" => $videoId,
                 "video_id" => $movieData["id"],
             ]

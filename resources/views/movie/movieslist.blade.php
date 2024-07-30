@@ -65,7 +65,7 @@
     </script>
         @if ((isset($movies) && $movies->count() > 0) || (isset($serie) && $serie->count() > 0))
         @include('layouts.filter')<livewire:movie-search />
-    @endif 
+    @endif
     <div class="min-h-screen py-12 transition-colors duration-300 bg-gray-100 dark:bg-gray-900">
         <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
             <h1 class="mb-8 text-3xl font-extrabold text-gray-900 dark:text-white animate-fade-in">Discover Movies</h1>
@@ -82,7 +82,7 @@
                             style="animation-delay: {{ $loop->index * 100 }}ms">
                             <a href="{{ route('movies.show', $movie->id) }}" class="block">
                                 <div class="relative aspect-w-2 aspect-h-3">
-                                    <img src="{{ $movie->image }}" alt="{{ $movie->title }}"
+                                    <img src="https://image.tmdb.org/t/p/w500/{{ $movie->image }}" alt="{{ $movie->title }}"
                                         class="object-cover w-full h-full transition-transform duration-300 group-hover:scale-110">
                                     <div
                                         class="absolute inset-0 flex items-center justify-center transition-all duration-300 bg-black bg-opacity-50 opacity-0 group-hover:scale-110 group-hover:opacity-100">

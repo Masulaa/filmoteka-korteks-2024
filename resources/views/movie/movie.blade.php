@@ -46,7 +46,7 @@
                             @if ($actor['profile_path'])
                                 <div class="md:h-[96px] md:w-[64px] h-[54px] w-[40px]">
                                     <a href="https://en.wikipedia.org/wiki/{{$actor['name']}}">
-                                    <img src="{{ $actor['profile_path'] }}" alt="{{ $actor['name'] }}"
+                                    <img src="https://image.tmdb.org/t/p/w185/{{ $actor['profile_path'] }}" alt="{{ $actor['name'] }}"
                                         class="object-cover rounded-md shadow-md">
                                     </a>
                                 </div>
