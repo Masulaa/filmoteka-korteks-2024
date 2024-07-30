@@ -4,6 +4,7 @@ use App\Http\Controllers\{
     ContactController,
     AdminController,
     AdminMoviesController,
+    AdminUsersController
 };
 
 use App\Http\Controllers\Profile\{
@@ -127,6 +128,17 @@ Route::middleware(["auth", "verified"])->group(function () {
     Route::get('/admin/movies/{id}/edit', [AdminMoviesController::class, 'edit'])->name('admin.movies.edit');
     Route::put('/admin/movies/{id}', [AdminMoviesController::class, 'update'])->name('admin.movies.update');
     Route::delete('/admin/movies/{id}', [AdminMoviesController::class, 'destroy'])->name('admin.movies.destroy');
+
+    Route::prefix('admin')->middleware('auth')->group(function() {
+        Route::get('users', [AdminUsersController::class, 'index'])->name('admin.users');
+        Route::post('users/store', [AdminUsersController::class, 'store'])->name('admin.users.store');
+        Route::delete('users/{id}', [AdminUsersController::class, 'destroy'])->name('admin.users.destroy');
+        Route::post('users/{id}/setadmin', [AdminUsersController::class, 'setAdmin'])->name('admin.users.setadmin');
+        Route::post('users/{id}/removeadmin', [AdminUsersController::class, 'removeAdmin'])->name('admin.users.removeadmin');
+        Route::get('users/{id}/editpassword', [AdminUsersController::class, 'editPassword'])->name('admin.users.editpassword');
+        Route::put('users/{id}/updatepassword', [AdminUsersController::class, 'updatePassword'])->name('admin.users.updatepassword'); // Koristi PUT metodu
+    });
+    
 
 
     Route::resource("reviews", MovieReviewController::class)->only(["destroy"]);
