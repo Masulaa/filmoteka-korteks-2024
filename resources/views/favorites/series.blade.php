@@ -54,7 +54,7 @@
                     <div id="serie-card-{{ $serie->id }}" class="overflow-hidden transition duration-300 transform bg-white rounded-lg shadow-md group dark:bg-gray-800 hover:scale-105 hover:shadow-xl animate-fade-in-up" style="animation-delay: {{ $loop->index * 100 }}ms">
                             <a href="{{ route('series.index') }}/ {{ $serie->id }}" class="block">
                                 <div class="relative aspect-w-2 aspect-h-3">
-                                    <img src="{{ $serie->image }}" alt="{{ $serie->title }}"
+                                    <img src="https://image.tmdb.org/t/p/w500/{{ $serie->image }}" alt="{{ $serie->title }}"
                                         class="object-cover w-full h-full transition-transform duration-300 group-hover:scale-110">
                                     <div class="absolute inset-0 flex items-center justify-center transition-all duration-300 bg-black bg-opacity-50 opacity-0 group-hover:scale-110 group-hover:opacity-100">
                                         <button

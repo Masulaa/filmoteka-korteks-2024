@@ -54,7 +54,7 @@
                             </td>
                             <!-- <td>{{ $movie->rating }}</td> -->
                             <td>
-                                <a href="{{$movie->image }}">{{$movie->image }}</a>
+                                <a href="https://image.tmdb.org/t/p/w500/{{$movie->image }}">{{$movie->image }}</a>
                             </td>
                             <!-- <td>{{ $movie->overview }}</td> -->
                             <!-- <td>
