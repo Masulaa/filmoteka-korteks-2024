@@ -311,7 +311,11 @@ return [
                     'url'  => '/admin/movies',
                     'icon' => 'fas fa-film', // Ovde možete promeniti ikonu prema vašim potrebama
             ],
-        
+        [
+                'text' => 'Users',
+                'url'  => '/admin/users',
+                'icon' => 'fas fa-users', // Ikonica za korisnike
+            ],
     ],
 
     /*

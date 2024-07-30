@@ -29,7 +29,7 @@
                         <th>Image</th>
                         <!-- <th>Overview</th>
                         -->
-                        <th>Backdrop Path</th>
+                        <!-- <th>Backdrop Path</th> -->
                         <th>Trailer Link</th>
                         <th>Video ID</th>
                         <th>Views</th>
@@ -57,9 +57,9 @@
                                 <a href="{{$movie->image }}">{{$movie->image }}</a>
                             </td>
                             <!-- <td>{{ $movie->overview }}</td> -->
-                            <td>
+                            <!-- <td>
                                 <a href="{{ $movie->backdrop_path }}"> {{$movie->backdrop_path}}<a>
-                            </td>
+                            </td> -->
                             <td>
                                 <a href="https://youtube.com/watch?v={{ $movie->trailer_link }}"> {{$movie->trailer_link}}<a>
                             </td>
