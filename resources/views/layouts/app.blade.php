@@ -18,15 +18,8 @@
 <body class="font-sans antialiased">
     <div class="flex flex-col min-h-screen bg-gray-100 dark:bg-gray-900">
         @include('layouts.header')
-        <!-- Привремено, док series не добије свој систем за search/filter -->
-        @if ((isset($movies) && $movies->count() > 0) || (isset($serie) && $serie->count() > 0))
 
-            @if (Request::is('movies'))
-                @include('layouts.filter')<livewire:movie-search />
-            @elseif (Request::is('series'))
-                @include('layouts.serie-filter')  <livewire:serie-search />
-            @endif
-        @endif 
+
 
         <!-- Page Content -->
         <main class="flex-grow">
