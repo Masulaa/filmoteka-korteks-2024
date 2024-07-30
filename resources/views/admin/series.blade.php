@@ -53,7 +53,7 @@
                             </td>
                             <!-- <td>{{ $serie->rating }}</td> -->
                             <td>
-                                <a href="{{ $serie->image }}">{{ $serie->image }}</a>
+                                <a href="https://image.tmdb.org/t/p/w500/{{ $serie->image }}">{{ $serie->image }}</a>
                             </td>
                             <!-- <td>{{ $serie->overview }}</td> -->
                             <!-- <td>
