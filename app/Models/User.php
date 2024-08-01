@@ -18,7 +18,8 @@ use Illuminate\Notifications\Notifiable;
  * @property string $remember_token
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Review[] $reviews
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\MovieReview[] $moviereviews
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\SerieReview[] $seriereviews
  * @property-read int|null $reviews_count
  * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()
@@ -69,13 +70,23 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the reviews written by this user.
+     * Get the movie reviews written by this user.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function reviews()
+    public function reviewsMovie()
     {
-        return $this->hasMany(Review::class);
+        return $this->hasMany(MovieReview::class);
+    }
+
+    /**
+     * Get the serie reviews written by this user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function reviewsSerie()
+    {
+        return $this->hasMany(SerieReview::class);
     }
     /**
      * Get favorite movies by this user.
