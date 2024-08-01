@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Movie;
 use App\Http\Controllers\Controller;
 
 use App\Models\{Movie, MovieReview};
-use Illuminate\Http\{RedirectResponse, Request};
+use Illuminate\Http\{RedirectResponse};
+use App\Http\Requests\Movie\MovieReviewRequest;
 
 class MovieReviewController extends Controller
 {
@@ -24,15 +25,12 @@ class MovieReviewController extends Controller
     /**
      * Store a new review for a movie.
      *
-     * @param Request $request
+     * @param MovieReviewRequest $request
      * @param Movie $movie
      * @return RedirectResponse
      */
-    public function store(Request $request, Movie $movie): RedirectResponse
+    public function store(MovieReviewRequest $request, Movie $movie): RedirectResponse
     {
-        $request->validate([
-            'content' => 'required',
-        ]);
 
         $movie->reviews()->create([
             'user_id' => auth()->id(),

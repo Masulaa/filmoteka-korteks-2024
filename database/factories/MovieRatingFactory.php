@@ -2,12 +2,12 @@
 
 namespace Database\Factories;
 
-use App\Models\{ Movie, User, Rating };
+use App\Models\{Movie, User, MovieRating};
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class RatingFactory extends Factory
+class MovieRatingFactory extends Factory
 {
-    protected $model = Rating::class;
+    protected $model = MovieRating::class;
 
     public function definition()
     {

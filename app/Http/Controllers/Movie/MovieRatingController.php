@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Movie;
 
 use App\Http\Controllers\Controller;
-
 use App\Models\{Movie, MovieRating};
-use Illuminate\Http\{Request, JsonResponse, RedirectResponse};
+use Illuminate\Http\{JsonResponse, RedirectResponse};
+use App\Http\Requests\Movie\MovieRatingRequest;
 use Illuminate\Support\Facades\{Auth, Log};
 
 class MovieRatingController extends Controller
@@ -25,18 +25,17 @@ class MovieRatingController extends Controller
     /**
      * Store a newly created rating in storage.
      *
-     * @param Request $request
+     * @param MovieRatingRequest $request
      * @param Movie $movie
      * @return JsonResponse
      */
-    public function store(Request $request, Movie $movie): JsonResponse
+    public function store(MovieRatingRequest $request, Movie $movie): JsonResponse
     {
         Log::info('Rating store method called', ['user_id' => Auth::id(), 'movie_id' => $movie->id]);
 
         try {
-            $validated = $request->validate([
-                'rating' => 'required|integer|min:1|max:10',
-            ]);
+            // Validacija se već desila pre nego što je request stigao do ove tačke
+            $validated = $request->validated();
 
             Log::info('Validation passed', $validated);
 

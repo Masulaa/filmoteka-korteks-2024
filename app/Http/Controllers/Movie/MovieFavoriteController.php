@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Movie;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\Movie\MovieFavoriteRequest;
 use App\Models\{User, MovieFavorite};
 use Illuminate\Support\Facades\Auth;
 
@@ -12,10 +12,10 @@ class MovieFavoriteController extends Controller
     /**
      * Store a movie in the user's favorites.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param  \App\Http\Requests\Movie\MovieFavoriteRequest
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function store(MovieFavoriteRequest $request)
     {
         // Validate the request data to ensure user_id and movie_id are provided and valid
         $request->validate([

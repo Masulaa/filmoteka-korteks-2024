@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Movie;
 use App\Http\Controllers\Controller;
 
 use App\Models\{Movie, MovieRating};
-use Illuminate\Http\{Request, RedirectResponse};
+use Illuminate\Http\RedirectResponse;
+use App\Http\Requests\Movie\MovieRequest;
 use Illuminate\Support\Facades\{Storage};
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
@@ -37,20 +38,11 @@ class MovieController extends Controller
     /**
      * Store a newly created movie in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param \App\Http\Requests\Movie\MovieRequest
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request): RedirectResponse
+    public function store(MovieRequest $request): RedirectResponse
     {
-        $request->validate([
-            'title' => 'required',
-            'director' => 'required',
-            'release_date' => 'required|date',
-            'rating' => 'required|integer|min:1|max:10',
-            'image' => 'nullable|image|max:2048',
-            'views' => 'nullable|integer|min:0',
-        ]);
-
         $path = $request->file('image') ? $request->file('image')->store('images') : null;
 
         Movie::create([
@@ -103,21 +95,12 @@ class MovieController extends Controller
     /**
      * Update the specified movie in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param \App\Http\Requests\Movie\MovieRequest
      * @param \App\Models\Movie $movie
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, Movie $movie): RedirectResponse
+    public function update(MovieRequest $request, Movie $movie): RedirectResponse
     {
-        $request->validate([
-            'title' => 'required',
-            'director' => 'required',
-            'release_date' => 'required|date',
-            'genre' => 'required',
-            'rating' => 'required|integer|min:1|max:10',
-            'image' => 'nullable|image|max:2048',
-            'views' => 'nullable|integer|min:0',
-        ]);
 
         if ($request->file('image')) {
             if ($movie->image) {

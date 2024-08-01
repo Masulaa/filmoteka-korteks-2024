@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Movie;
 
 use App\Http\Controllers\Controller;
 use App\Models\MovieCast;
+use App\Http\Requests\Movie\MovieCastRequest;
 use Illuminate\Http\Request;
 
 class MovieCastController extends Controller
@@ -17,7 +18,7 @@ class MovieCastController extends Controller
     {
         // Retrieve all cast members from the database
         $castMembers = MovieCast::all();
-        
+
         // Return the cast members as a JSON response
         return response()->json($castMembers);
     }
@@ -25,23 +26,14 @@ class MovieCastController extends Controller
     /**
      * Store a newly created movie cast member in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param \App\Http\Requests\Movie\MovieCastRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function store(MovieCastRequest $request)
     {
-        // Validate the request data
-        $validatedData = $request->validate([
-            'movie_id' => 'required|exists:movies,id',
-            'name' => 'required|string',
-            'character' => 'required|string',
-            'profile_path' => 'nullable|string',
-            'actor_id' => 'nullable|exists:actors,id',
-        ]);
-
         // Create a new movie cast member with the validated data
-        $castMember = MovieCast::create($validatedData);
-        
+        $castMember = MovieCast::create($request->validated());
+
         // Return the created cast member as a JSON response with HTTP status 201
         return response()->json($castMember, 201);
     }
@@ -56,7 +48,7 @@ class MovieCastController extends Controller
     {
         // Find the cast member by ID or fail if not found
         $castMember = MovieCast::findOrFail($id);
-        
+
         // Return the cast member as a JSON response
         return response()->json($castMember);
     }
@@ -64,18 +56,18 @@ class MovieCastController extends Controller
     /**
      * Update the specified movie cast member in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param \App\Http\Requests\Movie\MovieCastRequest $request
      * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update(MovieCastRequest $request, $id)
     {
         // Find the cast member by ID or fail if not found
         $castMember = MovieCast::findOrFail($id);
 
         // Update the cast member with the request data
-        $castMember->update($request->all());
-        
+        $castMember->update($request->validated());
+
         // Return the updated cast member as a JSON response with HTTP status 200
         return response()->json($castMember, 200);
     }
@@ -90,7 +82,7 @@ class MovieCastController extends Controller
     {
         // Find the cast member by ID or fail if not found, then delete it
         MovieCast::findOrFail($id)->delete();
-        
+
         // Return a 204 No Content response indicating successful deletion
         return response()->json(null, 204);
     }

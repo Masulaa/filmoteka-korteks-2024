@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Movie;
 
 use App\Http\Controllers\Controller;
 
-use Illuminate\Http\Request;
+use \App\Http\Requests\Movie\MovieFilterRequest;
 
 use App\Models\{Movie};
 
@@ -15,10 +15,10 @@ class MovieFilterController extends Controller
     /**
      * Filter movies based on criteria.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param \App\Http\Requests\Movie\MovieFilterRequest
      * @return \Illuminate\Http\Response|\Illuminate\View\View
      */
-    public function filter(Request $request)
+    public function filter(MovieFilterRequest $request)
     {
         try {
             $query = Movie::query();
