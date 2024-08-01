@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Serie;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\Serie\SerieFavouriteRequest;
 use App\Models\{User, SerieFavorite};
 use Illuminate\Support\Facades\Auth;
 
@@ -12,16 +12,11 @@ class SerieFavoriteController extends Controller
     /**
      * Store a series in the user's favorites.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param SerieFavouriteRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function store(SerieFavouriteRequest $request)
     {
-        // Validate the request data to ensure user_id and serie_id are provided and valid
-        $request->validate([
-            "user_id" => "required|exists:users,id",
-            "serie_id" => "required|exists:series,id",
-        ]);
 
         // Find the user by ID from the request
         $user = User::find($request->user_id);

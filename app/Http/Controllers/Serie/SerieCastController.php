@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Serie;
 
 use App\Http\Controllers\Controller;
 use App\Models\SerieCast;
-use Illuminate\Http\Request;
+use App\Http\Requests\Serie\SerieCastRequest;
 
 class SerieCastController extends Controller
 {
@@ -17,7 +17,7 @@ class SerieCastController extends Controller
     {
         // Retrieve all cast members for series from the database
         $castMembers = SerieCast::all();
-        
+
         // Return the cast members as a JSON response
         return response()->json($castMembers);
     }
@@ -28,20 +28,12 @@ class SerieCastController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function store(SerieCastRequest $request)
     {
-        // Validate the request data
-        $validatedData = $request->validate([
-            'serie_id' => 'required|exists:series,id',
-            'name' => 'required|string',
-            'character' => 'required|string',
-            'profile_path' => 'nullable|string',
-            'actor_id' => 'nullable|exists:actors,id',
-        ]);
 
         // Create a new series cast member with the validated data
-        $castMember = SerieCast::create($validatedData);
-        
+        $castMember = SerieCast::create($request->validated());
+
         // Return the created cast member as a JSON response with HTTP status 201
         return response()->json($castMember, 201);
     }
@@ -56,7 +48,7 @@ class SerieCastController extends Controller
     {
         // Find the cast member by ID or fail if not found
         $castMember = SerieCast::findOrFail($id);
-        
+
         // Return the cast member as a JSON response
         return response()->json($castMember);
     }
@@ -68,14 +60,14 @@ class SerieCastController extends Controller
      * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update(SerieCastRequest $request, $id)
     {
         // Find the cast member by ID or fail if not found
         $castMember = SerieCast::findOrFail($id);
 
         // Update the cast member with the request data
-        $castMember->update($request->all());
-        
+        $castMember->update($request->validated());
+
         // Return the updated cast member as a JSON response with HTTP status 200
         return response()->json($castMember, 200);
     }
@@ -90,7 +82,7 @@ class SerieCastController extends Controller
     {
         // Find the cast member by ID or fail if not found, then delete it
         SerieCast::findOrFail($id)->delete();
-        
+
         // Return a 204 No Content response indicating successful deletion
         return response()->json(null, 204);
     }

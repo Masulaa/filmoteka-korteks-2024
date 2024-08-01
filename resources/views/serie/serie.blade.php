@@ -145,7 +145,7 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             const ratingSection = document.getElementById('rating-section');
-            const serieId = ratingSection.dataset.movieId;
+            const serieId = ratingSection.dataset.serieId;
             const userRating = ratingSection.dataset.userRating;
             const stars = document.querySelectorAll('.star');
             const selectedRatingSpan = document.getElementById('selected-rating');
@@ -181,7 +181,7 @@
                     return;
                 }
 
-                fetch(`/series/${movieId}/rate`, {
+                fetch(`/series/${serieId}/rate`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',

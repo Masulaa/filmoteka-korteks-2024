@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Serie;
 
 use App\Http\Controllers\Controller;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\Serie\SerieFilterRequest;
 use App\Models\{Serie};
 use Illuminate\Support\Facades\{Log};
 
@@ -13,10 +13,10 @@ class SerieFilterController extends Controller
     /**
      * Filter series based on criteria.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param SerieFilterRequest $request
      * @return \Illuminate\Http\Response|\Illuminate\View\View
      */
-    public function filter(Request $request)
+    public function filter(SerieFilterRequest $request)
     {
         try {
             $query = Serie::query();

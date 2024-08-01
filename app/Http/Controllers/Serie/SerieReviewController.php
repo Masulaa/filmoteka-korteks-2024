@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Serie;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Serie\SerieReviewRequest;
 
 use App\Models\{Serie, SerieReview};
-use Illuminate\Http\{RedirectResponse, Request};
+use Illuminate\Http\{RedirectResponse};
 
 class SerieReviewController extends Controller
 {
@@ -26,16 +27,12 @@ class SerieReviewController extends Controller
     /**
      * Store a new review for a serie.
      *
-     * @param Request $request
+     * @param SerieReviewRequest $request
      * @param Serie $serie
      * @return RedirectResponse
      */
-    public function store(Request $request, Serie $serie): RedirectResponse
+    public function store(SerieReviewRequest $request, Serie $serie): RedirectResponse
     {
-        $request->validate([
-            "content" => "required",
-        ]);
-
         $serie->reviews()->create([
             "user_id" => auth()->id(),
             "content" => $request->input("content"),

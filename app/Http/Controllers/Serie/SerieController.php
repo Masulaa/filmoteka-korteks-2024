@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Serie;
 use App\Http\Controllers\Controller;
 
 use App\Models\{Serie, SerieRating};
-use Illuminate\Http\{Request, RedirectResponse};
+use Illuminate\Http\{RedirectResponse};
+use App\Http\Requests\Serie\SerieRequest;
 use Illuminate\Support\Facades\{Storage, Log};
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
@@ -35,19 +36,11 @@ class SerieController extends Controller
     /**
      * Store a newly created serie in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param SerieRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request): RedirectResponse
+    public function store(SerieRequest $request): RedirectResponse
     {
-        $request->validate([
-            "title" => "required",
-            "director" => "required",
-            "release_date" => "required|date",
-            "rating" => "required|integer|min:1|max:10",
-            "image" => "nullable|image|max:2048",
-            "views" => "nullable|integer|min:0",
-        ]);
 
         $path = $request->file("image")
             ? $request->file("image")->store("images")
@@ -106,21 +99,13 @@ class SerieController extends Controller
     /**
      * Update the specified serie in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param SerieRequest $request
      * @param \App\Models\Serie $serie
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, Serie $serie): RedirectResponse
+    public function update(SerieRequest $request, Serie $serie): RedirectResponse
     {
-        $request->validate([
-            "title" => "required",
-            "director" => "required",
-            "release_date" => "required|date",
-            "genre" => "required",
-            "rating" => "required|integer|min:1|max:10",
-            "image" => "nullable|image|max:2048",
-            "views" => "nullable|integer|min:0",
-        ]);
+
 
         if ($request->file("image")) {
             if ($serie->image) {

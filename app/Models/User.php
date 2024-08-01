@@ -70,7 +70,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the movie reviews written by this user.
+     * Get the reviews written by this user.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -80,7 +80,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the serie reviews written by this user.
+     * Get the movreviews written by this user.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */

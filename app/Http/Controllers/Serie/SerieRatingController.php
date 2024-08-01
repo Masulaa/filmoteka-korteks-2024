@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Serie;
 use App\Http\Controllers\Controller;
 
 use App\Models\{Serie, SerieRating};
-use Illuminate\Http\{Request, JsonResponse, RedirectResponse};
+use Illuminate\Http\{JsonResponse, RedirectResponse};
+use App\Http\Requests\Serie\SerieRatingRequest;
 use Illuminate\Support\Facades\{Auth, Log};
 
 class SerieRatingController extends Controller
@@ -27,11 +28,11 @@ class SerieRatingController extends Controller
     /**
      * Store a newly created rating in storage.
      *
-     * @param Request $request
+     * @param SerieRatingRequest $request
      * @param Serie $serie
      * @return JsonResponse
      */
-    public function store(Request $request, Serie $serie): JsonResponse
+    public function store(SerieRatingRequest $request, Serie $serie): JsonResponse
     {
         Log::info("Rating store method called", [
             "user_id" => Auth::id(),
@@ -39,9 +40,7 @@ class SerieRatingController extends Controller
         ]);
 
         try {
-            $validated = $request->validate([
-                "rating" => "required|integer|min:1|max:10",
-            ]);
+            $validated = $request->validated();
 
             Log::info("Validation passed", $validated);
 

@@ -17,11 +17,6 @@ class MovieFavoriteController extends Controller
      */
     public function store(MovieFavoriteRequest $request)
     {
-        // Validate the request data to ensure user_id and movie_id are provided and valid
-        $request->validate([
-            "user_id" => "required|exists:users,id",
-            "movie_id" => "required|exists:movies,id",
-        ]);
 
         // Find the user by ID from the request
         $user = User::find($request->user_id);
