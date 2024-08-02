@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Movie;
-use App\Models\User; // Dodajte ovaj use statement
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -70,7 +70,6 @@ class MovieTest extends TestCase
 
         $response->assertRedirect(route('admin.movies.index'));
 
-        // Proverite da li je film sačuvan u bazi
         $this->assertDatabaseHas('movies', [
             'title' => 'New Movie',
             'director' => 'Director Name',
