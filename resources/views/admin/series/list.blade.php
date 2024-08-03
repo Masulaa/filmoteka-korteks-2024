@@ -36,7 +36,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($series as $serie)
+                    @foreach ($series as $serie)
                         <tr>
                             <td>{{ $serie->id }}</td>
                             <td>{{ $serie->title }}</td>
@@ -57,23 +57,29 @@
                             </td>
                             <!-- <td>{{ $serie->overview }}</td> -->
                             <!-- <td>
-                                <a href="{{ $serie->backdrop_path }}">{{ $serie->backdrop_path }}</a>
-                            </td> -->
+                                    <a href="{{ $serie->backdrop_path }}">{{ $serie->backdrop_path }}</a>
+                                </td> -->
                             <td>
-                                <a href="https://youtube.com/watch?v={{ $serie->trailer_link }}">{{ $serie->trailer_link }}</a>
+                                <a
+                                    href="https://youtube.com/watch?v={{ $serie->trailer_link }}">{{ $serie->trailer_link }}</a>
                             </td>
                             <td>
-                                <a href="https://vidsrc.pro/embed/series/{{ $serie->video_id }}">{{ $serie->video_id }}</a>
+                                <a
+                                    href="https://vidsrc.pro/embed/series/{{ $serie->video_id }}">{{ $serie->video_id }}</a>
                             </td>
                             <td>{{ $serie->views }}</td>
                             <td>
-                                <a href="{{ route('admin.series.edit', $serie->id) }}" class="btn btn-primary btn-sm">Edit</a>
-                                <form action="{{ route('admin.series.destroy', $serie->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this series?');" style="display:inline;">
+                                <a href="{{ route('admin.series.edit', $serie->id) }}"
+                                    class="btn btn-primary btn-sm">Edit</a>
+                                <form action="{{ route('admin.series.destroy', $serie->id) }}" method="POST"
+                                    onsubmit="return confirm('Are you sure you want to delete this series?');"
+                                    style="display:inline;">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                                 </form>
-                                <a href="{{ route('series.show', ['series' => $serie->id]) }}" class="btn btn-info btn-sm">View</a>
+                                <a href="{{ route('series.show', ['series' => $serie->id]) }}"
+                                    class="btn btn-info btn-sm">View</a>
                             </td>
                         </tr>
                     @endforeach
@@ -81,7 +87,7 @@
             </table>
         </div>
     </div>
-    
+
     <!-- Card for creating new series -->
     <div class="card">
         <div class="card-header">
@@ -93,12 +99,14 @@
 
                 <div class="form-group">
                     <label for="title">Title</label>
-                    <input type="text" class="form-control" id="title" name="title" placeholder="Series Title" required>
+                    <input type="text" class="form-control" id="title" name="title" placeholder="Series Title"
+                        required>
                 </div>
 
                 <div class="form-group">
                     <label for="director">Director</label>
-                    <input type="text" class="form-control" id="director" name="director" placeholder="Director" required>
+                    <input type="text" class="form-control" id="director" name="director" placeholder="Director"
+                        required>
                 </div>
 
                 <div class="form-group">
@@ -112,9 +120,9 @@
                 </div>
 
                 <!-- <div class="form-group">
-                    <label for="rating">Rating</label>
-                    <input type="number" step="0.1" class="form-control" id="rating" name="rating" placeholder="Rating" required>
-                </div> -->
+                        <label for="rating">Rating</label>
+                        <input type="number" step="0.1" class="form-control" id="rating" name="rating" placeholder="Rating" required>
+                    </div> -->
 
                 <div class="form-group">
                     <label for="image">Upload Image</label>
@@ -122,18 +130,19 @@
                 </div>
 
                 <!-- <div class="form-group">
-                    <label for="overview">Overview</label>
-                    <textarea id="overview" class="form-control" name="overview" rows="8" placeholder="Series Overview..." required></textarea>
-                </div>
+                        <label for="overview">Overview</label>
+                        <textarea id="overview" class="form-control" name="overview" rows="8" placeholder="Series Overview..." required></textarea>
+                    </div>
 
-                <div class="form-group">
-                    <label for="backdrop_path">Backdrop Path</label>
-                    <input type="text" class="form-control" id="backdrop_path" name="backdrop_path" placeholder="Backdrop Path">
-                </div> -->
+                    <div class="form-group">
+                        <label for="backdrop_path">Backdrop Path</label>
+                        <input type="text" class="form-control" id="backdrop_path" name="backdrop_path" placeholder="Backdrop Path">
+                    </div> -->
 
                 <div class="form-group">
                     <label for="trailer_link">Trailer Link</label>
-                    <input type="url" class="form-control" id="trailer_link" name="trailer_link" placeholder="Trailer Link">
+                    <input type="url" class="form-control" id="trailer_link" name="trailer_link"
+                        placeholder="Trailer Link">
                 </div>
 
                 <div class="form-group">

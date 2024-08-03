@@ -7,15 +7,21 @@
         <div
             class="max-w-7xl mx-auto lg:py-36 sm:py-[136px] sm:pb-28 xs:py-28 xs:pb-12 pt-24 pb-8 flex flex-row lg:gap-12 md:gap-10 gap-8 justify-center">
             <div class="transition duration-500 transform poster hover:scale-105">
-                <img src="https://image.tmdb.org/t/p/w500/{{ $movie->image }}" alt="{{ $movie->title }}"
-                    class="rounded-lg shadow-lg w-80 animate-fade-in">
+                @php
+                    $imageUrl = "https://image.tmdb.org/t/p/w500/{$movie->image}";
+                    $fallbackImage = "../storage/movies-images/{$movie->image}";
+                    $imageExists = @getimagesize($imageUrl);
+                    $displayImage = $imageExists ? $imageUrl : $fallbackImage;
+                @endphp
+                <img src="{{ $displayImage }}" alt="{{ $movie->title }}" class="rounded-lg shadow-lg w-80 animate-fade-in">
             </div>
             <div
                 class="text-gray-300 animate-fade-in dark:text-gray-200 sm:max-w-[80vw] max-w-[90vw] md:max-w-[520px] font-nunito flex flex-col lg:gap-5 sm:gap-4 xs:gap-[14px] gap-3 mb-8 flex-1">
                 <h2 class="text-4xl font-bold md:max-w-[420px] animate-fade-in">{{ $movie->title }}</h2>
                 <ul class="flex flex-row items-center sm:gap-[14px] xs:gap-3 gap-[6px] flex-wrap">
                     @foreach ($movie->genres as $genre)
-                        <li class="px-3 py-1 text-sm text-white transition-all duration-300 bg-gray-800 rounded-full dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-600">
+                        <li
+                            class="px-3 py-1 text-sm text-white transition-all duration-300 bg-gray-800 rounded-full dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-600">
                             <a href="{{ route('movies.filter', ['genre' => $genre->name]) }}">{{ $genre->name }}</a>
                         </li>
                     @endforeach
@@ -45,9 +51,9 @@
                         <div class="flex flex-col justify-start gap-2 transition duration-500 transform hover:scale-110">
                             @if ($actor['profile_path'])
                                 <div class="md:h-[96px] md:w-[64px] h-[54px] w-[40px]">
-                                    <a href="https://en.wikipedia.org/wiki/{{$actor['name']}}">
-                                    <img src="https://image.tmdb.org/t/p/w185/{{ $actor['profile_path'] }}" alt="{{ $actor['name'] }}"
-                                        class="object-cover rounded-md shadow-md">
+                                    <a href="https://en.wikipedia.org/wiki/{{ $actor['name'] }}">
+                                        <img src="https://image.tmdb.org/t/p/w185/{{ $actor['profile_path'] }}"
+                                            alt="{{ $actor['name'] }}" class="object-cover rounded-md shadow-md">
                                     </a>
                                 </div>
                             @endif

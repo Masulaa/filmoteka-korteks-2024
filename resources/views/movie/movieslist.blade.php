@@ -6,9 +6,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.add-to-favorites-button').forEach(button => {
-                button.addEventListener('click', function (event) {
+                button.addEventListener('click', function(event) {
                     event.stopPropagation();
                     event.preventDefault();
 
@@ -16,54 +16,55 @@
                     const movieId = this.dataset.movieId;
 
                     fetch('{{ route('movie-favorites.store') }}', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                        },
-                        body: JSON.stringify({
-                            user_id: userId,
-                            movie_id: movieId
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector(
+                                    'meta[name="csrf-token"]').getAttribute('content')
+                            },
+                            body: JSON.stringify({
+                                user_id: userId,
+                                movie_id: movieId
+                            })
                         })
-                    })
-                    .then(response => {
-                        if (response.status === 201) {
-                            return response.json().then(data => {
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Success!',
-                                    text: data.message,
-                                    showConfirmButton: false,
-                                    timer: 1500
+                        .then(response => {
+                            if (response.status === 201) {
+                                return response.json().then(data => {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Success!',
+                                        text: data.message,
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    });
                                 });
-                            });
-                        } else if (response.status === 200) {
-                            return response.json().then(data => {
-                                Swal.fire({
-                                    icon: 'info',
-                                    title: 'Info',
-                                    text: data.message,
-                                    showConfirmButton: false,
-                                    timer: 1500
+                            } else if (response.status === 200) {
+                                return response.json().then(data => {
+                                    Swal.fire({
+                                        icon: 'info',
+                                        title: 'Info',
+                                        text: data.message,
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    });
                                 });
+                            } else {
+                                throw new Error('Unexpected response');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Something went wrong!',
                             });
-                        } else {
-                            throw new Error('Unexpected response');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: 'Something went wrong!',
                         });
-                    });
                 });
             });
         });
     </script>
-        @if ((isset($movies) && $movies->count() > 0) || (isset($serie) && $serie->count() > 0))
+    @if ((isset($movies) && $movies->count() > 0) || (isset($serie) && $serie->count() > 0))
         @include('layouts.filter')<livewire:movie-search />
     @endif
     <div class="min-h-screen py-12 transition-colors duration-300 bg-gray-100 dark:bg-gray-900">
@@ -82,12 +83,17 @@
                             style="animation-delay: {{ $loop->index * 100 }}ms">
                             <a href="{{ route('movies.show', $movie->id) }}" class="block">
                                 <div class="relative aspect-w-2 aspect-h-3">
-                                    <img src="https://image.tmdb.org/t/p/w500/{{ $movie->image }}" alt="{{ $movie->title }}"
+                                    @php
+                                        $imageUrl = "https://image.tmdb.org/t/p/w500/{$movie->image}";
+                                        $fallbackImage = "storage/movies-images/{$movie->image}";
+                                        $imageExists = @getimagesize($imageUrl);
+                                        $displayImage = $imageExists ? $imageUrl : $fallbackImage;
+                                    @endphp
+                                    <img src="{{ $displayImage }}" alt="{{ $movie->title }}"
                                         class="object-cover w-full h-full transition-transform duration-300 group-hover:scale-110">
                                     <div
                                         class="absolute inset-0 flex items-center justify-center transition-all duration-300 bg-black bg-opacity-50 opacity-0 group-hover:scale-110 group-hover:opacity-100">
-                                        <button
-                                            onclick="event.stopPropagation(); event.preventDefault();"
+                                        <button onclick="event.stopPropagation(); event.preventDefault();"
                                             class="px-4 py-2 text-white transition-colors duration-300 bg-indigo-600 rounded-md hover:bg-indigo-700 animate-pulse add-to-favorites-button"
                                             data-user-id="{{ auth()->id() }}" data-movie-id="{{ $movie->id }}">
                                             Add to Favorites
@@ -114,10 +120,13 @@
                                             {{ $movie->averageRating() }} ({{ $movie->countRatings() }} ratings)</p>
                                     </div>
                                     <div class="flex items-center mt-3">
-                                    <svg class="flex-shrink-0 w-5 h-5 text-white" viewBox="0 0 24 24" fill="currentColor">
-                                        <path d="M12 5c-7.633 0-12 7-12 7s4.367 7 12 7 12-7 12-7-4.367-7-12-7zm0 12c-2.761 0-5-2.239-5-5s2.239-5 5-5 5 2.239 5 5-2.239 5-5 5zm0-8c-1.654 0-3 1.346-3 3s1.346 3 3 3 3-1.346 3-3-1.346-3-3-3z"/>
-                                    </svg>
-                                        <p class="ml-1 text-sm text-gray-600 dark:text-gray-400">Views: {{ $movie->views }}</p>
+                                        <svg class="flex-shrink-0 w-5 h-5 text-white" viewBox="0 0 24 24"
+                                            fill="currentColor">
+                                            <path
+                                                d="M12 5c-7.633 0-12 7-12 7s4.367 7 12 7 12-7 12-7-4.367-7-12-7zm0 12c-2.761 0-5-2.239-5-5s2.239-5 5-5 5 2.239 5 5-2.239 5-5 5zm0-8c-1.654 0-3 1.346-3 3s1.346 3 3 3 3-1.346 3-3-1.346-3-3-3z" />
+                                        </svg>
+                                        <p class="ml-1 text-sm text-gray-600 dark:text-gray-400">Views: {{ $movie->views }}
+                                        </p>
                                     </div>
                                     <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Released:
                                         {{ $movie->release_date }}</p>
