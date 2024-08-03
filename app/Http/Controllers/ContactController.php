@@ -28,6 +28,6 @@ class ContactController extends Controller
     {
         Mail::to('my@mail.com')->send(new ContactMail($request->name, $request->email, $request->content));
 
-        return redirect()->route('home');
+        return redirect()->route('movies.index');
     }
 }
