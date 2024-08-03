@@ -4,12 +4,10 @@ namespace Tests\Feature;
 
 use App\Models\Movie;
 use App\Models\User;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
 class MovieTest extends TestCase
 {
-    use DatabaseTransactions;
 
     public function test_movies_are_displayed(): void
     {

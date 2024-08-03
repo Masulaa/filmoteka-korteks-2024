@@ -1,29 +1,31 @@
 <?php
 
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\AdminMoviesController;
-use App\Http\Controllers\AdminSeriesController;
-use App\Http\Controllers\AdminUsersController;
-use App\Http\Controllers\ContactController;
-use App\Http\Controllers\Movie\MovieController;
-use App\Http\Controllers\Movie\MovieFavoriteController;
-use App\Http\Controllers\Movie\MovieFilterController;
-use App\Http\Controllers\Movie\MovieRatingController;
-use App\Http\Controllers\Movie\MovieReviewController;
-use App\Http\Controllers\Movie\MovieWatchController;
-use App\Http\Controllers\Profile\ProfileController;
-use App\Http\Controllers\Profile\ProfileReviewsAndRatingsController;
-use App\Http\Controllers\Serie\SerieController;
-use App\Http\Controllers\Serie\SerieFavoriteController;
-use App\Http\Controllers\Serie\SerieFilterController;
-use App\Http\Controllers\Serie\SerieRatingController;
-use App\Http\Controllers\Serie\SerieReviewController;
-use App\Http\Controllers\Serie\SerieWatchController;
-use App\Livewire\MovieSearch;
-use App\Livewire\SerieSearch;
+use App\Http\Controllers\{
+    ContactController,
+    AdminController,
+    AdminMoviesController,
+    AdminUsersController,
+    AdminSeriesController,
+    Profile\ProfileController,
+    Profile\ProfileReviewsAndRatingsController,
+    Serie\SerieController,
+    Serie\SerieReviewController,
+    Serie\SerieRatingController,
+    Serie\SerieFilterController,
+    Serie\SerieFavoriteController,
+    Serie\SerieWatchController,
+    Movie\MovieController,
+    Movie\MovieReviewController,
+    Movie\MovieRatingController,
+    Movie\MovieFavoriteController,
+    Movie\MovieWatchController,
+    Movie\MovieFilterController,
+};
+
+use App\Livewire\{MovieSearch, SerieSearch};
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', fn () => redirect('login'));
+Route::get('/', fn() => redirect('login'));
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('/dashboard', 'dashboard.dashboard')->name('dashboard');
@@ -54,7 +56,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('profile', ProfileController::class)->only(['edit', 'update', 'destroy'])->parameters(['profile' => 'id'])->names(['edit' => 'profile.edit', 'update' => 'profile.update', 'destroy' => 'profile.destroy']);
 
     /* ADMIN PANEL */
-    Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
+    Route::prefix('admin')->group(function () {
         Route::get('/', [AdminController::class, 'index'])->name('admin.dashboard');
 
         // Movies
@@ -97,4 +99,4 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('serie-favorites', SerieFavoriteController::class)->only(['index', 'store', 'destroy']);
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
