@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use App\Models\Serie;
-use App\Models\User;
+use App\Http\Requests\Admin\AdminSeriesRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\Controller;
 
 class AdminSeriesController extends Controller
 {
@@ -39,19 +40,9 @@ class AdminSeriesController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request)
+    public function store(AdminSeriesRequest $request)
     {
         $this->checkAdmin($request);
-
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'director' => 'required|string|max:255',
-            'release_date' => 'required|date',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'trailer_link' => 'nullable|url',
-            'video_id' => 'nullable|integer',
-            'views' => 'nullable|integer|min:0',
-        ]);
 
         $serie = new Serie($request->all());
 
@@ -105,22 +96,13 @@ class AdminSeriesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, $id)
+    public function update(AdminSeriesRequest $request, $id)
     {
         $this->checkAdmin($request);
 
         $serie = Serie::findOrFail($id);
 
-        $validatedData = $request->validate([
-            'title' => 'required|string|max:255',
-            'director' => 'required|string|max:255',
-            'release_date' => 'required|date',
-            'genre' => 'required|string|max:255',
-            'trailer_link' => 'nullable|url',
-            'video_id' => 'nullable|integer',
-            'views' => 'nullable|integer|min:0',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
+        $validatedData = $request->validated();
 
         $serie->fill($validatedData);
 
@@ -159,7 +141,7 @@ class AdminSeriesController extends Controller
     /**
      * Check if the authenticated user is an admin.
      *
-     * @return \App\Models\User
+     * @return $user
      */
     protected function checkAdmin(Request $request)
     {

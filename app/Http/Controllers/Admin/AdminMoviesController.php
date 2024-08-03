@@ -1,11 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use App\Models\Movie;
-use App\Models\User;
+use App\Http\Requests\Admin\AdminMoviesRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+
+
+
+use App\Http\Controllers\Controller;
 
 class AdminMoviesController extends Controller
 {
@@ -39,23 +43,10 @@ class AdminMoviesController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request)
+    public function store(AdminMoviesRequest $request)
     {
         $this->checkAdmin($request);
 
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'director' => 'required|string|max:255',
-            'release_date' => 'required|date',
-            // 'genre_ids' => 'required|string',
-            // 'rating' => 'required|numeric|min:0|max:10',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            // 'overview' => 'required|string',
-            // 'backdrop_path' => 'nullable|string|max:255',
-            'trailer_link' => 'nullable|url',
-            'video_id' => 'nullable|integer',
-            'views' => 'nullable|integer|min:0',
-        ]);
 
         $movie = new Movie($request->all());
 
@@ -109,22 +100,13 @@ class AdminMoviesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, $id)
+    public function update(AdminMoviesRequest $request, $id)
     {
         $this->checkAdmin($request);
 
         $movie = Movie::findOrFail($id);
 
-        $validatedData = $request->validate([
-            'title' => 'required|string|max:255',
-            'director' => 'required|string|max:255',
-            'release_date' => 'required|date',
-            'genre' => 'required|string|max:255',
-            'trailer_link' => 'nullable|url',
-            'video_id' => 'nullable|integer',
-            'views' => 'nullable|integer|min:0',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
+        $validatedData = $request->validated();
 
         $movie->fill($validatedData);
 

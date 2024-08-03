@@ -2,10 +2,11 @@
 
 use App\Http\Controllers\{
     ContactController,
-    AdminController,
-    AdminMoviesController,
-    AdminUsersController,
-    AdminSeriesController,
+    Admin\AdminController,
+    Admin\AdminMoviesController,
+    Admin\AdminUsersController,
+    Admin\AdminSeriesController,
+    Admin\AdminSetterController,
     Profile\ProfileController,
     Profile\ProfileReviewsAndRatingsController,
     Serie\SerieController,
@@ -60,38 +61,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [AdminController::class, 'index'])->name('admin.dashboard');
 
         // Movies
-        Route::resource('movies', AdminMoviesController::class)->names([
-            'index' => 'admin.movies.index',
-            'create' => 'admin.movies.create',
-            'store' => 'admin.movies.store',
-            'show' => 'admin.movies.show',
-            'edit' => 'admin.movies.edit',
-            'update' => 'admin.movies.update',
-            'destroy' => 'admin.movies.destroy',
-        ]);
+        Route::resource('movies', AdminMoviesController::class)->names(['index' => 'admin.movies.index', 'create' => 'admin.movies.create', 'store' => 'admin.movies.store', 'show' => 'admin.movies.show', 'edit' => 'admin.movies.edit', 'update' => 'admin.movies.update', 'destroy' => 'admin.movies.destroy',]);
 
         // Series
-        Route::resource('series', AdminSeriesController::class)->names([
-            'index' => 'admin.series.index',
-            'create' => 'admin.series.create',
-            'store' => 'admin.series.store',
-            'show' => 'admin.series.show',
-            'edit' => 'admin.series.edit',
-            'update' => 'admin.series.update',
-            'destroy' => 'admin.series.destroy',
-        ]);
+        Route::resource('series', AdminSeriesController::class)->names(['index' => 'admin.series.index', 'create' => 'admin.series.create', 'store' => 'admin.series.store', 'show' => 'admin.series.show', 'edit' => 'admin.series.edit', 'update' => 'admin.series.update', 'destroy' => 'admin.series.destroy',]);
 
         // Users
-        Route::get('users', [AdminUsersController::class, 'index'])->name('admin.users.index');
-        Route::post('users', [AdminUsersController::class, 'store'])->name('admin.users.store');
-        Route::delete('users/{id}', [AdminUsersController::class, 'destroy'])->name('admin.users.destroy');
-        Route::post('users/{id}/set-admin', [AdminUsersController::class, 'setAdmin'])->name('admin.users.setadmin');
-        Route::post('users/{id}/remove-admin', [AdminUsersController::class, 'removeAdmin'])->name('admin.users.removeadmin');
-        Route::get('users/{id}/edit', [AdminUsersController::class, 'editUser'])->name('admin.users.edit');
-        Route::put('users/{id}/update', [AdminUsersController::class, 'updateUser'])->name('admin.users.update');
-
+        Route::resource('users', AdminUsersController::class)->names(['index' => 'admin.users.index', 'store' => 'admin.users.store', 'destroy' => 'admin.users.destroy', 'edit' => 'admin.users.edit', 'update' => 'admin.users.update']);
+        Route::post('users/{id}/set-admin', [AdminSetterController::class, 'setAdmin'])->name('admin.users.setadmin');
+        Route::post('users/{id}/remove-admin', [AdminSetterController::class, 'removeAdmin'])->name('admin.users.removeadmin');
     });
-
     Route::resource('reviews', MovieReviewController::class)->only(['destroy']);
     Route::resource('ratings', MovieRatingController::class)->only(['destroy']);
 

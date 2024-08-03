@@ -34,7 +34,6 @@ class MovieRatingController extends Controller
         Log::info('Rating store method called', ['user_id' => Auth::id(), 'movie_id' => $movie->id]);
 
         try {
-            // Validacija se već desila pre nego što je request stigao do ove tačke
             $validated = $request->validated();
 
             Log::info('Validation passed', $validated);
