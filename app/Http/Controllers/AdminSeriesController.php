@@ -47,17 +47,24 @@ class AdminSeriesController extends Controller
             'title' => 'required|string|max:255',
             'director' => 'required|string|max:255',
             'release_date' => 'required|date',
-            'image' => 'nullable|image|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'trailer_link' => 'nullable|url',
             'video_id' => 'nullable|integer',
             'views' => 'nullable|integer|min:0',
         ]);
 
         $serie = new Serie($request->all());
+
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('public/series');
-            $serie->image = $imagePath;
+            if ($serie->image && Storage::exists($serie->image)) {
+                Storage::delete($serie->image);
+            }
+
+            $path = $request->file('image')->store('public/series-images');
+
+            $serie->image = str_replace('public/series-images/', '', $path);
         }
+
 
         $serie->save();
 
@@ -156,13 +163,13 @@ class AdminSeriesController extends Controller
      */
     protected function checkAdmin(Request $request)
     {
-        if (! auth()->check()) {
+        if (!auth()->check()) {
             abort(403, 'Unauthorized action.');
         }
 
         $user = auth()->user();
 
-        if (! $user->is_admin) {
+        if (!$user->is_admin) {
             abort(403, 'Unauthorized action.');
         }
 

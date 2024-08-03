@@ -49,7 +49,7 @@ class AdminMoviesController extends Controller
             'release_date' => 'required|date',
             // 'genre_ids' => 'required|string',
             // 'rating' => 'required|numeric|min:0|max:10',
-            'image' => 'nullable|image|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             // 'overview' => 'required|string',
             // 'backdrop_path' => 'nullable|string|max:255',
             'trailer_link' => 'nullable|url',
@@ -60,9 +60,15 @@ class AdminMoviesController extends Controller
         $movie = new Movie($request->all());
 
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('public/movies');
-            $movie->image = $imagePath;
+            if ($movie->image && Storage::exists($movie->image)) {
+                Storage::delete($movie->image);
+            }
+
+            $path = $request->file('image')->store('public/movies-images');
+
+            $movie->image = str_replace('public/movies-images/', '', $path);
         }
+
 
         $movie->save();
 
@@ -156,16 +162,16 @@ class AdminMoviesController extends Controller
     /**
      * Check if the authenticated user is an admin.
      *
-     * @return \App\Models\User
+     * @return $user
      */
     protected function checkAdmin(Request $request)
     {
-        if (! auth()->check()) {
+        if (!auth()->check()) {
             abort(403, 'Unauthorized action.');
         }
 
         $user = auth()->user();
-        if (! $user->is_admin) {
+        if (!$user->is_admin) {
             abort(403, 'Unauthorized action.');
         }
 
