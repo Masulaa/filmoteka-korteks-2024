@@ -20,7 +20,6 @@ class SerieFactory extends Factory
             'title' => $this->faker->realText($this->faker->numberBetween(10, 25)), // It looks like a movie title
             'director' => $this->faker->name,
             'release_date' => $this->faker->date,
-            'genre' => "serie",
             'image' => $this->faker->imageUrl(),
             'trailer_link' => $this->faker->url(),
             'video_id' => $this->faker->randomNumber(),
