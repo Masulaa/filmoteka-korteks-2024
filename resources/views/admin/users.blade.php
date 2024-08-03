@@ -37,25 +37,9 @@
                             <td>{{ $user->is_admin ? 'yes' : 'no' }}</td>
                             <td>{{ $user->created_at }}</td>
                             <td>
-                                <form action="{{ route('admin.users.setadmin', $user->id) }}" method="POST">
+                                <form action="{{ route('admin.users.edit', $user->id) }}" method="GET">
                                     @csrf
-                                    <button type="submit" class="btn btn-primary btn-sm"
-                                        @if ($user->is_admin) disabled @endif>Set to Admin</button>
-                                </form>
-                                <form action="{{ route('admin.users.removeadmin', $user->id) }}" method="POST">
-                                    @csrf
-                                    <button type="submit" class="btn btn-warning btn-sm"
-                                        @unless ($user->is_admin) disabled @endunless>Remove Admin</button>
-                                </form>
-                                <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST"
-                                    onsubmit="return confirm('Are you sure you want to delete this user?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                </form>
-                                <form action="{{ route('admin.users.editpassword', $user->id) }}" method="GET">
-                                    @csrf
-                                    <button type="submit" class="btn btn-info btn-sm">Change Password</button>
+                                    <button type="submit" class="btn btn-info btn-lg">Change User</button>
                                 </form>
                             </td>
                         </tr>

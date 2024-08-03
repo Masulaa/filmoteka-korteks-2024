@@ -124,26 +124,26 @@ class AdminUsersController extends Controller
     }
 
     /**
-     * Show the form for editing the password of the specified user.
+     * Show the form for editing the user.
      *
      * @param  int  $id
      * @return \Illuminate\View\View
      */
-    public function editPassword(Request $request, $id)
+    public function editUser(Request $request, $id)
     {
         $user = $this->checkAdmin($request);
         $userToEdit = User::findOrFail($id);
 
-        return view('admin.password_edit', compact('userToEdit'));
+        return view('admin.user_edit', compact('userToEdit'));
     }
 
     /**
-     * Update the password of the specified user in storage.
+     * Update the user in storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function updatePassword(Request $request, $id)
+    public function updateUser(Request $request, $id)
     {
         $user = $this->checkAdmin($request);
         $userToUpdate = User::findOrFail($id);
@@ -155,6 +155,6 @@ class AdminUsersController extends Controller
         $userToUpdate->password = bcrypt($request->input('password'));
         $userToUpdate->save();
 
-        return redirect()->route('admin.users.index')->with('success', 'Password updated successfully');
+        return redirect()->route('admin.users.index')->with('success', 'User updated successfully');
     }
 }

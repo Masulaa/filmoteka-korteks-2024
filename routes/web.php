@@ -87,8 +87,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('users/{id}', [AdminUsersController::class, 'destroy'])->name('admin.users.destroy');
         Route::post('users/{id}/set-admin', [AdminUsersController::class, 'setAdmin'])->name('admin.users.setadmin');
         Route::post('users/{id}/remove-admin', [AdminUsersController::class, 'removeAdmin'])->name('admin.users.removeadmin');
-        Route::get('users/{id}/edit-password', [AdminUsersController::class, 'editPassword'])->name('admin.users.editpassword');
-        Route::put('users/{id}/update-password', [AdminUsersController::class, 'updatePassword'])->name('admin.users.updatepassword');
+        Route::get('users/{id}/edit', [AdminUsersController::class, 'editUser'])->name('admin.users.edit');
+        Route::put('users/{id}/update', [AdminUsersController::class, 'updateUser'])->name('admin.users.update');
+
     });
 
     Route::resource('reviews', MovieReviewController::class)->only(['destroy']);
