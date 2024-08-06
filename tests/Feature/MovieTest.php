@@ -76,38 +76,31 @@ class MovieTest extends TestCase
         ]);
     }
 
-    // WHEN OUR GREAT FRIEND BORIS MAKES EDIT FUNCTIONAL IN ADMIN PANEL, THIS TEST SHOULD WORK
+    public function test_is_movie_updated()
+    {
+        $user = User::factory()->create(['is_admin' => 1]);
+        $this->actingAs($user);
 
-    // public function test_is_movie_updated() 
-    // {
-    //     $user = User::factory()->create(['is_admin' => 1]);
+        $movie = Movie::factory()->create([
+            'title' => 'Stari Naslov',
+            'director' => 'Stari Režiser',
+            'release_date' => '2010-01-01',
+        ]);
 
-    //     $this->actingAs($user);
+        $updateData = [
+            'title' => 'Novi Naslov',
+            'director' => 'Ime Režisera NOVO',
+            'release_date' => '2023-01-01',
+        ];
 
-    //     $movie = Movie::factory()->create([
-    //         'id' => 50,
-    //         'title' => 'Old Title',
-    //         'director' => 'Old Director',
-    //         'release_date' => '2010-01-01',
-    //         'views' => 100,
-    //     ]);
+        $response = $this->put(route('admin.movies.update', $movie->id), $updateData);
 
-    //     $response = $this->put(route('admin.movies.update', $movie->id), [
-    //         'title' => 'New Movie UPDATED',
-    //         'director' => 'Director Name UPDATED',
-    //         'release_date' => '2023-01-01',
-    //         'views' => 130,
-    //     ]);
+        $response->assertRedirect(route('admin.movies.index'));
 
-    //     $response->assertRedirect(route('admin.movies.index'));
+        $response->assertStatus(302);
 
-    //     $this->assertDatabaseHas('movies', [
-    //         'title' => 'New Movie UPDATED',
-    //         'director' => 'Director Name UPDATED',
-    //         'release_date' => '2023-01-01',
-    //         'views' => 130,
-    //     ]);
-    // }
+        $this->assertDatabaseHas('movies', $updateData);
+    }
 
     public function test_is_movie_destroyed()
     {

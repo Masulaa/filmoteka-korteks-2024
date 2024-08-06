@@ -80,38 +80,37 @@ class SerieTest extends TestCase
         ]);
     }
 
-    // WHEN OUR GREAT FRIEND BORIS MAKES EDIT FUNCTIONAL IN ADMIN PANEL, THIS TEST SHOULD WORK
 
-    // public function test_is_serie_updated() 
-    // {
-    //     $user = User::factory()->create(['is_admin' => 1]);
+    public function test_is_serie_updated()
+    {
+        $user = User::factory()->create(['is_admin' => 1]);
 
-    //     $this->actingAs($user);
+        $this->actingAs($user);
 
-    //     $serie = Serie::factory()->create([
-    //         'id' => 50,
-    //         'title' => 'Old Title',
-    //         'director' => 'Old Director',
-    //         'release_date' => '2010-01-01',
-    //         'views' => 100,
-    //     ]);
+        $serie = Serie::factory()->create([
+            'id' => 50,
+            'title' => 'Old Title',
+            'director' => 'Old Director',
+            'release_date' => '2010-01-01',
+            'views' => 100,
+        ]);
 
-    //     $response = $this->put(route('admin.series.update', $serie->id), [
-    //         'title' => 'New Serie UPDATED',
-    //         'director' => 'Director Name UPDATED',
-    //         'release_date' => '2023-01-01',
-    //         'views' => 130,
-    //     ]);
+        $response = $this->put(route('admin.series.update', $serie->id), [
+            'title' => 'New Serie UPDATED',
+            'director' => 'Director Name UPDATED',
+            'release_date' => '2023-01-01',
+            'views' => 130,
+        ]);
 
-    //     $response->assertRedirect(route('admin.series.index'));
+        $response->assertRedirect(route('admin.series.index'));
 
-    //     $this->assertDatabaseHas('series', [
-    //         'title' => 'New Serie UPDATED',
-    //         'director' => 'Director Name UPDATED',
-    //         'release_date' => '2023-01-01',
-    //         'views' => 130,
-    //     ]);
-    // }
+        $this->assertDatabaseHas('series', [
+            'title' => 'New Serie UPDATED',
+            'director' => 'Director Name UPDATED',
+            'release_date' => '2023-01-01',
+            'views' => 130,
+        ]);
+    }
 
     public function test_is_serie_destroyed()
     {

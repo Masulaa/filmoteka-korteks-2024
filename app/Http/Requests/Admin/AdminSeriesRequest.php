@@ -40,7 +40,7 @@ class AdminSeriesRequest extends FormRequest
                 'title' => 'required|string|max:255',
                 'director' => 'required|string|max:255',
                 'release_date' => 'required|date',
-                'genre' => 'required|string|max:255',
+                'genre' => 'string|max:255',
                 'trailer_link' => 'nullable|url',
                 'video_id' => 'nullable|integer',
                 'views' => 'nullable|integer|min:0',
