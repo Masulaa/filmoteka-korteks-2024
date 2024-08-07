@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Movie;
 
 use App\Models\Movie;
 use App\Models\User;
