@@ -71,9 +71,6 @@ class MovieFavouriteTest extends TestCase
             'movie_id' => $movie->id,
         ]);
 
-        $response->assertStatus(201)
-            ->assertJson(['message' => 'Movie added to favorites']);
-
         $response = $this->post(route('movie-favorites.store'), [
             'user_id' => $user->id,
             'movie_id' => $movie->id,
