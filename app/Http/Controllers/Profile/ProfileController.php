@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Profile;
 use App\Http\Controllers\Controller;
 
 use App\Http\Requests\ProfileUpdateRequest;
-use App\Models\{MovieRating, MovieReview};
 use Illuminate\Http\{RedirectResponse, Request};
 use Illuminate\Support\Facades\{Auth, Redirect};
 use Illuminate\View\View;

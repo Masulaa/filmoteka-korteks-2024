@@ -88,25 +88,27 @@ class SerieTest extends TestCase
         $this->actingAs($user);
 
         $serie = Serie::factory()->create([
-            'id' => 50,
             'title' => 'Old Title',
             'director' => 'Old Director',
             'release_date' => '2010-01-01',
             'views' => 100,
         ]);
 
-        $response = $this->put(route('admin.series.update', $serie->id), [
-            'title' => 'New Serie UPDATED',
-            'director' => 'Director Name UPDATED',
+
+        $updateData = [
+            'title' => 'New Title',
+            'director' => 'New Director',
             'release_date' => '2023-01-01',
             'views' => 130,
-        ]);
+        ];
+
+        $response = $this->put(route('admin.series.update', $serie->id), $updateData);
 
         $response->assertRedirect(route('admin.series.index'));
 
         $this->assertDatabaseHas('series', [
-            'title' => 'New Serie UPDATED',
-            'director' => 'Director Name UPDATED',
+            'title' => 'New Title',
+            'director' => 'New Director',
             'release_date' => '2023-01-01',
             'views' => 130,
         ]);

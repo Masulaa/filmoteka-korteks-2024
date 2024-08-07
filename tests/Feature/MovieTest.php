@@ -72,7 +72,7 @@ class MovieTest extends TestCase
             'title' => 'New Movie',
             'director' => 'Director Name',
             'release_date' => '2023-01-01',
-
+            'views' => 150,
         ]);
     }
 
@@ -82,22 +82,22 @@ class MovieTest extends TestCase
         $this->actingAs($user);
 
         $movie = Movie::factory()->create([
-            'title' => 'Stari Naslov',
-            'director' => 'Stari Režiser',
+            'title' => 'Old Title',
+            'director' => 'Old Director',
             'release_date' => '2010-01-01',
+            'views' => 100,
         ]);
 
         $updateData = [
-            'title' => 'Novi Naslov',
-            'director' => 'Ime Režisera NOVO',
+            'title' => 'New Title',
+            'director' => 'New Director',
             'release_date' => '2023-01-01',
+            'views' => 130,
         ];
 
         $response = $this->put(route('admin.movies.update', $movie->id), $updateData);
 
         $response->assertRedirect(route('admin.movies.index'));
-
-        $response->assertStatus(302);
 
         $this->assertDatabaseHas('movies', $updateData);
     }
