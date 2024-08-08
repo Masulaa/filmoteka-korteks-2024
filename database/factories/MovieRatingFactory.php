@@ -14,7 +14,7 @@ class MovieRatingFactory extends Factory
         return [
             'user_id' => User::factory()->create()->id,
             'movie_id' => Movie::factory()->create()->id,
-            'rating' => $this->faker->numberBetween(1, 10),
+            'rating' => $this->faker->numberBetween(1, 100),
         ];
     }
 }

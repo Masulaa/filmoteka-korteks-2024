@@ -71,8 +71,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('users/{id}/set-admin', [AdminSetterController::class, 'setAdmin'])->name('admin.users.setadmin');
         Route::post('users/{id}/remove-admin', [AdminSetterController::class, 'removeAdmin'])->name('admin.users.removeadmin');
     });
-    Route::resource('reviews', MovieReviewController::class)->only(['destroy']);
-    Route::resource('ratings', MovieRatingController::class)->only(['destroy']);
 
     Route::resource('contact', ContactController::class)->only(['index', 'store']);
     Route::resource('movie-favorites', MovieFavoriteController::class)->only(['index', 'store', 'destroy']);

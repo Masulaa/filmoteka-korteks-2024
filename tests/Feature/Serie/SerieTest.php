@@ -10,9 +10,6 @@ use Tests\TestCase;
 
 class SerieTest extends TestCase
 {
-    /**
-     * A basic feature test example.
-     */
     public function test_series_are_displayed(): void
     {
         $user = User::factory()->create();

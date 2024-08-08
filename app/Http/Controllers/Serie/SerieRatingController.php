@@ -11,19 +11,6 @@ use Illuminate\Support\Facades\{Auth, Log};
 
 class SerieRatingController extends Controller
 {
-    /**
-     * Remove the specified rating from storage.
-     *
-     * @param SerieRating $rating
-     * @return RedirectResponse
-     */
-    public function destroy(SerieRating $rating): RedirectResponse
-    {
-        $rating->delete();
-        return redirect()
-            ->back()
-            ->with("success", "Rating deleted successfully.");
-    }
 
     /**
      * Store a newly created rating in storage.

@@ -10,17 +10,6 @@ use Illuminate\Support\Facades\{Auth, Log};
 
 class MovieRatingController extends Controller
 {
-    /**
-     * Remove the specified rating from storage.
-     *
-     * @param MovieRating $rating
-     * @return RedirectResponse
-     */
-    public function destroy(MovieRating $rating): RedirectResponse
-    {
-        $rating->delete();
-        return redirect()->back()->with('success', 'Rating deleted successfully.');
-    }
 
     /**
      * Store a newly created rating in storage.

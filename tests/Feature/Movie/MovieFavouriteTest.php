@@ -10,9 +10,6 @@ use App\Models\User;
 
 class MovieFavouriteTest extends TestCase
 {
-    /**
-     * A basic feature test example.
-     */
     public function test_movie_can_be_added_to_favorites()
     {
         $user = User::factory()->create();

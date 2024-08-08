@@ -10,9 +10,6 @@ use App\Models\User;
 
 class SerieFavouriteTest extends TestCase
 {
-    /**
-     * A basic feature test example.
-     */
     public function test_serie_can_be_added_to_favorites()
     {
         $user = User::factory()->create();
