@@ -15,7 +15,6 @@ return new class extends Migration {
             $table->foreignId("serie_id")->constrained()->onDelete("cascade");
             $table->integer("season_number");
             $table->integer("episode_number");
-            $table->string("title");
             $table->timestamps();
         });
     }

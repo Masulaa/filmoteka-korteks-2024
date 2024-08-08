@@ -189,20 +189,20 @@ class SeriesService
         array $seasonsData
     ): void {
         foreach ($seasonsData as $seasonData) {
-            foreach ($seasonData["episodes"] as $episodeData) {
-                SerieEpisode::updateOrCreate(
-                    [
-                        "serie_id" => $series->id,
-                        "season_number" => $seasonData["season_number"],
-                        "episode_number" => $episodeData["episode_number"],
-                    ],
-                    [
-                        "title" => $episodeData["name"],
-                        "updated_at" => now(),
-                        "created_at" => now(),
-                    ]
-                );
-            }
+            $seasonNumber = $seasonData["season_number"];
+            $episodeCount = count($seasonData["episodes"]);
+
+            SerieEpisode::updateOrCreate(
+                [
+                    "serie_id" => $series->id,
+                    "season_number" => $seasonNumber,
+                    "episode_number" => $episodeCount,
+                ],
+                [
+                    "updated_at" => now(),
+                    "created_at" => now(),
+                ]
+            );
         }
     }
 
