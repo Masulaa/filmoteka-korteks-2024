@@ -54,6 +54,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     /* PROFILE */
     Route::get('/profile/reviews-ratings/{id}', [ProfileReviewsAndRatingsController::class, 'reviewsAndRatings'])->name('profile.reviews-ratings');
+    Route::resource("reviews", MovieReviewController::class)->only(["destroy"]);
+    Route::resource("ratings", MovieRatingController::class)->only(["destroy"]);
     Route::resource('profile', ProfileController::class)->only(['edit', 'update', 'destroy'])->parameters(['profile' => 'id'])->names(['edit' => 'profile.edit', 'update' => 'profile.update', 'destroy' => 'profile.destroy']);
 
     /* ADMIN PANEL */
