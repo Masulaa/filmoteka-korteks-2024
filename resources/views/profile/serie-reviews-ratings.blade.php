@@ -13,7 +13,13 @@
                         <a href="{{ route('series.index') }}/{{ $review->serie->id }}"
                             class="flex items-center justify-between">
                             <div class="flex items-center space-x-4">
-                                <img src="{{ $review->serie->image }}" alt="{{ $review->serie->title }}"
+                            @php
+                        $imageUrl = "https://image.tmdb.org/t/p/w500/{$review->serie->image}";
+                        $fallbackImage = asset('storage/series-images/' . $review->serie->image);
+                        $imageExists = @getimagesize($imageUrl);
+                        $displayImage = $imageExists ? $imageUrl : $fallbackImage;
+                    @endphp
+                                <img src="{{ $displayImage }}" alt="{{ $review->serie->title }}"
                                     class="object-cover w-20 rounded-lg shadow-md">
                                 <div>
                                     <h3 class="text-xl font-bold text-white">{{ $review->serie->title }}</h3>
@@ -53,7 +59,13 @@
                         <a href="{{ route('series.index') }}/{{ $rating->serie->id }}"
                             class="flex items-center justify-between">
                             <div class="flex items-center space-x-4">
-                                <img src="{{ $rating->serie->image }}" alt="{{ $rating->serie->title }}"
+                            @php
+                        $imageUrl = "https://image.tmdb.org/t/p/w500/{$review->serie->image}";
+                        $fallbackImage = asset('storage/series-images/' . $review->serie->image);
+                        $imageExists = @getimagesize($imageUrl);
+                        $displayImage = $imageExists ? $imageUrl : $fallbackImage;
+                    @endphp
+                                <img src="{{ $displayImage }}" alt="{{ $rating->serie->title }}"
                                     class="object-cover w-20 rounded-lg shadow-md">
                                 <div>
                                     <h3 class="text-xl font-bold text-white">{{ $rating->serie->title }}</h3>
