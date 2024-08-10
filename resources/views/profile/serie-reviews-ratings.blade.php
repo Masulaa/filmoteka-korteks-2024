@@ -10,22 +10,22 @@
 
                 @foreach ($reviews as $review)
                     <li class="p-2 bg-gray-800 rounded-lg shadow-md">
-                        <a href="{{ route('movies.index') }}/{{ $review->movie->id }}"
+                        <a href="{{ route('series.index') }}/{{ $review->serie->id }}"
                             class="flex items-center justify-between">
                             <div class="flex items-center space-x-4">
-                                <img src="{{ $review->movie->image }}" alt="{{ $review->movie->title }}"
+                                <img src="{{ $review->serie->image }}" alt="{{ $review->serie->title }}"
                                     class="object-cover w-20 rounded-lg shadow-md">
                                 <div>
-                                    <h3 class="text-xl font-bold text-white">{{ $review->movie->title }}</h3>
-                                    <p class="text-sm text-white ">Director: {{ $review->movie->director }}</p>
-                                    <p class="text-sm text-white ">Release Date: {{ $review->movie->release_date }}
+                                    <h3 class="text-xl font-bold text-white">{{ $review->serie->title }}</h3>
+                                    <p class="text-sm text-white ">Director: {{ $review->serie->director }}</p>
+                                    <p class="text-sm text-white ">Release Date: {{ $review->serie->release_date }}
                                     </p>
                                     <p class="text-sm text-white">Date: {{ $review->created_at }}
 
                                     <p class="mt-4 text-white">Your Review: {{ $review->content }}</p>
                                 </div>
                             </div>
-                            <form action="{{ route('reviews.destroy', $review->id) }}" method="POST">
+                            <form action="{{ route('serie-reviews.destroy', $review->id) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit"
@@ -50,15 +50,15 @@
 
                 @foreach ($ratings as $rating)
                     <li class="p-2 bg-gray-800 rounded-lg shadow-md">
-                        <a href="{{ route('movies.index') }}/{{ $rating->movie->id }}"
+                        <a href="{{ route('series.index') }}/{{ $rating->serie->id }}"
                             class="flex items-center justify-between">
                             <div class="flex items-center space-x-4">
-                                <img src="{{ $rating->movie->image }}" alt="{{ $rating->movie->title }}"
+                                <img src="{{ $rating->serie->image }}" alt="{{ $rating->serie->title }}"
                                     class="object-cover w-20 rounded-lg shadow-md">
                                 <div>
-                                    <h3 class="text-xl font-bold text-white">{{ $rating->movie->title }}</h3>
-                                    <p class="text-sm text-white">Director: {{ $rating->movie->director }}</p>
-                                    <p class="text-sm text-white">Release Date: {{ $rating->movie->release_date }}
+                                    <h3 class="text-xl font-bold text-white">{{ $rating->serie->title }}</h3>
+                                    <p class="text-sm text-white">Director: {{ $rating->serie->director }}</p>
+                                    <p class="text-sm text-white">Release Date: {{ $rating->serie->release_date }}
                                     </p>
                                     <p class="text-sm text-white">Date: {{ $rating->created_at }}
                                     </p>
@@ -66,7 +66,7 @@
                                             class="font-semibold text-indigo-600">{{ $rating->rating }}/10</span></p>
                                 </div>
                             </div>
-                            <form action="{{ route('ratings.destroy', $rating->id) }}" method="POST">
+                            <form action="{{ route('serie-ratings.destroy', $rating->id) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit"

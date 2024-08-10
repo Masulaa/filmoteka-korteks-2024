@@ -60,8 +60,11 @@
                         <x-dropdown-link :href="route('profile.edit', ['id' => Auth::user()->id])">
                             {{ __('Profile') }}
                         </x-dropdown-link>
-                        <x-dropdown-link :href="route('profile.reviews-ratings',['id' => Auth::user()->id])">
-                            {{ __('Reviews & Ratings') }}
+                        <x-dropdown-link :href="route('profile.movie-reviews-ratings',['id' => Auth::user()->id])">
+                            {{ __('Movie Reviews & Ratings') }}
+                        </x-dropdown-link>
+                        <x-dropdown-link :href="route('profile.serie-reviews-ratings',['id' => Auth::user()->id])">
+                            {{ __('Serie Reviews & Ratings') }}
                         </x-dropdown-link>
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">

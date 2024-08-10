@@ -53,9 +53,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/series/{serie}/reviews', [SerieReviewController::class, 'store'])->name('series.reviews.store');
 
     /* PROFILE */
-    Route::get('/profile/reviews-ratings/{id}', [ProfileReviewsAndRatingsController::class, 'reviewsAndRatings'])->name('profile.reviews-ratings');
-    Route::resource("reviews", MovieReviewController::class)->only(["destroy"]);
-    Route::resource("ratings", MovieRatingController::class)->only(["destroy"]);
+    Route::get('/profile/movie-reviews-ratings/{id}', [ProfileReviewsAndRatingsController::class, 'movieReviewsAndRatings'])->name('profile.movie-reviews-ratings');
+    Route::get('/profile/serie-reviews-ratings/{id}', [ProfileReviewsAndRatingsController::class, 'serieReviewsAndRatings'])->name('profile.serie-reviews-ratings');
+    Route::delete('/movie-ratings/{rating}', [ProfileReviewsAndRatingsController::class, 'destroyMovieRating'])->name('movie-ratings.destroy');
+    Route::delete('/movie-reviews/{review}', [ProfileReviewsAndRatingsController::class, 'destroyMovieReview'])->name('movie-reviews.destroy');
+    Route::delete('/serie-ratings/{rating}', [ProfileReviewsAndRatingsController::class, 'destroySerieRating'])->name('serie-ratings.destroy');
+    Route::delete('/serie-reviews/{review}', [ProfileReviewsAndRatingsController::class, 'destroySerieReview'])->name('serie-reviews.destroy');
     Route::resource('profile', ProfileController::class)->only(['edit', 'update', 'destroy'])->parameters(['profile' => 'id'])->names(['edit' => 'profile.edit', 'update' => 'profile.update', 'destroy' => 'profile.destroy']);
 
     /* ADMIN PANEL */

@@ -10,19 +10,7 @@ use Illuminate\Http\{RedirectResponse};
 
 class SerieReviewController extends Controller
 {
-    /**
-     * Delete a review.
-     *
-     * @param SerieReview $review
-     * @return RedirectResponse
-     */
-    public function destroy(SerieReview $review): RedirectResponse
-    {
-        $review->delete();
-        return redirect()
-            ->back()
-            ->with("success", "Review deleted successfully.");
-    }
+
 
     /**
      * Store a new review for a serie.
