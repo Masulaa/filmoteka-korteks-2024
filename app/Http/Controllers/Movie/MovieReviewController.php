@@ -11,18 +11,6 @@ use App\Http\Requests\Movie\MovieReviewRequest;
 class MovieReviewController extends Controller
 {
     /**
-     * Delete a review.
-     *
-     * @param MovieReview $review
-     * @return RedirectResponse
-     */
-    public function destroy(MovieReview $review): RedirectResponse
-    {
-        $review->delete();
-        return redirect()->back()->with('success', 'Review deleted successfully.');
-    }
-
-    /**
      * Store a new review for a movie.
      *
      * @param MovieReviewRequest $request
