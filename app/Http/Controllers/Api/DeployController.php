@@ -10,39 +10,26 @@ class DeployController extends Controller
 {
     public function deploy(Request $request)
     {
-        $allowedIps = ['131.103.20.160/27', '165.254.145.0/26', '104.192.143.0/24', '104.192.143.192/28', '104.192.143.208/28', '192.30.252.0/22'];
-        $remoteIp = $request->ip();
-        $allowed = false;
-
-        foreach ($allowedIps as $range) {
-            if ($this->ipInRange($remoteIp, $range)) {
-                $allowed = true;
-                break;
-            }
-        }
-
-        if (!$allowed) {
-            return response('Access forbidden.', 403);
-        }
-
+        $output = [];
+        $returnVar = 0;
+        // TODO: fix git permision problem
         exec('cd /var/www/html/filmoteka && git pull origin main 2>&1', $output, $returnVar);
+        $outputString = implode("\n", $output);
 
         if ($returnVar === 0) {
             Artisan::call('migrate', ['--force' => true]);
-
-            return response('Deployment successful!', 200);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Deployment successful!',
+                'output' => $outputString
+            ], 200);
         } else {
-            return response('Deployment failed!', 500);
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Deployment failed!',
+                'output' => $outputString,
+                'return_var' => $returnVar
+            ], 500);
         }
     }
-
-    private function ipInRange($ip, $range)
-    {
-        list($subnet, $bits) = explode('/', $range);
-        $ip = ip2long($ip);
-        $subnet = ip2long($subnet);
-        $mask = -1 << (32 - $bits);
-        return ($ip & $mask) === ($subnet & $mask);
-    }
 }
-
