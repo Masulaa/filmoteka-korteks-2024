@@ -21,15 +21,12 @@ use App\Http\Controllers\{
     Movie\MovieFavoriteController,
     Movie\MovieWatchController,
     Movie\MovieFilterController,
-    DeployController,
 };
 
 use App\Livewire\{MovieSearch, SerieSearch};
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn() => redirect('login'));
-
-Route::post('/deploy', [DeployController::class, 'deploy'])->name('deploy');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('/dashboard', 'dashboard.dashboard')->name('dashboard');

@@ -12,7 +12,7 @@ jobs:
     steps:
     - name: Send deploy request
       run: |
-        curl -X POST https://thb-movies.online/deploy
+        curl -X POST https://thb-movies.online/api/deploy
       env:
-        DEPLOY_URL: https://thb-movies.online/deploy
+        DEPLOY_URL: https://thb-movies.online/api/deploy
 
