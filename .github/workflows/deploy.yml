@@ -8,11 +8,22 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: Cortex
 
     steps:
-    - name: Send deploy request
-      run: |
-        curl -X POST https://thb-movies.online/api/deploy
-      env:
-        DEPLOY_URL: https://thb-movies.online/api/deploy
+      - name: Checkout code
+        uses: actions/checkout@v3
 
+      - name: Set up SSH key
+        uses: webfactory/ssh-agent@v0.6.0
+        with:
+          ssh-private-key: ${{ secrets.CORTEX }}
+
+      - name: Deploy to server
+        run: |
+          echo "cortex2024#" | ssh cortex@188.245.100.223 << 'EOF'
+            cd /var/www/html/filmoteka
+            git pull origin main
+            (composer install && php artisan test) ||
+              (echo "Something failed. Return value: $? [ $(date) ] " >> $HOME/filmoteka_log.txt ) # dummy fail code
+          EOF
